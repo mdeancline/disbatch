@@ -1,0 +1,61 @@
+# Disbatch
+Disbatch is a versatile Minecraft server command library, meticulously designed to foster modularity and further streamline the handling of command arguments. With Disbatch, developers can effortlessly create and manage commands, empowering them to build robust and user-friendly commands. Its modular architecture facilitates the seamless integration of new commands and functionalities. Whether it's executing complex commands or managing intricate command structures, Disbatch offers a comprehensive toolkit that simplifies the development process involving commands.
+
+# Installation
+For the time being, Disbatch is only available for Spigot.
+Add the following to your `pom.xml` `<dependencies>`:
+```xml Maven
+<dependency>
+  <groupId>io.github.disbatch</groupId>
+  <artifactId>disbatch-spigot</artifactId>
+  <version>Insert version here</version> <!-- See the pom.xml in disbatch-spigot for the latest version -->
+  <scope>compile</scope>
+</dependency>
+```
+
+# Getting Started
+Disbatch has its own `Command` interface for creating your own commands and catering to a certain `CommandSender` type if necessary. The same goes for all of the other abstractions and subclasses derived from it. If you wish to dynamically create a `Command`, a `CommandBuilder` can be utilized to define how you want the built `Command` to be executed and if you want it to utilize tab completion. Below is an example of creating a simple command that will message a player.
+
+Implementing the `Command` interface:
+```java
+import io.github.disbatch.command.Command;
+import io.github.disbatch.command.CommandInput;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+public class PlayerCommand implements Command<Player> {
+    @Override
+    public void execute(final Player sender, final @NotNull CommandInput input) {
+        sender.sendMessage("Hello there, " + sender.getName());
+    }
+}
+```
+```java
+final Command<Player> playerCmd = new PlayerCommand();
+```
+
+Utilizing a `CommandBuilder`
+```java
+final Command<Player> playerCmd = new CommandBuilder<>()
+        .executor((sender, input) => sender.sendMessage("Hello there, " + sender.getName()))
+        .build();
+```
+
+# Registering Commands
+In order for a command to be recognized by the server, it must be registered. Commands created with the Disbatch library can be registered without your project containing a `plugin.yml` file.
+
+Using the previous player command example, below are examples of registering a command for if a `plugin.yml` file is present or not.
+
+Without it:
+```java
+Disbatch.register(playerCmd, CommandDescriptor.label("player"));
+```
+
+With it:
+```java
+// this method of registering command should be done in the JavaPlugin onEnable method of your
+// main class
+Disbatch.register(playerCmd, CommandDescriptor.label("player"), this);
+```
+
+Either one of these utility methods will register a command to the server so that it can be executed when `/player` is typed in the chat or `player` is typed in the server's console.
