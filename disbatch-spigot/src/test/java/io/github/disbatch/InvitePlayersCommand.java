@@ -1,0 +1,26 @@
+package io.github.disbatch;
+
+import io.github.disbatch.command.CommandInput;
+import io.github.disbatch.command.parameter.ParameterizedCommand;
+import io.github.disbatch.command.parameter.model.PlayerFromNameParameter;
+import io.github.disbatch.command.parameter.model.array.ArrayParameter;
+import io.github.disbatch.command.parameter.usage.ParameterUsage;
+import org.bukkit.entity.Player;
+
+public class InvitePlayersCommand extends ParameterizedCommand<Player, Player[]> {
+    public InvitePlayersCommand() {
+        super(new ArrayParameter<>(new PlayerFromNameParameter(), 1, 4),
+                ParameterUsage.builder()
+                        .baseMessage("Usage: %usage")
+                        .usageLabels("players")
+                        .labelHead('<')
+                        .labelTail('>')
+                        .build());
+    }
+
+    @Override
+    protected void execute(final Player sender, final Player[] argument, final CommandInput input) {
+        for (final Player player : argument)
+            player.sendMessage("You've been invited!");
+    }
+}

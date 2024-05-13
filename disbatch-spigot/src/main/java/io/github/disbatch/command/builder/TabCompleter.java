@@ -1,0 +1,28 @@
+package io.github.disbatch.command.builder;
+
+import io.github.disbatch.command.Command;
+import io.github.disbatch.command.CommandInput;
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.ApiStatus;
+
+import java.util.List;
+
+/**
+ * Responsible for the tab completion of any {@link Command} created from a {@link CommandBuilder}.
+ *
+ * @param <S> any type extending {@link CommandSender} that can safely perform tab completion.
+ * @apiNote Not to be confused with {@link org.bukkit.command.TabCompleter}.
+ */
+@FunctionalInterface
+@ApiStatus.AvailableSince("1.0")
+public interface TabCompleter<S extends CommandSender> {
+
+    /**
+     * Executed on tab completion, returning a {@code List} of argument options the {@link CommandSender} can tab through.
+     *
+     * @param sender the {@link CommandSender} responsible for initiating a tab completion.
+     * @param input  the {@link CommandInput} present from tab completion.
+     * @return a list of tab completions for the specified arguments, which may be empty or immutable.
+     */
+    List<String> tabComplete(S sender, CommandInput input);
+}
