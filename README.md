@@ -3,13 +3,23 @@ Disbatch is a versatile Minecraft server command library, meticulously designed 
 
 # Installation
 For the time being, Disbatch is only available for Spigot.
-Add the following to your `pom.xml` `<dependencies>`:
-```xml Maven
+
+To add the libary to your project, add the following to you `pom.xml` file.
+1. Add the following to your `<repositories>`:
+```xml
+<repository>
+    <id>repsy</id>
+    <name>mc-libs-repo</name>
+    <url>https://repo.repsy.io/mvn/mdcline/mc-libs/</url>
+</repository>
+```
+2. Add the following to your `<dependencies>`:
+```xml
 <dependency>
-  <groupId>io.github.disbatch</groupId>
-  <artifactId>disbatch-spigot</artifactId>
-  <version>Insert version here</version> <!-- See the pom.xml in disbatch-spigot for the latest version -->
-  <scope>compile</scope>
+    <groupId>io.github.disbatch</groupId>
+    <artifactId>disbatch-spigot</artifactId>
+    <version>Insert version here</version> <!-- See the pom.xml in disbatch-spigot for the latest version -->
+    <scope>compile</scope>
 </dependency>
 ```
 
