@@ -63,7 +63,7 @@ Disbatch.register(playerCmd, CommandDescriptor.label("player"));
 
 With it:
 ```java
-// this method of registering command should be done in the JavaPlugin onEnable method of your
+// this method of registering a command should be done in the JavaPlugin onEnable method of your
 // main class
 Disbatch.register(playerCmd, CommandDescriptor.label("player"), this);
 ```
