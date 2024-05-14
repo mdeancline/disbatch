@@ -58,4 +58,4 @@ With it:
 Disbatch.register(playerCmd, CommandDescriptor.label("player"), this);
 ```
 
-Either one of these utility methods will register a command to the server so that it can be executed when `/player` is typed in the chat or `player` is typed in the server's console.
+Either one of these utility methods will register a command to the server so that it can be executed when `/player` is typed in the chat. However, this will not work if `player` is typed in the server's console, as the `CommandSender` generic type defined in both creation examples is aimed at a `Player`. If you wish to target every `CommandSender`, simply specify `CommandSender` as the generic type argument when implementing the interface or extending a relative abstraction, or pass a generic wildcard when utilizing a `CommandBuilder`.
