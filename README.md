@@ -47,7 +47,7 @@ final Command<Player> playerCmd = new PlayerCommand();
 Utilizing a `CommandBuilder`
 ```java
 final Command<Player> playerCmd = new CommandBuilder<>()
-        .executor((sender, input) => sender.sendMessage("Hello there, " + sender.getName()))
+        .executor((sender, input) -> sender.sendMessage("Hello there, " + sender.getName()))
         .build();
 ```
 
