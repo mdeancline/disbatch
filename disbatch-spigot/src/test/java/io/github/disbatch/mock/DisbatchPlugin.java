@@ -30,6 +30,6 @@ public class DisbatchPlugin extends JavaPlugin {
                         .build()), "sensitive");
 
         Disbatch.register(entityTypeCmdGroup, "entitytype");
-        Disbatch.register(entityTypeCmdGroup, "invite");
+        Disbatch.register(new InvitePlayersCommand(), "invite");
     }
 }
