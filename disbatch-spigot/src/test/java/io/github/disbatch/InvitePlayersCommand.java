@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class InvitePlayersCommand extends ParameterizedCommand<Player, Player[]> {
     public InvitePlayersCommand() {
         super(new ArrayParameter<>(new PlayerFromNameParameter(), 1, 4),
-                ParameterUsage.builder()
+                new ParameterUsage.Builder()
                         .baseMessage("Usage: %usage")
                         .usageLabels("players")
                         .labelHead('<')
