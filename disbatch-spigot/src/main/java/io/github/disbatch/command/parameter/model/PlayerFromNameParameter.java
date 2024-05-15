@@ -8,8 +8,11 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Parses an online {@link Player} by their name based on a parsable, passed argument.
+ * <br>
+ * <br>
+ * <b>Argument Syntax:</b> [player name]
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class PlayerFromNameParameter extends SenderIndependentParameter<Player> {
     
     @Override

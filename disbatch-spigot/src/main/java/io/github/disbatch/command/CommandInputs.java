@@ -10,7 +10,7 @@ import java.util.StringJoiner;
 /**
  * A namespace for {@link CommandInput} convenience and utility methods.
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class CommandInputs {
     private static CommandInput EMPTY = new EmptyCommandInput();
     private CommandInputs() {

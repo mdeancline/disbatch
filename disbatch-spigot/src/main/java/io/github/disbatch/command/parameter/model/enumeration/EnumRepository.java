@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
  * @param <E> the enum type subclass.
  * @apiNote This should only be used in conjunction with {@link EnumConverter}.
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public interface EnumRepository<E extends Enum<E>> {
 
     /**

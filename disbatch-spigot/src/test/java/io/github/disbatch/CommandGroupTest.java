@@ -4,9 +4,8 @@ import com.google.common.collect.ImmutableList;
 import io.github.disbatch.command.Command;
 import io.github.disbatch.command.CommandInput;
 import io.github.disbatch.command.CommandInputs;
-import io.github.disbatch.command.descriptor.CommandDescriptor;
-import io.github.disbatch.command.group.CommandGroup;
-import io.github.disbatch.command.parameter.usage.ParameterUsage;
+import io.github.disbatch.command.CommandGroup;
+import io.github.disbatch.command.parameter.ParameterUsage;
 import io.github.disbatch.mock.DummyCommandLine;
 import org.bukkit.command.CommandSender;
 import org.easymock.EasyMock;
@@ -25,7 +24,7 @@ public class CommandGroupTest extends EasyMockSupport {
     public void setup() {
         senderMock = createMock(CommandSender.class);
 
-        cmdGroup = new CommandGroup<>(ParameterUsage.builder()
+        cmdGroup = new CommandGroup<>(new ParameterUsage.Builder()
                 .baseMessage("Usage: %usage")
                 .labelHead('<')
                 .labelTail('>').build());
@@ -48,8 +47,8 @@ public class CommandGroupTest extends EasyMockSupport {
             }
         };
 
-        cmdGroup.addCommand(cmd, CommandDescriptor.label("cmd-1"));
-        cmdGroup.addCommand(cmd, CommandDescriptor.label("cmd-2"));
+        cmdGroup.withCommand(cmd, "cmd-1")
+                .withCommand(cmd, "cmd-2");
     }
 
     @Test

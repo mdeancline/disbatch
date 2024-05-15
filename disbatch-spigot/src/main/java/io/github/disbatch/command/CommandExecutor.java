@@ -1,18 +1,16 @@
-package io.github.disbatch.command.builder;
+package io.github.disbatch.command;
 
-import io.github.disbatch.command.Command;
-import io.github.disbatch.command.CommandInput;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
- * Responsible for the execution of any {@link Command} created from a {@link CommandBuilder}.
+ * Responsible for the execution of any {@link Command} created from a {@link Command.Builder}.
  *
  * @param <S> any type extending {@link CommandSender} that can safely perform execution.
  * @apiNote Not to be confused with {@link org.bukkit.command.CommandExecutor}.
  */
 @FunctionalInterface
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public interface CommandExecutor<S extends CommandSender> {
 
     /**

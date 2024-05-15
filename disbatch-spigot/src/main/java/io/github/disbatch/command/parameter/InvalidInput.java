@@ -6,7 +6,7 @@ import org.jetbrains.annotations.ApiStatus;
 /**
  * Represents a type of {@link CommandInput} that is unable to be processed by a {@link ParameterizedCommand}.
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public interface InvalidInput extends CommandInput {
 
     /**

@@ -8,6 +8,9 @@ import java.util.UUID;
 
 /**
  * Creates an {@link Integer} based on a parsable, passed argument.
+ * <br>
+ * <br>
+ * <b>Argument Syntax:</b> [whole number]
  */
 public final class IntegerParameter extends NumericParameter<CommandSender, Integer> {
     

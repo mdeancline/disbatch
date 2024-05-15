@@ -1,4 +1,4 @@
-package io.github.disbatch.command.parameter.builder;
+package io.github.disbatch.command.parameter;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * A namespace for {@link Suggester} convenience and utility methods.
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class Suggesters {
     private static final Suggester<?> EMPTY = (sender, input) -> ImmutableList.of();
 

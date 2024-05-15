@@ -6,6 +6,9 @@ import java.util.UUID;
 
 /**
  * Parses a {@link Boolean} based on a parsable, passed argument.
+ * <br>
+ * <br>
+ * <b>Argument Syntax:</b> [true|false]
  */
 public final class BooleanParameter extends SenderIndependentParameter<Boolean> {
     

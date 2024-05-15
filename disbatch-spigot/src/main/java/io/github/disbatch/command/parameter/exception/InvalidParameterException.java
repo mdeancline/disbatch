@@ -1,7 +1,7 @@
 package io.github.disbatch.command.parameter.exception;
 
 import io.github.disbatch.command.parameter.ParameterizedCommand;
-import io.github.disbatch.command.parameter.model.Parameter;
+import io.github.disbatch.command.parameter.Parameter;
 
 /**
  * Thrown when any bounds from a {@link Parameter} cannot be used by a {@link ParameterizedCommand}.

@@ -16,7 +16,7 @@ import java.util.StringJoiner;
  *
  * @param <S> {@inheritDoc}
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class PermissibleCommand<S extends CommandSender> extends CommandProxy<S> {
     private final String permissionNode;
     private final String noPermissionMessage;

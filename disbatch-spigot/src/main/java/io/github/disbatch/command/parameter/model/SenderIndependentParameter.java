@@ -1,6 +1,8 @@
 package io.github.disbatch.command.parameter.model;
 
 import io.github.disbatch.command.CommandInput;
+import io.github.disbatch.command.parameter.AbstractParameter;
+import io.github.disbatch.command.parameter.Parameter;
 import io.github.disbatch.command.parameter.ParameterizedCommand;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;

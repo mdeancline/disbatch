@@ -3,8 +3,8 @@ package io.github.disbatch;
 import io.github.disbatch.command.CommandInput;
 import io.github.disbatch.command.parameter.ParameterizedCommand;
 import io.github.disbatch.command.parameter.model.PlayerFromNameParameter;
-import io.github.disbatch.command.parameter.model.array.ArrayParameter;
-import io.github.disbatch.command.parameter.usage.ParameterUsage;
+import io.github.disbatch.command.parameter.model.ArrayParameter;
+import io.github.disbatch.command.parameter.ParameterUsage;
 import org.bukkit.entity.Player;
 
 public class InvitePlayersCommand extends ParameterizedCommand<Player, Player[]> {

@@ -7,8 +7,11 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Parses and forms a {@code String} from all passed arguments, joined via single whitespace.
+ * <br>
+ * <br>
+ * <b>Argument Syntax:</b> [string value]
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class StringParameter extends SenderIndependentParameter<String> {
     private final int maxUsage;
 

@@ -4,6 +4,7 @@ import io.github.disbatch.command.Command;
 import io.github.disbatch.command.exception.CommandRegistrationException;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.command.CommandSender;
 import org.bukkit.help.HelpMap;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ import java.util.*;
  * Holds various necessary and optional data that should be associated with a {@link Command} upon registration, such as
  * its label (required) and available aliases (optional).
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class CommandDescriptor {
     private final List<String> aliases = new LinkedList<>();
     private final CommandTopic topic;
@@ -26,24 +27,6 @@ public final class CommandDescriptor {
         this.topic = topic;
         this.validSenderMessage = validSenderMessage;
         this.aliases.addAll(Arrays.asList(aliases));
-    }
-
-    /**
-     * @param label
-     * @return
-     */
-    public static CommandDescriptor label(final @NotNull String label) {
-        return builder().label(label).build();
-    }
-
-    /**
-     * Creates a {@link Builder}.
-     *
-     * @return the created descriptor builder
-     * @see CommandDescriptor#label(String)
-     */
-    public static Builder builder() {
-        return new Builder();
     }
 
     public String getLabel() {
@@ -65,7 +48,7 @@ public final class CommandDescriptor {
     /**
      * Serves as a flexible solution for creating a new {@link CommandDescriptor}.
      */
-    @ApiStatus.AvailableSince("1.0")
+    @ApiStatus.AvailableSince("1.0.0")
     public static final class Builder {
         private static final Map<Class<? extends CommandTopic>, CommandTopicFinalizer<?>> FINALIZERS = new HashMap<>();
         private static final CommandTopicFinalizer<CommandTopic> DEFAULT_FINALIZER = new DefaultTopicFinalizer();
@@ -74,9 +57,6 @@ public final class CommandDescriptor {
         private String label;
         private String[] aliases = ArrayUtils.EMPTY_STRING_ARRAY;
         private String validSenderMessage = StringUtils.EMPTY;
-
-        private Builder() {
-        }
 
         static {
             FINALIZERS.put(GenericCommandTopic.class, new GenericCommandTopic.Finalizer());
@@ -167,6 +147,38 @@ public final class CommandDescriptor {
         @Override
         public CommandTopic finalize(final CommandTopic topic, final CommandDescriptor descriptor) {
             return topic;
+        }
+    }
+
+    private static class MutableCommandTopic implements CommandTopic {
+        private CommandTopic innerTopic;
+
+        MutableCommandTopic(final CommandTopic innerTopic) {
+            this.innerTopic = innerTopic;
+        }
+
+        @Override
+        public String applyAmendment(final String baseText, final String amendment) {
+            return innerTopic.applyAmendment(baseText, amendment);
+        }
+
+        @Override
+        public boolean canSee(final CommandSender forWho) {
+            return innerTopic.canSee(forWho);
+        }
+
+        @Override
+        public String getShortText() {
+            return innerTopic.getShortText();
+        }
+
+        @Override
+        public String getFullText(final CommandSender forWho) {
+            return innerTopic.getFullText(forWho);
+        }
+
+        void setTopic(final CommandTopic innerTopic) {
+            this.innerTopic = innerTopic;
         }
     }
 }

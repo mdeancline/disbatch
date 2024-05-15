@@ -2,7 +2,7 @@ package io.github.disbatch.command.decorator;
 
 import io.github.disbatch.command.Command;
 import io.github.disbatch.command.CommandInput;
-import io.github.disbatch.command.builder.CommandExecutor;
+import io.github.disbatch.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <S> {@inheritDoc}
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class NoArgumentsCommand<S extends CommandSender> extends CommandProxy<S> {
     private final CommandExecutor<S> noArgsExecutor;
 

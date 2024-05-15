@@ -10,9 +10,12 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Parses a {@link Location} for a passed {@link World} based on parsable, passed arguments.
+ * <br>
+ * <br>
+ * <b>Argument Syntax:</b> [world name] [x] [y] [z]
  */
-@ApiStatus.AvailableSince("1.0")
-public final class LocationByWorldParameter extends NumericParameter<CommandSender, Location> {
+@ApiStatus.AvailableSince("1.0.0")
+public final class LocationFromWorldParameter extends NumericParameter<CommandSender, Location> {
 
     @Override
     public @Nullable Location parse(final CommandSender sender, final CommandInput input) {

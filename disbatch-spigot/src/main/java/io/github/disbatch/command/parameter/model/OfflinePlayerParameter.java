@@ -11,8 +11,11 @@ import java.util.UUID;
 
 /**
  * Parses an {@link OfflinePlayer} based on a parsable, passed argument.
+ * <br>
+ * <br>
+ * <b>Argument Syntax:</b> [player name]
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class OfflinePlayerParameter extends UUIDOrientedParameter<CommandSender, OfflinePlayer> {
     
     @Override

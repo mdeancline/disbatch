@@ -1,18 +1,18 @@
-package io.github.disbatch.command.parameter.usage;
+package io.github.disbatch.command.parameter;
 
 import org.jetbrains.annotations.ApiStatus;
 
 /**
  * A namespace for {@link ParameterUsage} convenience and utility methods.
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class ParameterUsages {
     private ParameterUsages() {
         throw new AssertionError();
     }
 
     public static ParameterUsage withChevrons(final String baseMessage, final String... usageLabels) {
-        return ParameterUsage.builder()
+        return new ParameterUsage.Builder()
                 .baseMessage(baseMessage)
                 .labelHead('<')
                 .labelTail('>')
@@ -20,7 +20,7 @@ public final class ParameterUsages {
     }
 
     public static ParameterUsage withCurlyBraces(final String baseMessage, final String... usageLabels) {
-        return ParameterUsage.builder()
+        return new ParameterUsage.Builder()
                 .baseMessage(baseMessage)
                 .labelHead('{')
                 .labelTail('}')
@@ -28,7 +28,7 @@ public final class ParameterUsages {
     }
 
     public static ParameterUsage withSquareBraces(final String baseMessage, final String... usageLabels) {
-        return ParameterUsage.builder()
+        return new ParameterUsage.Builder()
                 .baseMessage(baseMessage)
                 .labelHead('[')
                 .labelTail(']')

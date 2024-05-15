@@ -1,8 +1,5 @@
-package io.github.disbatch.command.parameter.usage;
+package io.github.disbatch.command.parameter;
 
-import io.github.disbatch.command.parameter.InvalidInput;
-import io.github.disbatch.command.parameter.InvalidInputHandler;
-import io.github.disbatch.command.parameter.ParameterizedCommand;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.ApiStatus;
@@ -13,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * {@link ParameterizedCommand}.
  * @see Builder
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class ParameterUsage implements InvalidInputHandler<CommandSender> {
     private final String baseMessage;
     private final char labelHead;
@@ -25,15 +22,6 @@ public final class ParameterUsage implements InvalidInputHandler<CommandSender> 
         this.labelHead = labelHead;
         this.labelTail = labelTail;
         this.usageLabels = usageLabels;
-    }
-
-    /**
-     * Creates a new {@link Builder}.
-     *
-     * @return the created builder.
-     */
-    public static Builder builder() {
-        return new Builder();
     }
 
     @Override
@@ -54,9 +42,6 @@ public final class ParameterUsage implements InvalidInputHandler<CommandSender> 
         private char labelHead;
         private char labelTail;
         private String[] usageLabels = ArrayUtils.EMPTY_STRING_ARRAY;
-
-        private Builder() {
-        }
 
         /**
          * @param baseMessage the base message, optionally with the {@code %usage} placeholder

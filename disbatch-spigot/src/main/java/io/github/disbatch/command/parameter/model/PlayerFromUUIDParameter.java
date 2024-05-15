@@ -11,8 +11,11 @@ import java.util.UUID;
 
 /**
  * Parses an online {@link Player} by their {@link UUID} based on a parsable, passed argument.
+ * <br>
+ * <br>
+ * <b>Argument Syntax:</b> [uuid]
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class PlayerFromUUIDParameter extends UUIDOrientedParameter<CommandSender, Player> {
     
     @Override

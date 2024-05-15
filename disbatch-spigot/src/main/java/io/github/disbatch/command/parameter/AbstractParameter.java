@@ -1,8 +1,9 @@
-package io.github.disbatch.command.parameter.model;
+package io.github.disbatch.command.parameter;
 
 import io.github.disbatch.command.CommandInput;
-import io.github.disbatch.command.parameter.builder.Suggester;
-import io.github.disbatch.command.parameter.builder.Suggesters;
+import io.github.disbatch.command.parameter.Parameter;
+import io.github.disbatch.command.parameter.Suggester;
+import io.github.disbatch.command.parameter.Suggesters;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +18,7 @@ import java.util.Collection;
  * @param <V> {@inheritDoc}
  * @see #withSuggester(Suggester)
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public abstract class AbstractParameter<S extends CommandSender, V> implements Parameter<S, V> {
     private Suggester<S> suggester = Suggesters.empty();
 

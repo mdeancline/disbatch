@@ -8,8 +8,11 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Parses a {@link Vector} based on parsable, passed arguments.
+ * <br>
+ * <br>
+ * <b>Argument Syntax:</b> [x] [y] [z]
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class VectorParameter extends NumericParameter<CommandSender, Vector> {
     
     @Override

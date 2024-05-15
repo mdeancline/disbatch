@@ -1,8 +1,8 @@
 package io.github.disbatch;
 
 import io.github.disbatch.command.parameter.ParameterizedCommand;
-import io.github.disbatch.command.parameter.usage.ParameterUsage;
-import io.github.disbatch.command.parameter.usage.ParameterUsages;
+import io.github.disbatch.command.parameter.ParameterUsage;
+import io.github.disbatch.command.parameter.ParameterUsages;
 import io.github.disbatch.mock.DummyCommandLine;
 import io.github.disbatch.mock.EntityTypeCaseInsensitiveCommand;
 import io.github.disbatch.mock.EntityTypeCaseSensitiveCommand;

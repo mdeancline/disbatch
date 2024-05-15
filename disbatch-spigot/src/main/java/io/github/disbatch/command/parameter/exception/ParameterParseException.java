@@ -1,7 +1,7 @@
 package io.github.disbatch.command.parameter.exception;
 
 import io.github.disbatch.command.CommandInput;
-import io.github.disbatch.command.parameter.model.Parameter;
+import io.github.disbatch.command.parameter.Parameter;
 
 /**
  * Thrown when there is an unexpected issue with a {@link Parameter} parsing a {@link CommandInput}.

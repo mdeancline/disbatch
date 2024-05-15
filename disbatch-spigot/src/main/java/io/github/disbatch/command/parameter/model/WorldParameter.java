@@ -8,8 +8,11 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Parses a {@link World} based on a parsable, passed argument.
+ * <br>
+ * <br>
+ * <b>Argument Syntax:</b> [world name]
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class WorldParameter extends SenderIndependentParameter<World> {
     
     @Override

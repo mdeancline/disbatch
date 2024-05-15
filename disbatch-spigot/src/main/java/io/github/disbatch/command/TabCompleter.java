@@ -1,7 +1,5 @@
-package io.github.disbatch.command.builder;
+package io.github.disbatch.command;
 
-import io.github.disbatch.command.Command;
-import io.github.disbatch.command.CommandInput;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -14,7 +12,7 @@ import java.util.List;
  * @apiNote Not to be confused with {@link org.bukkit.command.TabCompleter}.
  */
 @FunctionalInterface
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public interface TabCompleter<S extends CommandSender> {
 
     /**

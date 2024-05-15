@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import io.github.disbatch.command.CommandInput;
 import io.github.disbatch.command.parameter.exception.ParameterException;
 import io.github.disbatch.command.parameter.exception.ParameterParseException;
-import io.github.disbatch.command.parameter.model.Parameter;
+import io.github.disbatch.command.parameter.Parameter;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +20,7 @@ import java.util.StringJoiner;
  * @param <S> {@inheritDoc}
  * @param <V> {@inheritDoc}
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class MutableParameter<S extends CommandSender, V> implements Parameter<S, V> {
     private static final Parameter<?, ?> EMPTY = new EmptyParameter();
 

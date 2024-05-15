@@ -6,7 +6,7 @@ import org.jetbrains.annotations.ApiStatus;
 /**
  * Holds various components of the command line used to execute a specific {@link Command}.
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public interface CommandInput {
 
     /**

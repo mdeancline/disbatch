@@ -7,7 +7,7 @@ import java.util.Locale;
 /**
  * A namespace for {@link EnumConverter} convenience and utility methods.
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class EnumConverters {
     private static EnumConverter<?> LOWERCASE_INSENSITIVE;
     private static EnumConverter<?> UPPERCASE_INSENSITIVE;

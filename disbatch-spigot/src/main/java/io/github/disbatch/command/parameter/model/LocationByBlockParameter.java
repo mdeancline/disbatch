@@ -9,8 +9,11 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Parses a {@link Location} for the {@link BlockCommandSender}'s {@link World} based on parsable, passed arguments.
+ * <br>
+ * <br>
+ * <b>Argument Syntax:</b> [x] [y] [z]
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class LocationByBlockParameter extends NumericParameter<BlockCommandSender, Location> {
 
     @Override

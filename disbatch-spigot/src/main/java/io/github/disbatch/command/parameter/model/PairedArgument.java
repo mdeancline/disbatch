@@ -1,4 +1,4 @@
-package io.github.disbatch.command.parameter.model.paired;
+package io.github.disbatch.command.parameter.model;
 
 import io.github.disbatch.command.parameter.ParameterizedCommand;
 import org.jetbrains.annotations.ApiStatus;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.ApiStatus;
  * @param <F> type of the first {@code Object} argument
  * @param <L> type of the last {@code Object} argument
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class PairedArgument<F, L> {
     private final F first;
     private final L last;

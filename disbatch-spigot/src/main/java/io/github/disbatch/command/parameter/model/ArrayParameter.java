@@ -1,9 +1,9 @@
-package io.github.disbatch.command.parameter.model.array;
+package io.github.disbatch.command.parameter.model;
 
 import io.github.disbatch.command.CommandInput;
-import io.github.disbatch.command.parameter.model.Parameter;
+import io.github.disbatch.command.exception.ArgumentIndexOutOfBoundsException;
+import io.github.disbatch.command.parameter.Parameter;
 import org.bukkit.command.CommandSender;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +16,7 @@ import java.util.Collection;
  * @param <S> {@inheritDoc}
  * @param <V> {@inheritDoc}
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class ArrayParameter<S extends CommandSender, V> implements Parameter<S, V[]> {
     private static final String WHITESPACE = " ";
 
@@ -71,5 +71,54 @@ public final class ArrayParameter<S extends CommandSender, V> implements Paramet
     @Override
     public int getMaximumUsage() {
         return Math.min(innerParameter.getMaximumUsage() * maxUsageMultiple, Integer.MAX_VALUE);
+    }
+
+    static class SelectedArgumentsInput implements CommandInput {
+        private final CommandInput original;
+        private final String[] selectedArgs;
+        private String argumentLine;
+        private String commandLine;
+
+        SelectedArgumentsInput(final CommandInput original, final String[] selectedArgs) {
+            this.original = original;
+            this.selectedArgs = selectedArgs;
+        }
+
+        @Override
+        public int getArgumentLength() {
+            return selectedArgs.length;
+        }
+
+        @Override
+        public String getArgumentLine() {
+            return argumentLine == null
+                    ? (argumentLine = String.join(" "))
+                    : argumentLine;
+        }
+
+        @Override
+        public String getArgument(final int index) {
+            if (index < 0 || index >= selectedArgs.length)
+                throw new ArgumentIndexOutOfBoundsException(index);
+
+            return selectedArgs[index];
+        }
+
+        @Override
+        public String[] getArguments() {
+            return selectedArgs;
+        }
+
+        @Override
+        public String getCommandLabel() {
+            return original.getCommandLabel();
+        }
+
+        @Override
+        public String getCommandLine() {
+            return commandLine == null
+                    ? (commandLine = original.getCommandLabel() + " " + getArgumentLine())
+                    : commandLine;
+        }
     }
 }

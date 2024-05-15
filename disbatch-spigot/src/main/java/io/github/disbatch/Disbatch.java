@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The primary namespace dedicated to registering a {@link Command}.
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class Disbatch {
     private static final CommandRegistrar REGISTRAR = new LegacyCommandRegistrar(Bukkit.getServer());
 
@@ -25,8 +25,20 @@ public final class Disbatch {
     /**
      * Registers a {@link Command} to be used on the Spigot Minecraft server.
      *
-     * @param command the {@link Command} to be registered.
-     * @param descriptor the descriptor aiding in providing usage help in the server's {@code /help} menu.
+     * @param command the {@code Command} to be registered.
+     * @param label the label that should be used to execute the {@code Command}.
+     * @see Disbatch#register(Command, CommandDescriptor)
+     */
+    public static void register(final @NotNull Command<?> command, final @NotNull String label) {
+        register(command, new CommandDescriptor.Builder().label(label).build());
+    }
+
+    /**
+     * Registers a {@link Command} to be used on the Spigot Minecraft server.
+     *
+     * @param command the {@code Command} to be registered.
+     * @param descriptor the {@link CommandDescriptor} aiding in providing usage help in the server's {@code /help} menu.
+     * @see Disbatch#register(Command, String)
      */
     public static void register(final @NotNull Command<?> command, final @NotNull CommandDescriptor descriptor) {
         REGISTRAR.register(new TypedCommandProxy(command, descriptor.getValidSenderMessage()), descriptor);
@@ -35,9 +47,22 @@ public final class Disbatch {
     /**
      * Registers a {@link Command} to be used on the Spigot Minecraft server pertaining to a specific {@link JavaPlugin}.
      *
-     * @param command the {@link Command} to be registered.
-     * @param descriptor the descriptor aiding in providing usage help in the server's {@code /help} menu.
-     * @param plugin the plugin chosen to have the given {@link Command} registered.
+     * @param command the {@code Command} to be registered.
+     * @param label the label that should be used to execute the {@code Command}.
+     * @param plugin the plugin chosen to have the given {@code Command} registered.
+     * @see Disbatch#register(Command, CommandDescriptor, JavaPlugin)
+     */
+    public static void register(final @NotNull Command<?> command, final @NotNull String label, final @NotNull JavaPlugin plugin) {
+        register(command, new CommandDescriptor.Builder().label(label).build(), plugin);
+    }
+
+    /**
+     * Registers a {@link Command} to be used on the Spigot Minecraft server pertaining to a specific {@link JavaPlugin}.
+     *
+     * @param command the {@code Command} to be registered.
+     * @param descriptor the {@link CommandDescriptor} aiding in providing usage help in the server's {@code /help} menu.
+     * @param plugin the plugin chosen to have the given {@code Command} registered.
+     * @see Disbatch#register(Command, String, JavaPlugin)
      */
     public static void register(final @NotNull Command<?> command, final @NotNull CommandDescriptor descriptor, final @NotNull JavaPlugin plugin) {
         setupPluginCommandExecution(command, descriptor, plugin);

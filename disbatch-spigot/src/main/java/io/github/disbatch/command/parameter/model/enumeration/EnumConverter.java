@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
  * @apiNote This should only be used in conjunction with {@link EnumParameter}.
  */
 @FunctionalInterface
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public interface EnumConverter<E extends Enum<E>> {
 
     /**

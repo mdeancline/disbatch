@@ -12,7 +12,7 @@ import org.jetbrains.annotations.ApiStatus;
  * @apiNote This simplifies and offers more flexibility for commands than {@link org.bukkit.help.HelpTopic}, such as not
  * having to define a topic name and accounting for multiple {@link CommandSender} types.
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public interface CommandTopic {
 
     /**

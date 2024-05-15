@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @param <S>
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class ReasonBasedHandler<S extends CommandSender> implements InvalidInputHandler<S> {
     private final Map<InvalidInput.Reason, InvalidInputHandler<S>> handlers = new EnumMap<>(InvalidInput.Reason.class);
     private final InvalidInputHandler<S> fallback;

@@ -2,11 +2,10 @@ package io.github.disbatch.command;
 
 import com.google.common.collect.ImmutableList;
 import io.github.disbatch.Disbatch;
-import io.github.disbatch.command.builder.CommandBuilder;
 import io.github.disbatch.command.descriptor.CommandDescriptor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ import java.util.List;
  * @apiNote Not to be confused with {@link org.bukkit.command.Command}.
  * @see Disbatch#register(Command, CommandDescriptor)
  * @see Disbatch#register(Command, CommandDescriptor, JavaPlugin)
- * @see CommandBuilder
+ * @see Command.Builder
  */
 public interface Command<S extends CommandSender> {
 
@@ -39,5 +38,54 @@ public interface Command<S extends CommandSender> {
      */
     default List<String> tabComplete(final S sender, final CommandInput input) {
         return ImmutableList.of();
+    }
+
+    /**
+     * Serves as a flexible solution for creating a new {@link Command} without defining an anonymous or explicit abstraction.
+     *
+     * @param <S> any type extending {@link CommandSender} that can safely execute any built {@link Command}.
+     */
+    final class Builder<S extends CommandSender> {
+        private CommandExecutor<S> executor;
+        private TabCompleter<S> tabCompleter = TabCompleters.empty();
+
+        public Builder<S> executor(final @NotNull CommandExecutor<S> executor) {
+            this.executor = executor;
+            return this;
+        }
+
+        public Builder<S> tabCompleter(final @NotNull TabCompleter<S> tabCompleter) {
+            this.tabCompleter = tabCompleter;
+            return this;
+        }
+
+        /**
+         * Creates a new {@link Command}.
+         *
+         * @return the created {@code Command}.
+         */
+        public Command<S> build() {
+            return new BuiltCommand<>(executor, tabCompleter);
+        }
+
+        private static class BuiltCommand<S extends CommandSender> implements Command<S> {
+            private final CommandExecutor<S> executor;
+            private final TabCompleter<S> tabCompleter;
+
+            private BuiltCommand(final @NotNull CommandExecutor<S> executor, final @NotNull TabCompleter<S> tabCompleter) {
+                this.executor = executor;
+                this.tabCompleter = tabCompleter;
+            }
+
+            @Override
+            public void execute(final S sender, final CommandInput input) {
+                executor.execute(sender, input);
+            }
+
+            @Override
+            public List<String> tabComplete(final S sender, final CommandInput input) {
+                return tabCompleter.tabComplete(sender, input);
+            }
+        }
     }
 }

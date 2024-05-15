@@ -2,6 +2,7 @@ package io.github.disbatch.command.parameter.model;
 
 import io.github.disbatch.command.CommandInput;
 import io.github.disbatch.command.exception.ArgumentIndexOutOfBoundsException;
+import io.github.disbatch.command.parameter.AbstractParameter;
 import io.github.disbatch.command.parameter.ParameterizedCommand;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.ApiStatus;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.ApiStatus;
  * @param <S> {@inheritDoc}
  * @param <V> {@inheritDoc}
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public abstract class NumericParameter<S extends CommandSender, V> extends AbstractParameter<S, V> {
     private static final String NUMBER_REGEX = "-?\\d+(\\.\\d+)?";
     private static final String DECIMAL = ".";

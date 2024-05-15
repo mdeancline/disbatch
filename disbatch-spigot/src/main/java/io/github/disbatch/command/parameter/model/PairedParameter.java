@@ -1,8 +1,9 @@
-package io.github.disbatch.command.parameter.model.paired;
+package io.github.disbatch.command.parameter.model;
 
 import io.github.disbatch.command.CommandInput;
+import io.github.disbatch.command.exception.ArgumentIndexOutOfBoundsException;
 import io.github.disbatch.command.parameter.ParameterizedCommand;
-import io.github.disbatch.command.parameter.model.Parameter;
+import io.github.disbatch.command.parameter.Parameter;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -18,13 +19,13 @@ import java.util.Collection;
  * @param <F> type of the first {@code Object} argument
  * @param <L> type of the last {@code Object} argument
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class PairedParameter<S extends CommandSender, F, L> implements Parameter<S, PairedArgument<F, L>> {
     private final Parameter<? super S, F> first;
     private final Parameter<? super S, L> last;
 
     /**
-     * Creates a new {@code PairedParameter}.
+     * Creates a new {@link PairedParameter}.
      *
      * @param first the first {@code Parameter} that will produce the first {@code Object} argument
      * @param last  the last {@code Parameter} that will produce the last {@code Object} argument
@@ -60,5 +61,54 @@ public final class PairedParameter<S extends CommandSender, F, L> implements Par
     @Override
     public int getMaximumUsage() {
         return Math.min(first.getMaximumUsage() + last.getMaximumUsage(), Integer.MAX_VALUE);
+    }
+
+    static class ReducedArgumentsInput implements CommandInput {
+        private final Parameter<?, ?> first;
+        private final CommandInput original;
+        private String[] arguments;
+
+        ReducedArgumentsInput(final Parameter<?, ?> first, final CommandInput original) {
+            this.first = first;
+            this.original = original;
+        }
+
+        @Override
+        public int getArgumentLength() {
+            return original.getArgumentLength() - first.getMaximumUsage();
+        }
+
+        @Override
+        public String getArgumentLine() {
+            return original.getArgumentLine();
+        }
+
+        @Override
+        public String getArgument(final int index) {
+            if (index < 0 || index >= getArgumentLength())
+                throw new ArgumentIndexOutOfBoundsException(index);
+
+            return getArguments()[index];
+        }
+
+        @Override
+        public String[] getArguments() {
+            if (arguments == null) {
+                final String[] arguments = (this.arguments = new String[0]);
+                System.arraycopy(original.getArguments(), first.getMaximumUsage() - 1, arguments, 0, getArgumentLength());
+            }
+
+            return arguments;
+        }
+
+        @Override
+        public String getCommandLabel() {
+            return original.getCommandLabel();
+        }
+
+        @Override
+        public String getCommandLine() {
+            return original.getCommandLine();
+        }
     }
 }

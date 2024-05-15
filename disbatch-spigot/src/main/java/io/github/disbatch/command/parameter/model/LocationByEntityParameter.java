@@ -10,10 +10,13 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Parses a {@link Location} for the {@link Entity} sender's {@link World} based on parsable, passed arguments.
+ * <br>
+ * <br>
+ * <b>Argument Syntax:</b> [x] [y] [z]
  *
  * @param <S> the {@code Entity} type to create a {@code Location} from
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class LocationByEntityParameter<S extends Entity> extends NumericParameter<S, Location> {
 
     @Override

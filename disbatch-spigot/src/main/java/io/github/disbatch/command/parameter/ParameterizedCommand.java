@@ -1,10 +1,8 @@
 package io.github.disbatch.command.parameter;
 
 import com.google.common.collect.ImmutableList;
-import io.github.disbatch.command.Command;
-import io.github.disbatch.command.CommandInput;
+import io.github.disbatch.command.*;
 import io.github.disbatch.command.parameter.exception.InvalidParameterException;
-import io.github.disbatch.command.parameter.model.Parameter;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -18,11 +16,11 @@ import java.util.List;
  * {@link InvalidInputHandler} will be used to take control of that situation.
  *
  * @param <S> {@inheritDoc}
- * @param <V> the type from the resulting {@code Object} parsed from a set from arguments
+ * @param <V> the type from the resulting {@code Object} parsed from a set from arguments.
  * @see #execute(CommandSender, Object, CommandInput)
  * @see Parameter
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public abstract class ParameterizedCommand<S extends CommandSender, V> implements Command<S> {
     private final Parameter<? super S, V> parameter;
     private final InvalidInputHandler<? super S> handler;
@@ -83,5 +81,100 @@ public abstract class ParameterizedCommand<S extends CommandSender, V> implement
         return input.getArgumentLength() <= parameter.getMaximumUsage()
                 ? new LinkedList<>(parameter.getSuggestions(sender, input))
                 : ImmutableList.of();
+    }
+
+    /**
+     * Serves as a flexible solution for creating a new {@link ParameterizedCommand} without defining an anonymous or explicit abstraction.
+     *
+     * @param <S> any type extending {@link CommandSender} that can safely execute any built {@link ParameterizedCommand}.
+     */
+    @ApiStatus.AvailableSince("1.0.0")
+    public static final class Builder<S extends CommandSender, V> {
+        private Parameter<? super S, V> parameter;
+        private InvalidInputHandler<? super S> handler;
+        private ParameterizedCommandExecutor<S, V> executor;
+
+        public Builder<S, V> parameter(final @NotNull Parameter<? super S, V> parameter) {
+            this.parameter = parameter;
+            return this;
+        }
+
+        public Builder<S, V> executor(final @NotNull ParameterizedCommandExecutor<S, V> executor) {
+            this.executor = executor;
+            return this;
+        }
+
+        public Builder<S, V> invalidInputHandler(final @NotNull InvalidInputHandler<? super S> handler) {
+            this.handler = handler;
+            return this;
+        }
+
+        /**
+         * Creates a new {@link ParameterizedCommand}.
+         *
+         * @return the created {@code ParameterizedCommand}.
+         */
+        public ParameterizedCommand<S, V> build() {
+            return new BuiltCommand<>(parameter, handler, executor);
+        }
+
+        private static class BuiltCommand<S extends CommandSender, V> extends ParameterizedCommand<S, V> {
+            private final ParameterizedCommandExecutor<S, V> executor;
+
+            private BuiltCommand(final @NotNull Parameter<? super S, V> parameter, final @NotNull InvalidInputHandler<? super S> handler, @NotNull ParameterizedCommandExecutor<S, V> executor) {
+                super(parameter, handler);
+                this.executor = executor;
+            }
+
+            @Override
+            protected void execute(S sender, V argument, CommandInput input) {
+                executor.execute(sender, argument, input);
+            }
+        }
+    }
+
+    private static class InvalidInputImpl implements InvalidInput {
+        private final CommandInput original;
+        private final Reason reason;
+
+        InvalidInputImpl(final CommandInput original, final Reason reason) {
+            this.original = original;
+            this.reason = reason;
+        }
+
+        @Override
+        public int getArgumentLength() {
+            return original.getArgumentLength();
+        }
+
+        @Override
+        public String getArgumentLine() {
+            return original.getArgumentLine();
+        }
+
+        @Override
+        public String getArgument(final int index) {
+            return original.getArgument(index);
+        }
+
+        @Override
+        public String[] getArguments() {
+            return original.getArguments();
+        }
+
+        @Override
+        public String getCommandLabel() {
+            return original.getCommandLabel();
+        }
+
+        @Override
+        public String getCommandLine() {
+            return original.getCommandLine();
+        }
+
+        @Override
+        public Reason getReason() {
+            return reason;
+        }
     }
 }

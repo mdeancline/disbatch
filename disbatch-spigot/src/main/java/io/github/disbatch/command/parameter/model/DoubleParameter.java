@@ -8,6 +8,9 @@ import java.util.UUID;
 
 /**
  * Parses a {@link Double} based on a parsable, passed argument.
+ * <br>
+ * <br>
+ * <b>Argument Syntax:</b> [decimal number]
  */
 public final class DoubleParameter extends NumericParameter<CommandSender, Double> {
     

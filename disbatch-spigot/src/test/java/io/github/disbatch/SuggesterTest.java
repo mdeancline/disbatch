@@ -1,7 +1,7 @@
 package io.github.disbatch;
 
-import io.github.disbatch.command.parameter.builder.Suggester;
-import io.github.disbatch.command.parameter.builder.Suggesters;
+import io.github.disbatch.command.parameter.Suggester;
+import io.github.disbatch.command.parameter.Suggesters;
 import io.github.disbatch.mock.DummyCommandLine;
 import org.bukkit.command.CommandSender;
 import org.easymock.EasyMockSupport;

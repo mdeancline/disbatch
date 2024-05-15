@@ -2,10 +2,10 @@ package io.github.disbatch.mock;
 
 import io.github.disbatch.command.CommandInput;
 import io.github.disbatch.command.parameter.ParameterizedCommand;
-import io.github.disbatch.command.parameter.builder.Suggesters;
+import io.github.disbatch.command.parameter.Suggesters;
 import io.github.disbatch.command.parameter.model.enumeration.EnumConverters;
 import io.github.disbatch.command.parameter.model.enumeration.EnumParameter;
-import io.github.disbatch.command.parameter.usage.ParameterUsage;
+import io.github.disbatch.command.parameter.ParameterUsage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;

@@ -14,7 +14,7 @@ import java.util.List;
 /**
  *
  */
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("1.0.0")
 public final class GenericCommandTopic implements CommandTopic {
     private static final String LABEL_PLACEHOLDER = "%label";
     private static final String ALIASES_PLACEHOLDER = "%aliases";
