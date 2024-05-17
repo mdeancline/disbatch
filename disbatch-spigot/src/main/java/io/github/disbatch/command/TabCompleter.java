@@ -6,7 +6,7 @@ import org.jetbrains.annotations.ApiStatus;
 import java.util.List;
 
 /**
- * Responsible for the tab completion of any {@link Command} created from a {@link CommandBuilder}.
+ * Responsible for the tab completion of any {@link Command} created from a {@link Command.Builder}.
  *
  * @param <S> any type extending {@link CommandSender} that can safely perform tab completion.
  * @apiNote Not to be confused with {@link org.bukkit.command.TabCompleter}.
