@@ -14,6 +14,8 @@ import java.util.*;
 /**
  * Holds various necessary and optional data that should be associated with a {@link Command} upon registration, such as
  * its label (required) and available aliases (optional).
+ *
+ * @apiNote A {@code CommandDescriptor} can only be created with a {@link CommandDescriptor.Builder}.
  */
 @ApiStatus.AvailableSince("1.0.0")
 public final class CommandDescriptor {
@@ -46,7 +48,7 @@ public final class CommandDescriptor {
     }
 
     /**
-     * Serves as a flexible solution for creating a new {@link CommandDescriptor}.
+     * Serves as the flexible solution for creating a new {@link CommandDescriptor}.
      */
     @ApiStatus.AvailableSince("1.0.0")
     public static final class Builder {
