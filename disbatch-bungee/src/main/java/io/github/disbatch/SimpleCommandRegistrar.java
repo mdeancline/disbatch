@@ -5,11 +5,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import io.github.disbatch.command.Command;
 import io.github.disbatch.command.CommandInput;
+import io.github.disbatch.command.ConsoleCommandSender;
 import io.github.disbatch.command.decorator.CommandProxy;
 import io.github.disbatch.command.descriptor.CommandDescriptor;
 import io.github.disbatch.command.exception.ArgumentIndexOutOfBoundsException;
 import io.github.disbatch.command.exception.CommandExecutionException;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +42,8 @@ class SimpleCommandRegistrar implements CommandRegistrar {
     }
 
     private static class CommandAdapter extends net.md_5.bungee.api.plugin.Command implements TabExecutor {
+        private static final String BUNGEE_CONSOLE_CLASS_NAME = "net.md_5.bungee.command.ConsoleCommandSender";
+
         private final TypedCommandProxy typedCommand;
 
         private CommandAdapter(final TypedCommandProxy typedCommand, final CommandDescriptor descriptor) {
@@ -52,7 +56,14 @@ class SimpleCommandRegistrar implements CommandRegistrar {
             if (sender == null)
                 throw new CommandExecutionException("CommandSender is null");
 
-            typedCommand.execute(sender, computeInput(getName(), args));
+            typedCommand.execute(checkForConsole(sender), computeInput(getName(), args));
+        }
+
+        private CommandSender checkForConsole(final CommandSender sender) {
+            if (sender.getClass().getName().equals(BUNGEE_CONSOLE_CLASS_NAME))
+                return new ConsoleAdapter(sender);
+
+            return sender;
         }
 
         private CommandInput computeInput(final String label, final String[] args) {
@@ -67,6 +78,69 @@ class SimpleCommandRegistrar implements CommandRegistrar {
         @Override
         public String toString() {
             return typedCommand.toString();
+        }
+    }
+
+    private static class ConsoleAdapter implements ConsoleCommandSender {
+        private final CommandSender consoleSender;
+
+        private ConsoleAdapter(final CommandSender consoleSender) {
+            this.consoleSender = consoleSender;
+        }
+
+        @Override
+        public String getName() {
+            return consoleSender.getName();
+        }
+
+        @Override
+        public void sendMessage(String message) {
+            consoleSender.sendMessage(message);
+        }
+
+        @Override
+        public void sendMessages(String... messages) {
+            consoleSender.sendMessages(messages);
+        }
+
+        @Override
+        public void sendMessage(BaseComponent... message) {
+            consoleSender.sendMessage(message);
+        }
+
+        @Override
+        public void sendMessage(BaseComponent message) {
+            consoleSender.sendMessage(message);
+        }
+
+        @Override
+        public Collection<String> getGroups() {
+            return consoleSender.getGroups();
+        }
+
+        @Override
+        public void addGroups(String... groups) {
+            consoleSender.addGroups(groups);
+        }
+
+        @Override
+        public void removeGroups(String... groups) {
+            consoleSender.removeGroups(groups);
+        }
+
+        @Override
+        public boolean hasPermission(String permission) {
+            return consoleSender.hasPermission(permission);
+        }
+
+        @Override
+        public void setPermission(String permission, boolean value) {
+            consoleSender.setPermission(permission, value);
+        }
+
+        @Override
+        public Collection<String> getPermissions() {
+            return consoleSender.getPermissions();
         }
     }
 
