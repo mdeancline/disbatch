@@ -14,6 +14,9 @@ public class DisbatchPlugin extends Plugin {
         registrar.register(new PlayerCommand(), new CommandDescriptor.Builder()
                 .label("player")
                 .build());
+        registrar.register(new ConsoleCommand(), new CommandDescriptor.Builder()
+                .label("console")
+                .build());
 
         registrar.register(new InvitePlayersCommand(), "invite");
     }
