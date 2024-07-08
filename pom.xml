@@ -11,6 +11,7 @@
 
     <modules>
         <module>disbatch-spigot</module>
+        <module>disbatch-bungee</module>
     </modules>
 
     <properties>
