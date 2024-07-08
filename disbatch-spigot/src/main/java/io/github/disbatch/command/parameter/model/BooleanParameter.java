@@ -1,8 +1,6 @@
 package io.github.disbatch.command.parameter.model;
 
 import io.github.disbatch.command.CommandInput;
-import io.github.disbatch.command.TabCompleter;
-import io.github.disbatch.command.TabCompleters;
 import io.github.disbatch.command.parameter.Parameter;
 import org.bukkit.command.CommandSender;
 

@@ -1,12 +1,9 @@
 package io.github.disbatch.command.parameter.model;
 
 import io.github.disbatch.command.CommandInput;
-import io.github.disbatch.command.TabCompleter;
-import io.github.disbatch.command.TabCompleters;
 import io.github.disbatch.command.parameter.Parameter;
 import net.md_5.bungee.api.CommandSender;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
