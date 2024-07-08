@@ -5,7 +5,6 @@ import io.github.disbatch.command.exception.ArgumentIndexOutOfBoundsException;
 import io.github.disbatch.command.parameter.InvalidInputHandler;
 import io.github.disbatch.command.parameter.Parameter;
 import io.github.disbatch.command.parameter.ParameterizedCommand;
-import io.github.disbatch.command.parameter.Suggesters;
 import io.github.disbatch.command.parameter.decorator.MutableParameter;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +38,7 @@ public final class CommandGroup<S extends CommandSender> extends ParameterizedCo
                             ? null
                             : new GroupedCommandExecutor<>(groupedCommand, input);
                 })
-                .suggester(Suggesters.forFirstArgument(Suggesters.of(commands.keySet())))
+                .tabCompleter(TabCompleters.forFirstArgument(TabCompleters.of(commands.keySet())))
                 .build());
     }
 

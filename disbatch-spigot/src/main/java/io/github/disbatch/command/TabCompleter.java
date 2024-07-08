@@ -2,7 +2,7 @@ package io.github.disbatch.command;
 
 import org.bukkit.command.CommandSender;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Responsible for the tab completion of any {@link Command} created from a {@link Command.Builder}.
@@ -16,11 +16,11 @@ import java.util.List;
 public interface TabCompleter<S extends CommandSender> {
 
     /**
-     * Executed on tab completion, returning a {@code List} of argument options the {@link CommandSender} can tab through.
+     * Executed on tab completion, returning a {@code Collection} of argument options the {@link CommandSender} can tab through.
      *
      * @param sender the {@link CommandSender} responsible for initiating a tab completion.
      * @param input  the {@link CommandInput} present from tab completion.
-     * @return a list of tab completions for the specified arguments, which may be empty or immutable.
+     * @return a collection of tab completions for the specified arguments, which may be empty or immutable.
      */
-    List<String> tabComplete(S sender, CommandInput input);
+    Collection<String> tabComplete(S sender, CommandInput input);
 }

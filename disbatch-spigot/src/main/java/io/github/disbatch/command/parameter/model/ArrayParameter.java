@@ -53,14 +53,14 @@ public final class ArrayParameter<S extends CommandSender, V> implements Paramet
     }
 
     @Override
-    public Collection<String> getSuggestions(final S sender, final CommandInput input) {
+    public Collection<String> tabComplete(final S sender, final CommandInput input) {
         final int argLength = input.getArgumentLength();
         final int remainder = argLength % innerParameter.getMaximumUsage();
         final int beginIndex = (argLength - remainder) - 1;
         final String selectedArgLine = input.getArgumentLine().substring(beginIndex, argLength - 1);
         final String[] selectedArgs = selectedArgLine.split(WHITESPACE);
 
-        return innerParameter.getSuggestions(sender, new SelectedArgumentsInput(input, selectedArgs));
+        return innerParameter.tabComplete(sender, new SelectedArgumentsInput(input, selectedArgs));
     }
 
     @Override

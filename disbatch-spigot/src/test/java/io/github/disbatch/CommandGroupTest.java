@@ -62,6 +62,6 @@ public class CommandGroupTest extends EasyMockSupport {
 
     @Test
     public void testGroupedCommandInput() {
-        cmdGroup.execute(senderMock, new SingleLabelCommandInput("cmd"));
+        cmdGroup.execute(senderMock, new SimpleCommandRegistrar.SingleLabelCommandInput("cmd"));
     }
 }

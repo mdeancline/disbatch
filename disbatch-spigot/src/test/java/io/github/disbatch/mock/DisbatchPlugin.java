@@ -1,6 +1,7 @@
 package io.github.disbatch.mock;
 
-import io.github.disbatch.Disbatch;
+import io.github.disbatch.CommandRegistrar;
+import io.github.disbatch.CommandRegistrars;
 import io.github.disbatch.InvitePlayersCommand;
 import io.github.disbatch.TeleportCommand;
 import io.github.disbatch.command.CommandGroup;
@@ -11,13 +12,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class DisbatchPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
-        Disbatch.register(new PlayerCommand(), new CommandDescriptor.Builder()
+        final CommandRegistrar registrar = CommandRegistrars.getCompatibleRegistrar(this);
+
+        registrar.register(new PlayerCommand(), new CommandDescriptor.Builder()
                 .label("player")
                 .topic(new PlayerCommandTopic())
                 .build());
 
-        Disbatch.register(new TeleportCommand(), "teleport");
-        Disbatch.register(new InvitePlayersCommand(), "invite");
+        registrar.register(new TeleportCommand(), "teleport");
+        registrar.register(new InvitePlayersCommand(), "invite");
 
         final CommandGroup<?> entityTypeCmdGroup = new CommandGroup<>(new ParameterUsage.Builder()
                 .usageLabels("enum sensitivity", "entity name")
@@ -29,7 +32,7 @@ public class DisbatchPlugin extends JavaPlugin {
                         .usageLabels("name")
                         .build()), "sensitive");
 
-        Disbatch.register(entityTypeCmdGroup, "entitytype");
-        Disbatch.register(new InvitePlayersCommand(), "invite");
+        registrar.register(entityTypeCmdGroup, "entitytype");
+        registrar.register(new InvitePlayersCommand(), "invite");
     }
 }

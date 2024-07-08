@@ -47,10 +47,10 @@ public final class PairedParameter<S extends CommandSender, F, L> implements Par
     }
 
     @Override
-    public Collection<String> getSuggestions(final S sender, final CommandInput input) {
+    public Collection<String> tabComplete(final S sender, final CommandInput input) {
         return input.getArgumentLength() < first.getMaximumUsage()
-                ? first.getSuggestions(sender, input)
-                : last.getSuggestions(sender, new ReducedArgumentsInput(first, input));
+                ? first.tabComplete(sender, input)
+                : last.tabComplete(sender, new ReducedArgumentsInput(first, input));
     }
 
     @Override

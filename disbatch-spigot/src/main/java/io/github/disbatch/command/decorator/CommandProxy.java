@@ -5,7 +5,7 @@ import io.github.disbatch.command.CommandInput;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * An abstraction for proxying any {@link Command}. Any method calls that should be delegated to the proxied
@@ -29,7 +29,7 @@ public abstract class CommandProxy<S extends CommandSender> implements Command<S
     }
 
     @Override
-    public List<String> tabComplete(final S sender, final CommandInput input) {
+    public Collection<String> tabComplete(final S sender, final CommandInput input) {
         return innerCommand.tabComplete(sender, input);
     }
 

@@ -1,6 +1,7 @@
 package io.github.disbatch.command.parameter.model.enumeration;
 
 import io.github.disbatch.command.CommandInput;
+import io.github.disbatch.command.TabCompleters;
 import io.github.disbatch.command.parameter.AbstractParameter;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -10,10 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Parses an enum based on a parsable, passed argument.
+ * Parses an {@code Enum} type based on a parsable, passed argument.
  *
  * @param <S> {@inheritDoc}
  * @param <E> {@inheritDoc}
+ *           
+ * @see TabCompleters#of(Enum[]) 
  *
  * @since 1.0.0
  */

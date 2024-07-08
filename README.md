@@ -54,18 +54,18 @@ final Command<Player> playerCmd = new Command.Builder<Player>()
 # Registering Commands
 For a command to be recognized by the server, it must be registered. Commands created with the Disbatch library can be registered without your project containing a `plugin.yml` file.
 
-Using the previous player command example, below are examples of registering a command whether a `plugin.yml` file is present or not.
+Using the previous player command example, below are examples of registering a command whether a `plugin.yml` file is present or not. Note that both examples assume you are running the code inside your plugin's `onEnable` method.
 
 Without it:
 ```java
-Disbatch.register(playerCmd, "player");
+final CommandRegistrar registrar = CommandRegistrars.getCompatibleRegistrar(this);
+registrar.register(playerCmd, "player");
 ```
 
 With it:
 ```java
-// this method of registering a command should be done in the JavaPlugin onEnable method of your
-// main class
-Disbatch.register(playerCmd, "player", this);
+final CommandRegistrar registrar = CommandRegistrars.getCompatibleRegistrar(this);
+registrar.registerFromFile(playerCmd, "player");
 ```
 
 Either of these utility methods will register a command to the server so that it can be executed when `/player` is typed in the chat. However, this will not work if `player` is typed in the server's console, as the `CommandSender` generic type defined in both creation examples is aimed at a `Player`. If you wish to target every `CommandSender`, simply specify `CommandSender` as the generic type argument when implementing the interface or extending a related abstraction, or pass a generic wildcard when utilizing a `CommandBuilder`.

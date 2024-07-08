@@ -2,6 +2,7 @@ package io.github.disbatch.command.parameter;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import io.github.disbatch.command.TabCompleters;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +15,10 @@ import java.util.stream.Collectors;
  * A namespace for {@link Suggester} convenience and utility methods.
  *
  * @since 1.0.0
+ *
+ * @deprecated planned to be replaced with {@link TabCompleters}
  */
+@Deprecated
 public final class Suggesters {
     private static final Suggester<?> EMPTY = (sender, input) -> ImmutableList.of();
 

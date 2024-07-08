@@ -1,23 +1,19 @@
 package io.github.disbatch;
 
 import io.github.disbatch.command.Command;
-import io.github.disbatch.command.CommandInput;
 import io.github.disbatch.command.descriptor.CommandDescriptor;
-import io.github.disbatch.command.exception.CommandExecutionException;
-import io.github.disbatch.command.exception.CommandRegistrationException;
-import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * The primary namespace dedicated to registering a {@link Command}.
  *
+ * @deprecated use {@link CommandRegistrar} instead
+ *
  * @since 1.0.0
  */
+@Deprecated
 public final class Disbatch {
-    private static final CommandRegistrar REGISTRAR = new LegacyCommandRegistrar(Bukkit.getServer());
-
     private Disbatch() {
         throw new AssertionError();
     }
@@ -28,6 +24,8 @@ public final class Disbatch {
      * @param command the {@code Command} to be registered.
      * @param label the label that should be used to execute the {@code Command}.
      * @see Disbatch#register(Command, CommandDescriptor)
+     *
+     * @deprecated use {@link CommandRegistrar#register(Command, String)} instead
      */
     public static void register(final @NotNull Command<?> command, final @NotNull String label) {
         register(command, new CommandDescriptor.Builder().label(label).build());
@@ -39,9 +37,13 @@ public final class Disbatch {
      * @param command the {@code Command} to be registered.
      * @param descriptor the {@link CommandDescriptor} aiding in providing usage help in the server's {@code /help} menu.
      * @see Disbatch#register(Command, String)
+     *
+     * @deprecated use {@link CommandRegistrar#register(Command, CommandDescriptor)} instead
      */
     public static void register(final @NotNull Command<?> command, final @NotNull CommandDescriptor descriptor) {
-        REGISTRAR.register(new TypedCommandProxy(command, descriptor.getValidSenderMessage()), descriptor);
+        final JavaPlugin plugin = JavaPlugin.getProvidingPlugin(command.getClass());
+        final CommandRegistrar registrar = CommandRegistrars.getCompatibleRegistrar(plugin);
+        registrar.register(command, descriptor);
     }
 
     /**
@@ -51,6 +53,8 @@ public final class Disbatch {
      * @param label the label that should be used to execute the {@code Command}.
      * @param plugin the plugin chosen to have the given {@code Command} registered.
      * @see Disbatch#register(Command, CommandDescriptor, JavaPlugin)
+     *
+     * @deprecated use {@link CommandRegistrar#registerFromFile(Command, String)} instead
      */
     public static void register(final @NotNull Command<?> command, final @NotNull String label, final @NotNull JavaPlugin plugin) {
         register(command, new CommandDescriptor.Builder().label(label).build(), plugin);
@@ -63,37 +67,11 @@ public final class Disbatch {
      * @param descriptor the {@link CommandDescriptor} aiding in providing usage help in the server's {@code /help} menu.
      * @param plugin the plugin chosen to have the given {@code Command} registered.
      * @see Disbatch#register(Command, String, JavaPlugin)
+     *
+     * @deprecated use {@link CommandRegistrar#registerFromFile(Command, CommandDescriptor)} instead
      */
     public static void register(final @NotNull Command<?> command, final @NotNull CommandDescriptor descriptor, final @NotNull JavaPlugin plugin) {
-        setupPluginCommandExecution(command, descriptor, plugin);
-        plugin.getServer().getHelpMap().addTopic(new CommandTopicAdapter(descriptor.getLabel(), descriptor.getTopic()));
-    }
-
-    private static void setupPluginCommandExecution(final Command<?> command, final CommandDescriptor descriptor, final JavaPlugin plugin) {
-        final PluginCommand pluginCommand = getExistingPluginCommand(plugin, descriptor.getLabel());
-        final TypedCommandProxy proxy = new TypedCommandProxy(command, descriptor.getValidSenderMessage());
-
-        pluginCommand.setExecutor((sender, serverCommand, label, args) -> {
-            if (sender == null) throw new CommandExecutionException("CommandSender is null");
-            proxy.execute(sender, computeInput(label, args));
-            return true;
-        });
-
-        pluginCommand.setTabCompleter((sender, serverCommand, label, args)
-                -> proxy.tabComplete(sender, computeInput(label, args)));
-    }
-
-    private static PluginCommand getExistingPluginCommand(final JavaPlugin plugin, final String commandLabel) {
-        final PluginCommand pluginCommand = plugin.getCommand(commandLabel);
-
-        if (pluginCommand == null)
-            throw new CommandRegistrationException(String.format("Command \"%s\" is not registered in the plugin.yml file of %s",
-                    commandLabel, plugin.getName()));
-
-        return pluginCommand;
-    }
-
-    private static CommandInput computeInput(final String label, final String[] args) {
-        return args.length > 0 ? new LazyLoadingCommandInput(args, label) : new SingleLabelCommandInput(label);
+        final CommandRegistrar registrar = CommandRegistrars.getCompatibleRegistrar(plugin);
+        registrar.registerFromFile(command, descriptor);
     }
 }

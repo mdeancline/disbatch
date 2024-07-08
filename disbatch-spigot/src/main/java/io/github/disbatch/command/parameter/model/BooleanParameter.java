@@ -1,6 +1,12 @@
 package io.github.disbatch.command.parameter.model;
 
 import io.github.disbatch.command.CommandInput;
+import io.github.disbatch.command.TabCompleter;
+import io.github.disbatch.command.TabCompleters;
+import io.github.disbatch.command.parameter.Parameter;
+import org.bukkit.command.CommandSender;
+
+import java.util.Collection;
 
 /**
  * Parses a {@link Boolean} based on a parsable, passed argument.
@@ -10,7 +16,21 @@ import io.github.disbatch.command.CommandInput;
  *
  * @since 1.0.0
  */
-public final class BooleanParameter extends SenderIndependentParameter<Boolean> {
+public final class BooleanParameter implements Parameter<CommandSender, Boolean> {
+    private static final TabCompleter<CommandSender> COMPLETER = TabCompleters.of("true, false");
+
+    private final boolean tabComplete;
+
+    public BooleanParameter() {
+        this(false);
+    }
+
+    /**
+     * @since 1.1.0
+     */
+    public BooleanParameter(final boolean tabComplete) {
+        this.tabComplete = tabComplete;
+    }
     
     @Override
     public int getMinimumUsage() {
@@ -23,11 +43,16 @@ public final class BooleanParameter extends SenderIndependentParameter<Boolean> 
     }
 
     @Override
-    protected Boolean parse(final CommandInput input) {
+    public Boolean parse(final CommandSender sender, final CommandInput input) {
         final String argument = input.getArgument(0);
 
-        return Boolean.TRUE.toString().equals(argument) || Boolean.FALSE.toString().equals(argument)
+        return argument.equalsIgnoreCase("true") || argument.equalsIgnoreCase("false")
                 ? Boolean.valueOf(argument)
                 : null;
+    }
+
+    @Override
+    public Collection<String> tabComplete(final CommandSender sender, final CommandInput input) {
+        return tabComplete ? COMPLETER.tabComplete(sender, input) : Parameter.super.tabComplete(sender, input);
     }
 }

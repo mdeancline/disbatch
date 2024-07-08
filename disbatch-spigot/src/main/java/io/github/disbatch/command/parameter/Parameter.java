@@ -1,6 +1,9 @@
 package io.github.disbatch.command.parameter;
 
+import com.google.common.collect.ImmutableList;
 import io.github.disbatch.command.CommandInput;
+import io.github.disbatch.command.TabCompleter;
+import io.github.disbatch.command.TabCompleters;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,9 +41,22 @@ public interface Parameter<S extends CommandSender, V> {
      *
      * @param sender the {@link CommandSender} responsible for requesting suggestions.
      * @param input  the {@link CommandInput} passed from a {@link ParameterizedCommand} during tab completion.
+     *               
      * @return all possible suggestions.
+     * 
+     * @since 1.1.0
      */
-    Collection<String> getSuggestions(S sender, CommandInput input);
+    default Collection<String> tabComplete(S sender, CommandInput input) {
+        return ImmutableList.of();
+    }
+
+    /**
+     * @deprecated use {@link Parameter#tabComplete(CommandSender, CommandInput)} instead
+     */
+    @Deprecated
+    default Collection<String> getSuggestions(S sender, CommandInput input) {
+        return tabComplete(sender, input);
+    }
 
     /**
      * Retrieves the minimum number of arguments a {@link ParameterizedCommand} must pass to the {@link Parameter}.
@@ -66,7 +82,7 @@ public interface Parameter<S extends CommandSender, V> {
      */
     final class Builder<S extends CommandSender, V> {
         private ParameterParser<S, V> parser;
-        private Suggester<S> suggester = Suggesters.empty();
+        private TabCompleter completer = TabCompleters.empty();
         private int minUsage = 1;
         private int maxUsage = Integer.MAX_VALUE;
 
@@ -75,8 +91,17 @@ public interface Parameter<S extends CommandSender, V> {
             return this;
         }
 
+        /**
+         * @deprecated same reason as explained in the documentation of {@link Suggester}; use
+         * {@link Builder#tabCompleter(TabCompleter)} instead
+         */
+        @Deprecated
         public Builder<S, V> suggester(final Suggester<S> suggester) {
-            this.suggester = suggester;
+            return tabCompleter(suggester::getSuggestions);
+        }
+
+        public Builder<S, V> tabCompleter(final TabCompleter<S> completer) {
+            this.completer = completer;
             return this;
         }
 
@@ -91,18 +116,18 @@ public interface Parameter<S extends CommandSender, V> {
         }
 
         public Parameter<S, V> build() {
-            return new BuiltParameter(parser, suggester, minUsage, maxUsage);
+            return new BuiltParameter(parser, completer, minUsage, maxUsage);
         }
 
         private class BuiltParameter implements Parameter<S, V> {
             private final ParameterParser<S, V> parser;
-            private final Suggester<S> suggester;
+            private final TabCompleter<S> completer;
             private final int minUsage;
             private final int maxUsage;
 
-            private BuiltParameter(final @NotNull ParameterParser<S, V> parser, final @NotNull Suggester<S> suggester, final int minUsage, final int maxUsage) {
+            private BuiltParameter(final @NotNull ParameterParser<S, V> parser, final @NotNull TabCompleter<S> completer, final int minUsage, final int maxUsage) {
                 this.parser = parser;
-                this.suggester = suggester;
+                this.completer = completer;
                 this.minUsage = minUsage;
                 this.maxUsage = maxUsage;
             }
@@ -113,8 +138,8 @@ public interface Parameter<S extends CommandSender, V> {
             }
 
             @Override
-            public Collection<String> getSuggestions(final S sender, final CommandInput input) {
-                return suggester.getSuggestions(sender, input);
+            public Collection<String> tabComplete(final S sender, final CommandInput input) {
+                return completer.tabComplete(sender, input);
             }
 
             @Override
@@ -131,7 +156,7 @@ public interface Parameter<S extends CommandSender, V> {
             public String toString() {
                 return new StringJoiner(", ", getClass().getSimpleName() + "[", "]")
                         .add("parser=" + parser)
-                        .add("suggester=" + suggester)
+                        .add("completer=" + completer)
                         .add("minUsage=" + minUsage)
                         .add("maxUsage=" + maxUsage)
                         .toString();

@@ -40,7 +40,7 @@ public final class MutableParameter<S extends CommandSender, V> implements Param
     }
 
     @Override
-    public Collection<String> getSuggestions(final S sender, final CommandInput input) {
+    public Collection<String> tabComplete(final S sender, final CommandInput input) {
         return underlyingParameter.getSuggestions(sender, input);
     }
 
@@ -72,7 +72,7 @@ public final class MutableParameter<S extends CommandSender, V> implements Param
         }
 
         @Override
-        public Collection<String> getSuggestions(final CommandSender sender, final CommandInput input) {
+        public Collection<String> tabComplete(final CommandSender sender, final CommandInput input) {
             return ImmutableList.of();
         }
 

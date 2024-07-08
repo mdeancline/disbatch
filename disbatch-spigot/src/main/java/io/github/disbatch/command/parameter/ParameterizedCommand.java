@@ -7,8 +7,7 @@ import io.github.disbatch.command.parameter.exception.InvalidParameterException;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Introduces the concept of effortlessly transforming, or parsing, a specific set of arguments of a compatible length
@@ -78,10 +77,16 @@ public abstract class ParameterizedCommand<S extends CommandSender, V> implement
     protected abstract void execute(final S sender, final V argument, final CommandInput input);
 
     @Override
-    public final List<String> tabComplete(final S sender, final @NotNull CommandInput input) {
+    public final Collection<String> tabComplete(final S sender, final @NotNull CommandInput input) {
+        Collection<String> completions = parameter.tabComplete(sender, input);
+
+        // temporary solution until the getSuggestions method is removed
+        if (completions instanceof ImmutableList && completions.size() == 0)
+            completions = parameter.getSuggestions(sender, input);
+
         return input.getArgumentLength() <= parameter.getMaximumUsage()
-                ? new LinkedList<>(parameter.getSuggestions(sender, input))
-                : ImmutableList.of();
+                ? completions
+                : Command.super.tabComplete(sender, input);
     }
 
     /**

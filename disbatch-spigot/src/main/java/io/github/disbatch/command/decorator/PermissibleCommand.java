@@ -7,7 +7,7 @@ import io.github.disbatch.command.CommandInput;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.StringJoiner;
 
 /**
@@ -36,7 +36,7 @@ public final class PermissibleCommand<S extends CommandSender> extends CommandPr
     }
 
     @Override
-    public List<String> tabComplete(final S sender, final @NotNull CommandInput input) {
+    public Collection<String> tabComplete(final S sender, final @NotNull CommandInput input) {
         return sender.hasPermission(permissionNode)
                 ? super.tabComplete(sender, input)
                 : ImmutableList.of();
