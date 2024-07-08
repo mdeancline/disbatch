@@ -149,7 +149,7 @@ class SimpleCommandRegistrar implements CommandRegistrar {
         private final String validSenderMessage;
 
         @SuppressWarnings("unchecked")
-        TypedCommandProxy(final Command<?> innerCommand, final String validSenderMessage) {
+        private TypedCommandProxy(final Command<?> innerCommand, final String validSenderMessage) {
             super((Command<CommandSender>) innerCommand);
             senderType = extractSenderType(innerCommand);
             this.validSenderMessage = validSenderMessage;
