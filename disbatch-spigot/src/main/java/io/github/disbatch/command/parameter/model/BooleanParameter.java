@@ -6,6 +6,7 @@ import io.github.disbatch.command.TabCompleters;
 import io.github.disbatch.command.parameter.Parameter;
 import org.bukkit.command.CommandSender;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -17,7 +18,7 @@ import java.util.Collection;
  * @since 1.0.0
  */
 public final class BooleanParameter implements Parameter<CommandSender, Boolean> {
-    private static final TabCompleter<CommandSender> COMPLETER = TabCompleters.of("true, false");
+    private static final Collection<String> COMPLETIONS = Arrays.asList("true", "false");
 
     private final boolean tabComplete;
 
@@ -53,6 +54,6 @@ public final class BooleanParameter implements Parameter<CommandSender, Boolean>
 
     @Override
     public Collection<String> tabComplete(final CommandSender sender, final CommandInput input) {
-        return tabComplete ? COMPLETER.tabComplete(sender, input) : Parameter.super.tabComplete(sender, input);
+        return tabComplete ? COMPLETIONS : Parameter.super.tabComplete(sender, input);
     }
 }
