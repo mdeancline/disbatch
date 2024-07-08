@@ -32,8 +32,6 @@ public abstract class AbstractParameter<S extends CommandSender, V> implements P
      * @param completer the tab completer to be used.
      *
      * @return this {@code AbstractParameter} as a {@code Parameter}.
-     *
-     
      */
     public final Parameter<S, V> withTabCompleter(final @NotNull TabCompleter<S> completer) {
         this.completer = completer;
