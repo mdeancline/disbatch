@@ -31,8 +31,9 @@ public abstract class ParameterizedCommand<S extends CommandSender, V> implement
      * @param parameter the {@link Parameter} to use for {@code Object} argument creation
      * @param handler  the {@link InvalidInputHandler} to use for processing a {@link CommandSender} and an {@link InvalidInput}
      *                  when necessary.
-     * @throws InvalidParameterException if the passed {@link Parameter}'s minimum or maximum usages either return {@code 0} or
-     *                                   exceed one another.
+     * @throws InvalidParameterException if the passed {@link Parameter}'s minimum usage is less than {@code 0},
+     *                                   its maximum usage is {@code 0} or less, or if the minimum and maximum usage
+     *                                   values exceed one another.
      * @see Parameter#getMinimumUsage()
      * @see Parameter#getMaximumUsage()
      */
@@ -40,7 +41,7 @@ public abstract class ParameterizedCommand<S extends CommandSender, V> implement
         final int minUsage = parameter.getMinimumUsage();
         final int maxUsage = parameter.getMaximumUsage();
 
-        if (minUsage <= 0) throw new InvalidParameterException("Minimum usage must be greater than 0");
+        if (minUsage < 0) throw new InvalidParameterException("Minimum usage cannot be less than 0");
         if (maxUsage <= 0) throw new InvalidParameterException("Maximum usage must be greater than 0");
         if (minUsage > maxUsage) throw new InvalidParameterException("Minimum usage cannot exceed maximum usage");
 
