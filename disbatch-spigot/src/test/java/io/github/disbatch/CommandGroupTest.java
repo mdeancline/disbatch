@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.List;
 
 public class CommandGroupTest extends EasyMockSupport {
@@ -53,8 +54,8 @@ public class CommandGroupTest extends EasyMockSupport {
 
     @Test
     public void testCommandGroupTabCompletion() {
-        final List<String> tabCompletion = cmdGroup.tabComplete(senderMock, new DummyCommandLine("cmd-3"));
-        final List<String> emptyCompletion = cmdGroup.tabComplete(senderMock, CommandInputs.empty());
+        final Collection<String> tabCompletion = cmdGroup.tabComplete(senderMock, new DummyCommandLine("cmd-3"));
+        final Collection<String> emptyCompletion = cmdGroup.tabComplete(senderMock, CommandInputs.empty());
 
         System.out.println("Tab completion: " + tabCompletion);
         System.out.println("Empty tab completion: " + emptyCompletion);
