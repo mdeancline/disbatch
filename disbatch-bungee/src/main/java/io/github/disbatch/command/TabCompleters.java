@@ -78,6 +78,24 @@ public final class TabCompleters {
     }
 
     /**
+     * @param values
+     * @return
+     * @param <S>
+     */
+    public static <S extends CommandSender> TabCompleter<S> forFirstArgument(final @NotNull String... values) {
+        return forFirstArgument(Lists.newArrayList(values));
+    }
+
+    /**
+     * @param collection
+     * @return
+     * @param <S>
+     */
+    public static <S extends CommandSender> TabCompleter<S> forFirstArgument(final @NotNull Collection<String> collection) {
+        return forFirstArgument(of(collection));
+    }
+
+    /**
      * @param completer
      * @param <S>
      * @return
