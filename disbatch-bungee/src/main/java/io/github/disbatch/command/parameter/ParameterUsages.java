@@ -2,7 +2,6 @@ package io.github.disbatch.command.parameter;
 
 /**
  * A namespace for {@link ParameterUsage} convenience and utility methods.
- * @see ParameterUsages
  *
  * @since 1.0.0
  */

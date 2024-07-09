@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Encapsulates various {@code String} and {@code char} components to create a usage message for any
  * {@link ParameterizedCommand}.
- * @see ParameterUsages
+ * @see Builder
  *
  * @apiNote A {@code ParameterUsage} can only be created with a {@link ParameterUsage.Builder}.
  *
