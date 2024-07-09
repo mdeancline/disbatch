@@ -38,7 +38,7 @@ public final class CommandGroup<S extends CommandSender> extends ParameterizedCo
 
         parameter.setUnderlyingParameter(new Parameter.Builder<S, Command<? super S>>()
                 .parser((sender, input) -> commands.get(input.getArgument(0)))
-                .tabCompleter(TabCompleters.forFirstArgument(TabCompleters.of(commands.keySet())))
+                .tabCompleter(TabCompleters.forFirstArgument(commands.keySet()))
                 .build());
     }
 
