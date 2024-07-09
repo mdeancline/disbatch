@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
  *
  * @param <S> any type extending {@link CommandSender} that can safely perform execution.
  * @param <V> the type from the resulting {@code Object} parsed from a set from arguments.
- * @apiNote Not to be confused with {@link org.bukkit.command.CommandExecutor}.
  *
  * @since 1.0.0
  */
