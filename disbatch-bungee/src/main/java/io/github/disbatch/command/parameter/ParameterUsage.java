@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
  * {@link ParameterizedCommand}.
  * @see Builder
  *
+ * @apiNote A {@code ParameterUsage} can only be created with a {@link ParameterUsage.Builder}.
+ *
  * @since 1.0.0
  */
 public final class ParameterUsage implements InvalidInputHandler<CommandSender> {
