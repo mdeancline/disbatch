@@ -60,7 +60,11 @@ public final class ParameterPair<S extends CommandSender, F, L> implements Param
 
     @Override
     public int getMaximumUsage() {
-        return Math.min(first.getMaximumUsage() + last.getMaximumUsage(), Integer.MAX_VALUE);
+        try {
+            return Math.addExact(first.getMaximumUsage(), last.getMaximumUsage());
+        } catch (final ArithmeticException ignored) {
+            return Integer.MAX_VALUE;
+        }
     }
 
     /**
