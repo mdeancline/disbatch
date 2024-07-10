@@ -47,7 +47,11 @@ public final class PairedParameter<S extends CommandSender, F, L> implements Par
 
     @Override
     public int getMaximumUsage() {
-        return Math.min(first.getMaximumUsage() + last.getMaximumUsage(), Integer.MAX_VALUE);
+        try {
+            return Math.addExact(first.getMaximumUsage(), last.getMaximumUsage());
+        } catch (final ArithmeticException ignored) {
+            return Integer.MAX_VALUE;
+        }
     }
 
     static class ReducedArgumentsInput implements CommandInput {
