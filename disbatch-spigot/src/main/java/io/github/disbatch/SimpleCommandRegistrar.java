@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import io.github.disbatch.command.Command;
 import io.github.disbatch.command.CommandInput;
-import io.github.disbatch.command.decorator.CommandProxy;
 import io.github.disbatch.command.descriptor.CommandDescriptor;
 import io.github.disbatch.command.descriptor.CommandTopic;
 import io.github.disbatch.command.exception.ArgumentIndexOutOfBoundsException;
@@ -69,32 +68,34 @@ class SimpleCommandRegistrar implements CommandRegistrar {
 
     @Override
     public void register(final @NotNull Command<?> command, final @NotNull CommandDescriptor descriptor) {
+        final String label = descriptor.getLabel();
+        final CommandAdapter adapter = new CommandAdapter(command, descriptor);
+        serverCommandMap.register(label, adapter);
+        plugin.getServer().getHelpMap().addTopic(new CommandTopicAdapter(label, descriptor.getTopic()));
+    }
+
+    @Override
+    public void registerFromFile(final @NotNull Command<?> command, final @NotNull String label) {
+        registerFromFile(command, new CommandDescriptor.Builder().label(label).build());
+    }
+
+    @Override
+    public void registerFromFile(final @NotNull Command<?> command, final @NotNull CommandDescriptor descriptor) {
         setupPluginCommandExecution(command, descriptor);
         plugin.getServer().getHelpMap().addTopic(new CommandTopicAdapter(descriptor.getLabel(), descriptor.getTopic()));
     }
 
-    @Override
-    public void registerFromFile(@NotNull Command<?> command, @NotNull String label) {
-
-    }
-
-    @Override
-    public void registerFromFile(@NotNull Command<?> command, @NotNull CommandDescriptor descriptor) {
-
-    }
-
     private void setupPluginCommandExecution(final Command<?> command, final CommandDescriptor descriptor) {
         final PluginCommand pluginCommand = getExistingPluginCommand(descriptor.getLabel());
-        final TypedCommandProxy proxy = new TypedCommandProxy(command, descriptor.getValidSenderMessage());
+        final CommandAdapter adapter = new CommandAdapter(command, descriptor);
 
         pluginCommand.setExecutor((sender, serverCommand, label, args) -> {
-            if (sender == null) throw new CommandExecutionException("CommandSender is null");
-            proxy.execute(sender, computeInput(label, args));
+            adapter.execute(sender, label, args);
             return true;
         });
 
         pluginCommand.setTabCompleter((sender, serverCommand, label, args)
-                -> new LinkedList<>(proxy.tabComplete(sender, computeInput(label, args))));
+                -> new LinkedList<>(adapter.tabComplete(sender, label, args)));
     }
 
     private PluginCommand getExistingPluginCommand(final String commandLabel) {
@@ -107,53 +108,20 @@ class SimpleCommandRegistrar implements CommandRegistrar {
         return pluginCommand;
     }
 
-    private CommandInput computeInput(final String label, final String[] args) {
-        return args.length > 0 ? new LazyLoadingCommandInput(args, label) : new SingleLabelCommandInput(label);
-    }
-
     private static class CommandAdapter extends org.bukkit.command.Command {
-        private final TypedCommandProxy typedCommand;
-
-        private CommandAdapter(final TypedCommandProxy typedCommand, final CommandDescriptor descriptor) {
-            super(descriptor.getLabel());
-            this.typedCommand = typedCommand;
-
-            setAliases(descriptor.getAliases());
-        }
-
-        @Override
-        public boolean execute(final CommandSender sender, final String commandLabel, final String[] args) {
-            if (sender == null)
-                throw new CommandExecutionException("CommandSender is null");
-
-            typedCommand.execute(sender, computeInput(commandLabel, args));
-            return true;
-        }
-
-        private CommandInput computeInput(final String label, final String[] args) {
-            return args.length > 0 ? new LazyLoadingCommandInput(args, label) : new SingleLabelCommandInput(label);
-        }
-
-        @Override
-        public List<String> tabComplete(final CommandSender sender, final String alias, final String[] args) {
-            return new LinkedList<>(typedCommand.tabComplete(sender, computeInput(alias, args)));
-        }
-
-        @Override
-        public String toString() {
-            return typedCommand.toString();
-        }
-    }
-
-    private static class TypedCommandProxy extends CommandProxy<CommandSender> {
+        private final Command<CommandSender> command;
+        private final CommandDescriptor descriptor;
         private final Class<?> senderType;
-        private final String validSenderMessage;
 
         @SuppressWarnings("unchecked")
-        TypedCommandProxy(final Command<?> innerCommand, final String validSenderMessage) {
-            super((Command<CommandSender>) innerCommand);
-            senderType = extractSenderType(innerCommand);
-            this.validSenderMessage = validSenderMessage;
+        private CommandAdapter(final Command<?> command, final CommandDescriptor descriptor) {
+            super(descriptor.getLabel());
+
+            this.command = (Command<CommandSender>) command;
+            this.descriptor = descriptor;
+            senderType = extractSenderType(command);
+
+            setAliases(descriptor.getAliases());
         }
 
         private Class<?> extractSenderType(final Command<?> command) {
@@ -170,20 +138,62 @@ class SimpleCommandRegistrar implements CommandRegistrar {
         }
 
         @Override
-        public void execute(final CommandSender sender, final CommandInput input) {
-            final String validSenderMessage = this.validSenderMessage;
+        public boolean execute(final CommandSender sender, final String commandLabel, final String[] args) {
+            if (sender == null)
+                throw new CommandExecutionException("CommandSender is null");
 
             if (senderType.isAssignableFrom(sender.getClass()))
-                super.execute(sender, input);
-            else if (!Strings.isNullOrEmpty(validSenderMessage))
-                sender.sendMessage(validSenderMessage);
+                command.execute(sender, computeInput(commandLabel, args));
+            else if (!Strings.isNullOrEmpty(descriptor.getValidSenderMessage()))
+                sender.sendMessage(descriptor.getValidSenderMessage());
+
+            return true;
         }
 
         @Override
-        public Collection<String> tabComplete(final CommandSender sender, final @NotNull CommandInput input) {
+        public List<String> tabComplete(final CommandSender sender, final String alias, final String[] args) {
             return senderType.isAssignableFrom(sender.getClass())
-                    ? super.tabComplete(sender, input)
+                    ? new LinkedList<>(command.tabComplete(sender, computeInput(alias, args)))
                     : ImmutableList.of();
+        }
+
+        private CommandInput computeInput(final String label, final String[] args) {
+            return args.length > 0 ? new LazyLoadingCommandInput(args, label) : new SingleLabelCommandInput(label);
+        }
+
+        @Override
+        public String toString() {
+            return command.toString();
+        }
+    }
+
+    private static class CommandTopicAdapter extends HelpTopic {
+        protected final CommandTopic adaptedTopic;
+
+        private CommandTopicAdapter(final String name, final CommandTopic adaptedTopic) {
+            this.adaptedTopic = adaptedTopic;
+            this.name = "/" + name;
+        }
+
+        @Override
+        public boolean canSee(final CommandSender sender) {
+            return adaptedTopic.canSee(sender);
+        }
+
+        @Override
+        public String getShortText() {
+            return adaptedTopic.getShortText();
+        }
+
+        @Override
+        public String getFullText(final CommandSender forWho) {
+            return adaptedTopic.getFullText(forWho);
+        }
+
+        @Override
+        public void amendTopic(final String amendedShortText, final String amendedFullText) {
+            shortText = adaptedTopic.applyAmendment(shortText, amendedShortText);
+            fullText = adaptedTopic.applyAmendment(fullText, amendedFullText);
         }
     }
 
@@ -298,36 +308,6 @@ class SimpleCommandRegistrar implements CommandRegistrar {
             return new StringJoiner(", ", getClass().getSimpleName() + "[", "]")
                     .add("commandLine=" + getCommandLine())
                     .toString();
-        }
-    }
-
-    static class CommandTopicAdapter extends HelpTopic {
-        protected final CommandTopic adaptedTopic;
-
-        CommandTopicAdapter(final String name, final CommandTopic adaptedTopic) {
-            this.adaptedTopic = adaptedTopic;
-            this.name = "/" + name;
-        }
-
-        @Override
-        public boolean canSee(final CommandSender sender) {
-            return adaptedTopic.canSee(sender);
-        }
-
-        @Override
-        public String getShortText() {
-            return adaptedTopic.getShortText();
-        }
-
-        @Override
-        public String getFullText(final CommandSender forWho) {
-            return adaptedTopic.getFullText(forWho);
-        }
-
-        @Override
-        public void amendTopic(final String amendedShortText, final String amendedFullText) {
-            shortText = adaptedTopic.applyAmendment(shortText, amendedShortText);
-            fullText = adaptedTopic.applyAmendment(fullText, amendedFullText);
         }
     }
 }

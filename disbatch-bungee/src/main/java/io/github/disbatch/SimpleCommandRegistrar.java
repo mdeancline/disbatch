@@ -30,25 +30,42 @@ class SimpleCommandRegistrar implements CommandRegistrar {
     }
 
     @Override
-    public void register(@NotNull Command<?> command, @NotNull String label) {
+    public void register(final @NotNull Command<?> command, final @NotNull String label) {
         register(command, new CommandDescriptor.Builder().label(label).build());
     }
 
     @Override
     public void register(@NotNull Command<?> command, @NotNull CommandDescriptor descriptor) {
-        final TypedCommandProxy commandProxy = new TypedCommandProxy(command, descriptor.getValidSenderMessage());
-        final CommandAdapter adapter = new CommandAdapter(commandProxy, descriptor);
+        final CommandAdapter adapter = new CommandAdapter(command, descriptor);
         plugin.getProxy().getPluginManager().registerCommand(plugin, adapter);
     }
 
     private static class CommandAdapter extends net.md_5.bungee.api.plugin.Command implements TabExecutor {
         private static final String BUNGEE_CONSOLE_CLASS_NAME = "net.md_5.bungee.command.ConsoleCommandSender";
 
-        private final TypedCommandProxy typedCommand;
+        private final Command<CommandSender> command;
+        private final CommandDescriptor descriptor;
+        private final Class<?> senderType;
 
-        private CommandAdapter(final TypedCommandProxy typedCommand, final CommandDescriptor descriptor) {
+        @SuppressWarnings("unchecked")
+        private CommandAdapter(final Command<?> command, final CommandDescriptor descriptor) {
             super(descriptor.getLabel(), null, descriptor.getAliases());
-            this.typedCommand = typedCommand;
+            this.command = (Command<CommandSender>) command;
+            this.descriptor = descriptor;
+            senderType = extractSenderType(command);
+        }
+
+        private Class<?> extractSenderType(final Command<?> command) {
+            for (final TypeToken<?> type : TypeToken.of(command.getClass()).getTypes()) {
+                if (type.getRawType().equals(Command.class)) {
+                    final Type typeArgument = ((ParameterizedType) type.getType()).getActualTypeArguments()[0];
+
+                    if (typeArgument instanceof Class)
+                        return (Class<?>) typeArgument;
+                }
+            }
+
+            return CommandSender.class;
         }
 
         @Override
@@ -56,7 +73,21 @@ class SimpleCommandRegistrar implements CommandRegistrar {
             if (sender == null)
                 throw new CommandExecutionException("CommandSender is null");
 
-            typedCommand.execute(checkForConsole(sender), computeInput(getName(), args));
+            final CommandSender checkedSender = checkForConsole(sender);
+
+            if (senderType.isAssignableFrom(checkedSender.getClass()))
+                command.execute(checkedSender, computeInput(getName(), args));
+            else if (!Strings.isNullOrEmpty(descriptor.getValidSenderMessage()))
+                sender.sendMessage(descriptor.getValidSenderMessage());
+        }
+
+        @Override
+        public Iterable<String> onTabComplete(final CommandSender sender, final String[] args) {
+            final CommandSender checkedSender = checkForConsole(sender);
+
+            return senderType.isAssignableFrom(checkedSender.getClass())
+                    ? command.tabComplete(checkedSender, computeInput("", args))
+                    : ImmutableList.of();
         }
 
         private CommandSender checkForConsole(final CommandSender sender) {
@@ -71,13 +102,8 @@ class SimpleCommandRegistrar implements CommandRegistrar {
         }
 
         @Override
-        public Iterable<String> onTabComplete(final CommandSender sender, final String[] args) {
-            return typedCommand.tabComplete(sender, computeInput("", args));
-        }
-
-        @Override
         public String toString() {
-            return typedCommand.toString();
+            return command.toString();
         }
     }
 
