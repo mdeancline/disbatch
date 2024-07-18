@@ -1,13 +1,13 @@
 package io.github.disbatch.command.decorator;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import io.github.disbatch.command.Command;
 import io.github.disbatch.command.CommandInput;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.StringJoiner;
 
 /**
@@ -39,7 +39,7 @@ public final class PermissibleCommand<S extends CommandSender> extends CommandPr
     public Collection<String> tabComplete(final S sender, final @NotNull CommandInput input) {
         return sender.hasPermission(permissionNode)
                 ? super.tabComplete(sender, input)
-                : ImmutableList.of();
+                : Collections.emptyList();
     }
 
     @Override

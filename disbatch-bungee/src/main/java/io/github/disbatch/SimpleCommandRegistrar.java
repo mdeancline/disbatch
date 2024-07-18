@@ -1,7 +1,6 @@
 package io.github.disbatch;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import io.github.disbatch.command.Command;
 import io.github.disbatch.command.CommandInput;
@@ -87,7 +86,7 @@ class SimpleCommandRegistrar implements CommandRegistrar {
 
             return senderType.isAssignableFrom(checkedSender.getClass())
                     ? command.tabComplete(checkedSender, computeInput("", args))
-                    : ImmutableList.of();
+                    : Collections.emptyList();
         }
 
         private CommandSender checkForConsole(final CommandSender sender) {
@@ -208,7 +207,7 @@ class SimpleCommandRegistrar implements CommandRegistrar {
         public Collection<String> tabComplete(final CommandSender sender, final @NotNull CommandInput input) {
             return senderType.isAssignableFrom(sender.getClass())
                     ? super.tabComplete(sender, input)
-                    : ImmutableList.of();
+                    : Collections.emptyList();
         }
     }
 

@@ -6,8 +6,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Parses a {@link Double} based on a parsable, passed argument.
- * <br>
- * <br>
+ * <p>
+ * <p>
  * <b>Argument Syntax:</b> [decimal number]
  *
  * @since 1.0.0

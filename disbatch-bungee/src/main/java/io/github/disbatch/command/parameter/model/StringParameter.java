@@ -6,8 +6,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Parses and forms a {@code String} from all passed arguments, joined via single whitespace.
- * <br>
- * <br>
+ * <p>
+ * <p>
  * <b>Argument Syntax:</b> [string value]
  *
  * @since 1.0.0

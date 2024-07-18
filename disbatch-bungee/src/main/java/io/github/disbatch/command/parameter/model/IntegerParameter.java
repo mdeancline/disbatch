@@ -6,8 +6,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Creates an {@link Integer} based on a parsable, passed argument.
- * <br>
- * <br>
+ * <p>
+ * <p>
  * <b>Argument Syntax:</b> [whole number]
  *
  * @since 1.0.0

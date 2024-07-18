@@ -10,8 +10,8 @@ import java.util.UUID;
 
 /**
  * Parses a {@link ProxiedPlayer} by their {@link UUID} based on a parsable, passed argument.
- * <br>
- * <br>
+ * <p>
+ * <p>
  * <b>Argument Syntax:</b> [uuid]
  *
  * @since 1.0.0

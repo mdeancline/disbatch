@@ -1,6 +1,5 @@
 package io.github.disbatch.command.parameter;
 
-import com.google.common.collect.ImmutableList;
 import io.github.disbatch.command.CommandInput;
 import io.github.disbatch.command.TabCompleter;
 import io.github.disbatch.command.TabCompleters;
@@ -47,7 +46,7 @@ public interface Parameter<S extends CommandSender, V> {
      
      */
     default Collection<String> tabComplete(S sender, CommandInput input) {
-        return ImmutableList.of();
+        return Collections.emptyList();
     }
 
     /**

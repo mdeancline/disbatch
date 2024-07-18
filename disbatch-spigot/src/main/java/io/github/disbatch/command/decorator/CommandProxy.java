@@ -13,9 +13,10 @@ import java.util.Collection;
  * {@link Command#execute(CommandSender, CommandInput)} on it).
  *
  * @param <S> {@inheritDoc}
- *
  * @since 1.0.0
+ * @deprecated
  */
+@Deprecated
 public abstract class CommandProxy<S extends CommandSender> implements Command<S> {
     private final Command<S> innerCommand;
 
@@ -23,12 +24,13 @@ public abstract class CommandProxy<S extends CommandSender> implements Command<S
         this.innerCommand = innerCommand;
     }
 
-    @Override
+    @Deprecated
     public void execute(final S sender, final CommandInput input) {
         innerCommand.execute(sender, input);
     }
 
     @Override
+    @Deprecated
     public Collection<String> tabComplete(final S sender, final CommandInput input) {
         return innerCommand.tabComplete(sender, input);
     }

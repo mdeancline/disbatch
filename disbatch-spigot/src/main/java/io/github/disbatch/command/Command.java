@@ -1,97 +1,50 @@
 package io.github.disbatch.command;
 
-import com.google.common.collect.ImmutableList;
 import io.github.disbatch.CommandRegistrar;
-import io.github.disbatch.command.descriptor.CommandDescriptor;
+import io.github.disbatch.command.syntax.CommandSyntax;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Represents an executable command within a Minecraft server running a Spigot implementation, which acts based on
- * various user inputs.
+ * various {@link CommandSender} inputs.
  *
  * @param <S> any type extending {@link CommandSender} that can safely execute the {@code Command}.
- *
  * @apiNote Not to be confused with {@link org.bukkit.command.Command}.
- *
- * @see CommandRegistrar#register(Command, CommandDescriptor)
- * @see CommandRegistrar#registerFromFile(Command, CommandDescriptor)
- * @see Command.Builder
- *
+ * @see CommandRegistrar
  * @since 1.0.0
+ * @deprecated Starting in the release of Disbatch 1.2.0 for Spigot, all {@code Command} implementations will
+ * have to implement the {@link Command#getSyntax()} method due to the introduction of only having to register a
+ * {@link CommandExecutor} with a label at minimum. Other than that, the {@code Command} interface will remain available
+ * in the library after that version release.
  */
-public interface Command<S extends CommandSender> {
+@Deprecated
+public interface Command<S extends CommandSender> extends CommandExecutor<S, String> {
 
     /**
-     * Executes the {@code Command}.
-     *
-     * @param sender the {@link CommandSender} responsible for execution.
-     * @param input  the {@link CommandInput} used to execute the {@code Command}.
+     * @deprecated With the introduction of some of Minecraft's newest features, tab-completion suggestions will take
+     * a more modular approach to utilize those features. Therefore, you should register a {@code Command} with an
+     * implemented {@link Command#getSyntax()} that returns one capable of fetching a {@link Suggestion} collection.
      */
-    void execute(S sender, CommandInput input);
-
-    /**
-     * Executed on tab completion, returning a {@code List} of argument options the {@link CommandSender} can tab through.
-     *
-     * @param sender the {@link CommandSender} responsible for initiating a tab completion.
-     * @param input  the {@link CommandInput} present from tab completion.
-     *
-     * @return a list of tab completions for the specified arguments, which may be empty or immutable.
-     */
+    @Deprecated
     default Collection<String> tabComplete(final S sender, final CommandInput input) {
-        return ImmutableList.of();
+        return Collections.emptyList();
     }
 
+    @Deprecated
+    default void execute(S sender, CommandInput input) {
+        execute(sender, input, null);
+    }
+
+    //TODO return a valid CommandSyntax
     /**
-     * Serves as a flexible solution for creating a new {@link Command} without defining an anonymous or explicit abstraction.
+     * Provides the {@code Argumentation} for this command
      *
-     * @param <S> any type extending {@link CommandSender} that can safely execute any built {@link Command}.
-     *
-     * @since 1.0.0
+     * @return the syntax for this command
      */
-    final class Builder<S extends CommandSender> {
-        private CommandExecutor<S> executor;
-        private TabCompleter<S> tabCompleter = TabCompleters.empty();
-
-        public Builder<S> executor(final @NotNull CommandExecutor<S> executor) {
-            this.executor = executor;
-            return this;
-        }
-
-        public Builder<S> tabCompleter(final @NotNull TabCompleter<S> tabCompleter) {
-            this.tabCompleter = tabCompleter;
-            return this;
-        }
-
-        /**
-         * Creates a new {@link Command}.
-         *
-         * @return the created {@code Command}.
-         */
-        public Command<S> build() {
-            return new BuiltCommand<>(executor, tabCompleter);
-        }
-
-        private static class BuiltCommand<S extends CommandSender> implements Command<S> {
-            private final CommandExecutor<S> executor;
-            private final TabCompleter<S> tabCompleter;
-
-            private BuiltCommand(final @NotNull CommandExecutor<S> executor, final @NotNull TabCompleter<S> tabCompleter) {
-                this.executor = executor;
-                this.tabCompleter = tabCompleter;
-            }
-
-            @Override
-            public void execute(final S sender, final CommandInput input) {
-                executor.execute(sender, input);
-            }
-
-            @Override
-            public Collection<String> tabComplete(final S sender, final CommandInput input) {
-                return tabCompleter.tabComplete(sender, input);
-            }
-        }
+    default CommandSyntax<S, String> getSyntax() {
+        return null;
     }
 }

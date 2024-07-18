@@ -1,6 +1,5 @@
 package io.github.disbatch.command;
 
-import com.google.common.collect.ImmutableList;
 import io.github.disbatch.CommandRegistrar;
 import io.github.disbatch.command.descriptor.CommandDescriptor;
 import net.md_5.bungee.api.CommandSender;
@@ -40,7 +39,7 @@ public interface Command<S extends CommandSender> {
      * @return a list of tab completions for the specified arguments, which may be empty or immutable.
      */
     default Collection<String> tabComplete(final S sender, final CommandInput input) {
-        return ImmutableList.of();
+        return Collections.emptyList();
     }
 
     /**

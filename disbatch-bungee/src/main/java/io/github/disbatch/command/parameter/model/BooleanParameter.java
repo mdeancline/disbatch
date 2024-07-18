@@ -9,8 +9,8 @@ import java.util.Collection;
 
 /**
  * Parses a {@link Boolean} based on a parsable, passed argument.
- * <br>
- * <br>
+ * <p>
+ * <p>
  * <b>Argument Syntax:</b> [true|false]
  *
  * @since 1.0.0

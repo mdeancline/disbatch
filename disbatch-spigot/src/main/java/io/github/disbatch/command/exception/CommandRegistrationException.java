@@ -18,4 +18,14 @@ public class CommandRegistrationException extends CommandException {
     public CommandRegistrationException(final String message, final Exception cause) {
         super(cause);
     }
+
+    /**
+     *
+     * @param cause
+     *
+     * @since 1.1.0
+     */
+    public CommandRegistrationException(final Exception cause) {
+        super(cause);
+    }
 }

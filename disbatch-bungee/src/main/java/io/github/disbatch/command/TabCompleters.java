@@ -1,6 +1,5 @@
 package io.github.disbatch.command;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 public final class TabCompleters {
-    private static final TabCompleter<?> EMPTY = (sender, input) -> ImmutableList.of();
+    private static final TabCompleter<?> EMPTY = (sender, input) -> Collections.emptyList();
 
     private TabCompleters() {
         throw new AssertionError();
@@ -106,7 +105,7 @@ public final class TabCompleters {
             final int length = input.getArgumentLength();
             return length == 1
                     ? completer.tabComplete(sender, input)
-                    : ImmutableList.of();
+                    : Collections.emptyList();
         };
     }
 }

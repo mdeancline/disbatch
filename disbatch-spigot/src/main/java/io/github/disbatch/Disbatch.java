@@ -1,7 +1,9 @@
 package io.github.disbatch;
 
+import com.google.common.reflect.TypeToken;
 import io.github.disbatch.command.Command;
 import io.github.disbatch.command.descriptor.CommandDescriptor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @since 1.0.0
  */
+@SuppressWarnings({"unchecked", "UnstableApiUsage"})
 @Deprecated
 public final class Disbatch {
     private Disbatch() {
@@ -25,10 +28,11 @@ public final class Disbatch {
      * @param label the label that should be used to execute the {@code Command}.
      * @see Disbatch#register(Command, CommandDescriptor)
      *
-     * @deprecated use {@link CommandRegistrar#register(Command, String)} instead
+     * @deprecated use {@link CommandRegistrar#register(CommandDescriptor)} instead
      */
-    public static void register(final @NotNull Command<?> command, final @NotNull String label) {
-        register(command, new CommandDescriptor.Builder().label(label).build());
+    public static <S extends CommandSender> void register(final @NotNull Command<S> command, final @NotNull String label) {
+        final Class<S> senderType = (Class<S>) new TypeToken<S>(command.getClass()){}.getRawType();
+        register(command, CommandDescriptor.of(senderType, command).build());
     }
 
     /**
@@ -38,12 +42,13 @@ public final class Disbatch {
      * @param descriptor the {@link CommandDescriptor} aiding in providing usage help in the server's {@code /help} menu.
      * @see Disbatch#register(Command, String)
      *
-     * @deprecated use {@link CommandRegistrar#register(Command, CommandDescriptor)} instead
+     * @deprecated use {@link CommandRegistrar#register(CommandDescriptor)} instead
      */
-    public static void register(final @NotNull Command<?> command, final @NotNull CommandDescriptor descriptor) {
+    public static <S extends CommandSender> void register(final @NotNull Command<S> command, final @NotNull CommandDescriptor<?, ?> descriptor) {
         final JavaPlugin plugin = JavaPlugin.getProvidingPlugin(command.getClass());
+        final Class<S> senderType = (Class<S>) new TypeToken<S>(command.getClass()){}.getRawType();
         final CommandRegistrar registrar = CommandRegistrars.getCompatibleRegistrar(plugin);
-        registrar.register(command, descriptor);
+        registrar.register(descriptor);
     }
 
     /**
@@ -54,12 +59,15 @@ public final class Disbatch {
      * @param plugin the plugin chosen to have the given {@code Command} registered.
      * @see Disbatch#register(Command, CommandDescriptor, JavaPlugin)
      *
-     * @deprecated use {@link CommandRegistrar#registerFromFile(Command, String)} instead
+     * @deprecated use {@link CommandRegistrar#registerFromFile(CommandDescriptor)} instead
      */
-    public static void register(final @NotNull Command<?> command, final @NotNull String label, final @NotNull JavaPlugin plugin) {
-        register(command, new CommandDescriptor.Builder().label(label).build(), plugin);
+    public static <S extends CommandSender> void register(final @NotNull Command<S> command, final @NotNull String label, final @NotNull JavaPlugin plugin) {
+        register(command, CommandDescriptor.of((Class<S>) new TypeToken<S>(command.getClass()) {}.getRawType(), command)
+                .label(label)
+                .build(), plugin);
     }
 
+    //TODO create temporary mechanism
     /**
      * Registers a {@link Command} to be used on the Spigot Minecraft server pertaining to a specific {@link JavaPlugin}.
      *
@@ -68,10 +76,8 @@ public final class Disbatch {
      * @param plugin the plugin chosen to have the given {@code Command} registered.
      * @see Disbatch#register(Command, String, JavaPlugin)
      *
-     * @deprecated use {@link CommandRegistrar#registerFromFile(Command, CommandDescriptor)} instead
+     * @deprecated use {@link CommandRegistrar#registerFromFile(CommandDescriptor)} instead
      */
-    public static void register(final @NotNull Command<?> command, final @NotNull CommandDescriptor descriptor, final @NotNull JavaPlugin plugin) {
-        final CommandRegistrar registrar = CommandRegistrars.getCompatibleRegistrar(plugin);
-        registrar.registerFromFile(command, descriptor);
+    public static <S extends CommandSender> void register(final @NotNull Command<S> command, final @NotNull CommandDescriptor<?, ?> descriptor, final @NotNull JavaPlugin plugin) {
     }
 }

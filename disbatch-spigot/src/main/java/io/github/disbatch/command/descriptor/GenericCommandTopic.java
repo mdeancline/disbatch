@@ -1,78 +1,91 @@
 package io.github.disbatch.command.descriptor;
 
-import com.google.common.collect.ImmutableList;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.command.Command;
+import io.github.disbatch.command.exception.CommandException;
+import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.help.GenericCommandHelpTopic;
-import org.bukkit.help.HelpTopic;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.List;
-
+//TODO make valid command usage mechanism possible
 /**
+ * In the absence of an alternative, a {@link CommandDescriptor} will create a new instance of this to be registered
+ * in the server's {@link CommandMap}. You can use this as a base class for custom {@code CommandTopic}s or as an example
+ * of how to write your own.
  *
+ * @implSpec This internally uses a {@link GenericCommandHelpTopic} instance to fetch all necessary formatted help contents.
  *
- * @since 1.0.0
+ * @since 1.1.0
  */
-public final class GenericCommandTopic implements CommandTopic {
-    private static final String LABEL_PLACEHOLDER = "%label";
-    private static final String ALIASES_PLACEHOLDER = "%aliases";
+public class GenericCommandTopic<S extends CommandSender> implements CommandTopic<S> {
+    private final String description;
+//    private final CommandSyntaxMessage usage;
+    private GenericCommandHelpTopic bukkitTopic;
 
-    private final String label;
-    private final String[] aliases;
-    private final HelpTopic internalTopic;
+//    public GenericCommandTopic(final @NotNull String description) {
+//        this(description, new ParameterUsage.Builder().labelHead('<').labelTail('>').build());
+//    }
 
     /**
      * @param description
      */
-    public GenericCommandTopic(final String description) {
-        this(new GenericCommandHelpTopic(new PlaceholderCommand(description)), StringUtils.EMPTY, ImmutableList.of());
-    }
-
-    GenericCommandTopic(final HelpTopic internalTopic, final String label, final List<String> aliases) {
-        this.internalTopic = internalTopic;
-        this.label = label;
-        this.aliases = aliases.toArray(new String[0]);
+    public GenericCommandTopic(final @NotNull String description) {
+        this.description = description;
+//        this.usage = usage;
     }
 
     @Override
-    public boolean canSee(final CommandSender forWho) {
+    public void amend(final @Nullable String shortText, final @Nullable String fullText) {
+        throwIfNotApplied();
+        bukkitTopic.amendTopic(shortText, fullText);
+    }
+
+    @Override
+    public void apply(final CommandDescriptor<S, ?> descriptor) {
+//        final org.bukkit.command.Command placeholder = new PlaceholderCommand(
+//                descriptor.getLabel(),
+//                description,
+//                descriptor.getAliases(),
+//                descriptor.getSyntax()
+//        );
+//        bukkitTopic = new GenericCommandHelpTopic(placeholder);
+    }
+
+    @Override
+    public boolean isViewableTo(final CommandSender sender) {
         return true;
     }
 
     @Override
     public String getShortText() {
-        return internalTopic.getShortText();
+        throwIfNotApplied();
+        return bukkitTopic.getShortText();
     }
 
     @Override
-    public String getFullText(final CommandSender forWho) {
-        return internalTopic.getFullText(forWho)
-                .replace(LABEL_PLACEHOLDER, label)
-                .replace(ALIASES_PLACEHOLDER, String.join(", ", aliases));
+    public String getFullText(final CommandSender forSender) {
+        throwIfNotApplied();
+        return bukkitTopic.getFullText(forSender);
     }
 
-    @Override
-    public String applyAmendment(final String baseText, final String amendment) {
-        return baseText;
+    private void throwIfNotApplied() {
+        if (bukkitTopic == null)
+            throw new CommandException("GenericCommandTopic isn't fully initialized");
     }
 
-    private static class PlaceholderCommand extends Command {
-        public PlaceholderCommand(final String description) {
-            super(LABEL_PLACEHOLDER, description, "/", Collections.singletonList(ALIASES_PLACEHOLDER));
-        }
-
-        @Override
-        public boolean execute(final CommandSender sender, final String commandLabel, final String[] args) {
-            return false;
-        }
-    }
-
-    static class Finalizer implements CommandTopicFinalizer<GenericCommandTopic> {
-        @Override
-        public CommandTopic finalize(final GenericCommandTopic topic, final CommandDescriptor descriptor) {
-            return new GenericCommandTopic(topic.internalTopic, descriptor.getLabel(), descriptor.getAliases());
-        }
-    }
+//    private class PlaceholderCommand extends org.bukkit.command.Command {
+//        private PlaceholderCommand(final String label, final String description, final List<String> aliases) {
+//            super(
+//                label,
+//                description,
+//                "/<command>" + (commandSyntaxLiteral.isValid() ? usage.createUsageString(commandSyntaxLiteral) : StringUtils.EMPTY),
+//                aliases
+//            );
+//        }
+//
+//        @Override
+//        public boolean execute(final CommandSender sender, final String commandLabel, final String[] args) {
+//            return false;
+//        }
+//    }
 }

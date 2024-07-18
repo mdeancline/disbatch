@@ -7,8 +7,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Parses a {@link ProxiedPlayer} by their name based on a parsable, passed argument.
- * <br>
- * <br>
+ * <p>
+ * <p>
  * <b>Argument Syntax:</b> [player name]
  *
  * @since 1.0.0

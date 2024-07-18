@@ -2,86 +2,66 @@ package io.github.disbatch.command;
 
 import io.github.disbatch.command.descriptor.CommandDescriptor;
 import io.github.disbatch.command.exception.ArgumentIndexOutOfBoundsException;
-import io.github.disbatch.command.parameter.InvalidInputHandler;
-import io.github.disbatch.command.parameter.Parameter;
-import io.github.disbatch.command.parameter.ParameterUsages;
-import io.github.disbatch.command.parameter.ParameterizedCommand;
-import io.github.disbatch.command.parameter.decorator.MutableParameter;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 
+//TODO complete development
 /**
- * Introduces the concept of executing various {@link Command}s belonging to a root {@code Command}.
+ * Introduces the concept of executing various commands belonging to a root command.
  *
  * @param <S> {@inheritDoc}
  *
  * @since 1.0.0
  */
-public final class CommandGroup<S extends CommandSender> extends ParameterizedCommand<S, Command<? super S>> {
-    private final Map<String, Command<? super S>> commands = new HashMap<>();
+public final class CommandGroup<S extends CommandSender> implements Command<S> {
+    private final Map<String, GroupedExecutor<?>> executors = new HashMap<>();
 
-    /**
-     * @since 1.1.0
-     */
-    public CommandGroup() {
-        this(ParameterUsages.withChevrons("Usage: %usage"));
-    }
+    public CommandGroup(final @NotNull String name) {
 
-    public CommandGroup(final @NotNull InvalidInputHandler<? super S> handler) {
-        this(new MutableParameter<>(), handler);
-    }
-
-    private CommandGroup(final MutableParameter<S, Command<? super S>> parameter, final InvalidInputHandler<? super S> handler) {
-        super(parameter, handler);
-
-        parameter.setUnderlyingParameter(new Parameter.Builder<S, Command<? super S>>()
-                .parser((sender, input) -> commands.get(input.getArgument(0)))
-                .tabCompleter(TabCompleters.forFirstArgument(commands.keySet()))
-                .build());
     }
 
     /**
-     * Adds a {@link Command} to be linked to this one.
+     * Adds a command to be linked to this one through a {@link CommandDescriptor}.
      *
-     * @param command    the {@code Command} to be linked
-     * @param label
-     */
-    public CommandGroup<S> withCommand(final @NotNull Command<? super S> command, final @NotNull String label) {
-        return withCommand(command, new CommandDescriptor.Builder().label(label).build());
-    }
-
-    /**
-     * Adds a {@link Command} to be linked to this one.
-     *
-     * @param command    the {@code Command} to be linked
      * @param descriptor
      */
-    public CommandGroup<S> withCommand(final @NotNull Command<? super S> command, final @NotNull CommandDescriptor descriptor) {
-        commands.put(descriptor.getLabel(), command);
+    @SuppressWarnings("unchecked")
+    public <V> CommandGroup<S> with(final @NotNull CommandDescriptor<? extends S, V> descriptor) {
+        final CommandDescriptor<S, V> casted = (CommandDescriptor<S, V>) descriptor;
+        final GroupedExecutor<V> executor = new GroupedExecutor<>(casted);
 
-        for (final String alias : descriptor.getAliases())
-            commands.put(alias, command);
+        for (final String alias : casted.getAliases())
+            executors.put(alias, executor);
 
         return this;
     }
 
     @Override
-    protected void execute(final S sender, final Command<? super S> command, final CommandInput input) {
-        command.execute(sender, new LazyLoadingGroupedCommandInput(input));
+    public void execute(S sender, CommandInput input, String value) {
+        executors.get(input.getArgument(0)).execute(sender, input);
     }
 
-    private static class LazyLoadingGroupedCommandInput implements CommandInput {
+    private class GroupedExecutor<V> {
+        private final CommandDescriptor<S, V>.Command command;
+
+        private GroupedExecutor(final CommandDescriptor<S, V> descriptor) {
+            command = descriptor.getCommand();
+        }
+
+        public void execute(final S sender, final CommandInput input) {
+            command.execute(sender, new LazyLoadingGroupedArgumentInput(input));
+        }
+    }
+
+    private static class LazyLoadingGroupedArgumentInput implements CommandInput {
         private final CommandInput previous;
         private final String cmdLabel;
         private String[] arguments;
         private String argumentLine;
 
-        private LazyLoadingGroupedCommandInput(final CommandInput previous) {
+        private LazyLoadingGroupedArgumentInput(final CommandInput previous) {
             this.previous = previous;
             cmdLabel = previous.getCommandLabel() + " " + previous.getArgument(0);
         }
@@ -149,6 +129,12 @@ public final class CommandGroup<S extends CommandSender> extends ParameterizedCo
             return new StringJoiner(", ", getClass().getSimpleName() + "[", "]")
                     .add("commandLine=" + getCommandLine())
                     .toString();
+        }
+
+        @NotNull
+        @Override
+        public Iterator<Binding> iterator() {
+            return null;
         }
     }
 }

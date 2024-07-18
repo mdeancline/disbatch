@@ -13,10 +13,10 @@ import org.jetbrains.annotations.NotNull;
  *
  * @since 1.0.0
  */
-public final class NoArgumentsCommand<S extends CommandSender> extends CommandProxy<S> {
-    private final CommandExecutor<S> noArgsExecutor;
+public final class NoArgumentsCommand<S extends CommandSender, V> extends CommandProxy<S> {
+    private final CommandExecutor<S, V> noArgsExecutor;
 
-    public NoArgumentsCommand(final Command<S> innerCommand, final CommandExecutor<S> noArgsExecutor) {
+    public NoArgumentsCommand(final Command<S> innerCommand, final CommandExecutor<S, V> noArgsExecutor) {
         super(innerCommand);
         this.noArgsExecutor = noArgsExecutor;
     }

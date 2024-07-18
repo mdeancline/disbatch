@@ -1,6 +1,5 @@
 package io.github.disbatch.command.parameter.decorator;
 
-import com.google.common.collect.ImmutableList;
 import io.github.disbatch.command.CommandInput;
 import io.github.disbatch.command.parameter.Parameter;
 import io.github.disbatch.command.parameter.exception.ParameterException;
@@ -73,7 +72,7 @@ public final class MutableParameter<S extends CommandSender, V> implements Param
 
         @Override
         public Collection<String> tabComplete(final CommandSender sender, final CommandInput input) {
-            return ImmutableList.of();
+            return Collections.emptyList();
         }
 
         @Override
