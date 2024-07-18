@@ -1,6 +1,5 @@
 package io.github.disbatch.mock;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import io.github.disbatch.command.CommandInput;
 import org.jetbrains.annotations.NotNull;

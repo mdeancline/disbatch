@@ -33,7 +33,7 @@ public class CommandDispatchTest {
 
     @Test
     public void testWithExecutor() throws CommandSyntaxException {
-        mockServer.addPlayer("HelloWorld");
+        final Player player = mockServer.addPlayer(TestUtils.randomString());
 
         final CommandExecutor<CommandSender, Player> messageExecutor = (sender, input, value) -> value.sendMessage(sender.getName() + " said hi!");
         mockRegistrar.register(CommandDescriptor.of(messageExecutor)
@@ -41,7 +41,7 @@ public class CommandDispatchTest {
                 .label("message")
                 .build());
 
-        final int status = mockDispatcher.execute("message HelloWorld", mockConsole);
+        final int status = mockDispatcher.execute("message " + player.getName(), mockConsole);
         System.out.println("Execution dispatch success: " + isSuccessful(status));
     }
 
