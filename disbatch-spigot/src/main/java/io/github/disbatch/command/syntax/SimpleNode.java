@@ -32,7 +32,7 @@ public final class SimpleNode implements CommandSyntax.Node {
     }
 
     @Override
-    public CommandSyntax.Node next() {
+    public CommandSyntax.Node getDirectChild() {
         return next;
     }
 

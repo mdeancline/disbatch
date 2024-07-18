@@ -67,7 +67,7 @@ public interface CommandSyntax<S extends CommandSender, V> extends Iterable<Comm
 
         Node getChild(String value);
 
-        Node next();
+        Node getDirectChild();
 
         String getLabel();
     }
