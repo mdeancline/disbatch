@@ -38,7 +38,7 @@ public final class CommandGroup implements Command<CommandSender> {
     }
 
     @Override
-    public void run(final CommandSender sender, final CommandInput input) {
+    public void execute(final CommandSender sender, final CommandInput input) {
         executors.get(input.getArgument(0)).execute(sender, input);
     }
 

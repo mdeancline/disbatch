@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Parses a {@link World} based on a parsable, passed argument.
  * <p>
- * <b>Syntax:</b> [world name]
+ * <b>Input syntax:</b> [world name]
  *
  * @since 1.1.0
  */

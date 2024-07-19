@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Parses a {@link Vector} based on parsable, passed arguments.
  * <p>
- * <b>Syntax:</b> [x] [y] [z]
+ * <b>Input syntax:</b> [x] [y] [z]
  *
  * @since 1.1.0
  */

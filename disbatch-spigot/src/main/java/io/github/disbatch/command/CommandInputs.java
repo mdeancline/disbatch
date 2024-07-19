@@ -2,10 +2,13 @@ package io.github.disbatch.command;
 
 import com.google.common.collect.Iterators;
 import io.github.disbatch.command.exception.ArgumentIndexOutOfBoundsException;
+import io.github.disbatch.command.syntax.AbstractSyntax;
 import io.github.disbatch.command.syntax.CommandSyntax;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -19,12 +22,15 @@ import java.util.StringJoiner;
  */
 public final class CommandInputs {
     private static final CommandInput EMPTY = new EmptyCommandInput();
+    private static final CommandInputSyntax SYNTAX = new CommandInputSyntax();
+
     private CommandInputs() {
         throw new AssertionError();
     }
 
     /**
      * Retrieves an empty {@link CommandInput}.
+     *
      * @return the retrieved {@link CommandInput}.
      */
     public static CommandInput empty() {
@@ -32,21 +38,36 @@ public final class CommandInputs {
     }
 
     /**
+     * Creates a new {@link CommandInput} from the given label and arguments, using the provided {@link CommandSyntax}.
+     *
      * @since 1.1.0
-     * @param label
-     * @param arguments
-     * @return
+     * @param label the command label
+     * @param arguments the command arguments
+     * @param syntax the command syntax
+     * @return the created {@link CommandInput}
      */
     public static CommandInput of(final @NotNull String label, final @NotNull String[] arguments, final @NotNull CommandSyntax<?, ?> syntax) {
         return arguments.length > 0
-                ? new LazyLoadingArgumentInput(label, arguments, syntax)
-                : new SingleLabelArgumentInput(label);
+                ? new LazyLoadingCommandInput(label, arguments, syntax)
+                : new SingleLabelCommandInput(label);
     }
 
-    private static class SingleLabelArgumentInput implements CommandInput {
+    /**
+     * Provides the {@link CommandSyntax} for any sort of command input.
+     *
+     * @since 1.1.0
+     * @param <S> the type of the command sender
+     * @return the syntax for command inputs
+     */
+    @SuppressWarnings("unchecked")
+    public static <S extends CommandSender> CommandSyntax<S, CommandInput> syntax() {
+        return (CommandSyntax<S, CommandInput>) SYNTAX;
+    }
+
+    private static class SingleLabelCommandInput implements CommandInput {
         private final String label;
 
-        private SingleLabelArgumentInput(final String label) {
+        private SingleLabelCommandInput(final String label) {
             this.label = label;
         }
 
@@ -91,7 +112,7 @@ public final class CommandInputs {
         }
     }
 
-    private static class LazyLoadingArgumentInput implements CommandInput {
+    private static class LazyLoadingCommandInput implements CommandInput {
         private final String[] arguments;
         private final CommandSyntax<?, ?> syntax;
         private final String cmdLabel;
@@ -99,7 +120,7 @@ public final class CommandInputs {
         private String argumentLine;
         private String commandLine;
 
-        private LazyLoadingArgumentInput(final String cmdLabel, final String[] arguments, final CommandSyntax<?, ?> syntax) {
+        private LazyLoadingCommandInput(final String cmdLabel, final String[] arguments, final CommandSyntax<?, ?> syntax) {
             this.arguments = arguments;
             this.cmdLabel = cmdLabel;
             this.syntax = syntax;
@@ -213,6 +234,38 @@ public final class CommandInputs {
         @Override
         public Iterator<CommandInput.Binding> iterator() {
             return Iterators.emptyIterator();
+        }
+    }
+
+    private static final class CommandInputSyntax extends AbstractSyntax<CommandSender, CommandInput> {
+        private CommandInputSyntax() {
+            super(StringUtils.EMPTY);
+        }
+
+        @Override
+        protected boolean isGreedy() {
+            return true;
+        }
+
+        @Nullable
+        @Override
+        public CommandInput parse(final CommandSender sender, final CommandInput input) {
+            return input;
+        }
+
+        @Override
+        public boolean matches(final CommandInput.Binding binding) {
+            return true;
+        }
+
+        @Override
+        public int getMinimumUsage() {
+            return 0;
+        }
+
+        @Override
+        public int getMaximumUsage() {
+            return Integer.MAX_VALUE;
         }
     }
 }

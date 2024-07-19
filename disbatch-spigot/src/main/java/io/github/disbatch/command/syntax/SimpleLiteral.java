@@ -2,23 +2,21 @@ package io.github.disbatch.command.syntax;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public final class SimpleLiteral implements CommandSyntax.Literal {
-    private final Map<String, CommandSyntax.Literal> children = new HashMap<>();
-    private SimpleLiteral parent;
-    private SimpleLiteral next;
-    private final String value;
+    private final List<CommandSyntax.Literal> children = new ArrayList<>();
+    private final String label;
 
-    public SimpleLiteral(final @NotNull String value) {
-        this.value = value;
+    public SimpleLiteral(final @NotNull String label) {
+        this.label = label;
     }
 
     @Override
     public String getLabel() {
-        return value;
+        return label;
     }
 
     @Override
@@ -26,15 +24,12 @@ public final class SimpleLiteral implements CommandSyntax.Literal {
         return false;
     }
 
-    public void setParent(final @NotNull SimpleLiteral parent) {
-        if (this.parent != null)
-            throw new IllegalStateException("Parent has already been set");
-
-        this.parent = parent;
+    @Override
+    public Collection<CommandSyntax.Literal> getChildren() {
+        return children;
     }
 
-    public void addChild(final @NotNull SimpleLiteral node) {
-        children.put(node.getLabel(), node);
-        node.setParent(this);
+    public void addChild(final @NotNull SimpleLiteral literal) {
+        children.add(literal);
     }
 }

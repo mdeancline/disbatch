@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * Parses an online {@link Player} by their {@link UUID} based on a parsable, passed argument.
  * <p>
- * <b>Syntax:</b> [uuid]
+ * <b>Input syntax:</b> [uuid]
  *
  * @since 1.1.0
  */

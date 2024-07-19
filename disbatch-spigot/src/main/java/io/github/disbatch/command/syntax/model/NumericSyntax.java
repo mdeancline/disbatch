@@ -17,7 +17,7 @@ public abstract class NumericSyntax<S extends CommandSender, V> extends Abstract
     private static final String NUMBER_REGEX = "-?\\d+(\\.\\d+)?";
     private static final String DECIMAL = ".";
 
-    protected NumericSyntax(final String... labels) {
+    protected NumericSyntax(final @NotNull String... labels) {
         super(labels);
     }
 
@@ -60,7 +60,7 @@ public abstract class NumericSyntax<S extends CommandSender, V> extends Abstract
      * @return the integer value represented by the argument.
      * @throws NumberFormatException if the argument does not contain a parsable integer.
      */
-    protected final int parseInt(final @NotNull String argument) throws NumberFormatException {
+    protected final int parseInt(final @NotNull String argument) {
         return Integer.parseInt(argument);
     }
 

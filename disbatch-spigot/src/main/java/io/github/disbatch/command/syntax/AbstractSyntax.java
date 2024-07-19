@@ -24,7 +24,7 @@ public abstract class AbstractSyntax<S extends CommandSender, V> implements Comm
     private Suggester<S> suggester = Suggesters.empty();
     private final SimpleLiteral root;
 
-    protected AbstractSyntax(final String... labels) {
+    protected AbstractSyntax(final @NotNull String... labels) {
         if (labels.length == 0)
             throw new IllegalArgumentException("There must be at least one label");
 
@@ -39,15 +39,15 @@ public abstract class AbstractSyntax<S extends CommandSender, V> implements Comm
     }
 
     @Override
-    public Collection<Suggestion> getSuggestions(S sender, String[] arguments) {
+    public Collection<Suggestion> getSuggestions(final S sender, final String[] arguments) {
         return suggester.getSuggestions(sender, arguments);
     }
 
     @Override
-    public final @Nullable CommandSyntax.Literal getLiteral(final int index) {
+    public final @Nullable Literal getLiteral(final int index) {
         Literal current = root;
         int i = 0;
-        final CommandSyntaxNodeIterator iterator = new CommandSyntaxNodeIterator(current, false);
+        final CommandLiteralIterator iterator = new CommandLiteralIterator(current, false);
 
         for (; i <= index; i++) {
             if (iterator.hasNext()) current = iterator.next();
@@ -60,7 +60,7 @@ public abstract class AbstractSyntax<S extends CommandSender, V> implements Comm
     @NotNull
     @Override
     public Iterator<Literal> iterator() {
-        return new CommandSyntaxNodeIterator(root, false);
+        return new CommandLiteralIterator(root, false);
     }
 
     /**
@@ -75,7 +75,7 @@ public abstract class AbstractSyntax<S extends CommandSender, V> implements Comm
     }
 
     /**
-     * Determines if this syntax either covers all arguments in one or only targets individual arguments.
+     * Checks if this syntax is greedy as a whole, meaning it consumes all remaining arguments.
      *
      * @return true if the syntax is greedy, false otherwise
      */

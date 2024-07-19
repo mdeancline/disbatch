@@ -11,7 +11,7 @@ import java.util.UUID;
  * Parses a {@link UUID} based on a parsable, passed argument.
  * <p>
  * <p>
- * <b>Syntax:</b> [uuid]
+ * <b>Input syntax:</b> [uuid]
  *
  * @since 1.0.0
  */

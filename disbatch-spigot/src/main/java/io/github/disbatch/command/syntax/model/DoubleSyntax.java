@@ -5,10 +5,11 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+//TODO create minimum and maximum double input requirements
 /**
  * Parses a {@link Double} based on a parsable, passed argument.
  * <p>
- * <b>Syntax:</b> [decimal number]
+ * <b>Input syntax:</b> [decimal number]
  *
  * @since 1.1.0
  */

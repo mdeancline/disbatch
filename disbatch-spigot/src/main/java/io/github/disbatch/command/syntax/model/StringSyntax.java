@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Parses and forms a {@code String} from all passed arguments, joined via single whitespace.
  * <p>
- * <b>Syntax:</b> [string value]
+ * <b>Input syntax:</b> [string value]
  *
  * @since 1.1.0
  */

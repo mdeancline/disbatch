@@ -19,11 +19,12 @@ import java.util.Collection;
 public interface CommandSyntax<S extends CommandSender, V> extends Iterable<CommandSyntax.Literal> {
 
     /**
-     * Parses the command input to a value of type {@code V}.
+     * Parses the {@link CommandInput} provided by the sender into an {@code Object} of type {@link V}, which may be {@code null},
+     * for use in the command execution.
      *
-     * @param sender the command sender
-     * @param input the command input
-     * @return the parsed value, or null if parsing fails
+     * @param sender the sender required to parse the input.
+     * @param input  the input provided by the sender.
+     * @return the parsed {@code Object}.
      */
     @Nullable V parse(S sender, CommandInput input);
 
@@ -31,11 +32,17 @@ public interface CommandSyntax<S extends CommandSender, V> extends Iterable<Comm
      * Provides suggestions based on the current input.
      *
      * @param sender the command sender
-     * @param args the current input arguments
+     * @param arguments the current input arguments
      * @return a collection of suggestions
      */
-    Collection<Suggestion> getSuggestions(S sender, String[] args);
+    Collection<Suggestion> getSuggestions(S sender, String[] arguments);
 
+    /**
+     * Retrieves a specific literal by its index.
+     *
+     * @param index the index of the literal
+     * @return the literal at the specified index, or {@code null} if it doesn't exist
+     */
     @Nullable Literal getLiteral(int index);
 
     /**
@@ -60,9 +67,30 @@ public interface CommandSyntax<S extends CommandSender, V> extends Iterable<Comm
      */
     int getMaximumUsage();
 
+    /**
+     * Represents a literal in the command syntax.
+     */
     interface Literal {
+
+        /**
+         * Checks if this literal is greedy, meaning it consumes all remaining arguments.
+         *
+         * @return true if the literal is greedy, false otherwise
+         */
         boolean isGreedy();
 
+        /**
+         * Gets the child literals of this literal.
+         *
+         * @return a collection of child literals
+         */
+        Collection<Literal> getChildren();
+
+        /**
+         * Gets the label of this literal.
+         *
+         * @return the label of the literal
+         */
         String getLabel();
     }
 }

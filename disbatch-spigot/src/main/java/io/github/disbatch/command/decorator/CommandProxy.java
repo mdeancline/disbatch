@@ -25,8 +25,8 @@ public abstract class CommandProxy<S extends CommandSender> implements Command<S
     }
 
     @Deprecated
-    public void run(final S sender, final CommandInput input) {
-        innerCommand.run(sender, input);
+    public void execute(final S sender, final CommandInput input) {
+        innerCommand.execute(sender, input);
     }
 
     @Override

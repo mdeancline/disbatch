@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Parses an {@code Enum} type based on a parsable, passed argument.
  * <p>
- * <b>Syntax:</b> [enum type]
+ * <b>Input syntax:</b> [enum type]
  *
  * @param <S> {@inheritDoc}
  * @param <E> {@inheritDoc}

@@ -1,5 +1,6 @@
 package io.github.disbatch.command;
 
+import io.github.disbatch.command.syntax.CommandSyntax;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -20,10 +21,17 @@ public interface CommandExecutor<S extends CommandSender, V> {
      * @param input  the {@link CommandInput} used to execute the {@code Command}.
      * @param value the resulting {@code Object} parsed from arguments.
      */
-    void run(S sender, V value);
+    void execute(S sender, V value);
 
+    /**
+     * @deprecated This method has been replaced by {@link CommandExecutor#execute(CommandSender, Object)}.
+     * To execute a command with a {@link CommandInput}, register it using a {@link CommandSyntax} for command inputs.
+     * The required syntax can be retrieved using {@link CommandInputs#syntax()}.
+     * <br><br>
+     * Since this method now does nothing by default and is no longer called within the internal operations of Disbatch,
+     * it should be avoided and replaced with the new method as soon as possible.
+     */
     @Deprecated
     default void execute(S sender, CommandInput input) {
-        run(sender, null);
     }
 }

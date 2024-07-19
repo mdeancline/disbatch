@@ -4,7 +4,6 @@ import io.github.disbatch.command.*;
 import io.github.disbatch.command.exception.CommandExecutionException;
 import io.github.disbatch.command.exception.CommandRegistrationException;
 import io.github.disbatch.command.syntax.CommandSyntax;
-import io.github.disbatch.command.syntax.model.StringSyntax;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
@@ -146,6 +145,8 @@ public final class CommandDescriptor {
      */
     public interface AdvancedBuilder<S extends CommandSender, V> {
 
+        AdvancedBuilder<S, V> syntax(@NotNull CommandSyntax<S, V> syntax);
+
         AdvancedBuilder<S, V> onFailure(@NotNull CommandFailureHandler failureHandler);
 
         /**
@@ -177,8 +178,6 @@ public final class CommandDescriptor {
         @Deprecated
         AdvancedBuilder<S, V> validSenderMessage(@NotNull String validSenderMessage);
 
-        AdvancedBuilder<S, V> syntax(@NotNull CommandSyntax<S, V> syntax);
-
         /**
          * Creates a new {@link CommandDescriptor}.
          *
@@ -192,8 +191,7 @@ public final class CommandDescriptor {
 
         private final Class<S> senderType;
         private final CommandExecutor<S, V> executor;
-        @SuppressWarnings("unchecked")
-        private CommandSyntax<S, V> syntax = (CommandSyntax<S, V>) new StringSyntax(StringUtils.EMPTY);
+        private CommandSyntax<S, V> syntax;
         private CommandFailureHandler failureHandler = DEFAULT_FAILURE_HANDLER;
         private CommandTopic<S> topic = new GenericCommandTopic<>("A plugin provided command.");
         private String label = StringUtils.EMPTY;
@@ -263,15 +261,10 @@ public final class CommandDescriptor {
 
         @Override
         public @NotNull CommandDescriptor build() {
-            return new CommandDescriptor(
-                    label,
-                    aliases,
-                    senderType,
-                    executor,
-                    syntax,
-                    failureHandler,
-                    topic
-            );
+            if (syntax == null)
+                throw new CommandRegistrationException("CommandSyntax is null");
+
+            return new CommandDescriptor(label, aliases, senderType, executor, syntax, failureHandler, topic);
         }
     }
 
@@ -323,7 +316,7 @@ public final class CommandDescriptor {
             if (result == null)
                 CommandDescriptor.this.failureHandler.handle(sender, new CommandFailure(input, CommandFailure.Reason.INSUFFICIENT_ARGUMENTS));
             else
-                executor.run(sender, result);
+                executor.execute(sender, result);
         }
 
         public Collection<Suggestion> getSuggestions(CommandSender sender, String[] args) {

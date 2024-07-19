@@ -5,10 +5,11 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+//TODO create minimum and maximum integer input requirements
 /**
  * Creates an {@link Integer} based on a parsable, passed argument.
  * <p>
- * <b>Syntax:</b> [integer number]
+ * <b>Input syntax:</b> [integer number]
  *
  * @since 1.1.0
  */

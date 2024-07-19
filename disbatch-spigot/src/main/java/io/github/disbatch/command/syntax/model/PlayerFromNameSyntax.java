@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Parses an online {@link Player} by their name based on a parsable, passed argument.
  * <p>
- * <b>Syntax:</b> [player name]
+ * <b>Input syntax:</b> [player name]
  *
  * @since 1.1.0
  */

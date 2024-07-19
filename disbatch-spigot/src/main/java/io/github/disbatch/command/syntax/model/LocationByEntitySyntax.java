@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Parses a {@link Location} for the {@link Entity} sender's {@link World} based on parsable, passed arguments.
  * <p>
- * <b>Syntax:</b> [x] [y] [z]
+ * <b>Input syntax:</b> [x] [y] [z]
  *
  * @param <S> the {@code Entity} type to create a {@code Location} from
  * @since 1.1.0

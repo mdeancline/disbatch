@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Parses a {@link Location} for a passed {@link World} based on parsable, passed arguments.
  * <p>
- * <b>Syntax:</b> [world name] [x] [y] [z]
+ * <b>Input syntax:</b> [world name] [x] [y] [z]
  *
  * @since 1.1.0
  */

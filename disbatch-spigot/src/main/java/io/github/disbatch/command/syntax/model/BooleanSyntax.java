@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Parses a {@code Boolean} based on a parsable, passed argument.
  * <p>
- * <b>Syntax:</b> [true|false]
+ * <b>Input syntax:</b> [true|false]
  *
  * @since 1.1.0
  */
