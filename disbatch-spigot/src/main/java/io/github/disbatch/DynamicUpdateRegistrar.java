@@ -1,6 +1,6 @@
 package io.github.disbatch;
 
-import io.github.disbatch.command.descriptor.CommandDescriptor;
+import io.github.disbatch.command.CommandDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 class DynamicUpdateRegistrar implements CommandRegistrar {

@@ -1,8 +1,8 @@
 package io.github.disbatch;
 
+import io.github.disbatch.command.CommandDescriptor;
+import io.github.disbatch.command.CommandTopic;
 import io.github.disbatch.command.Suggestion;
-import io.github.disbatch.command.descriptor.CommandDescriptor;
-import io.github.disbatch.command.descriptor.CommandTopic;
 import io.github.disbatch.command.exception.CommandException;
 import io.github.disbatch.command.exception.CommandRegistrationException;
 import org.bukkit.Server;

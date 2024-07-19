@@ -1,7 +1,7 @@
 package io.github.disbatch;
 
 import io.github.disbatch.command.Command;
-import io.github.disbatch.command.descriptor.CommandDescriptor;
+import io.github.disbatch.command.CommandDescriptor;
 import io.github.disbatch.command.exception.CommandRegistrationException;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;

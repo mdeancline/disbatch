@@ -2,7 +2,7 @@ package io.github.disbatch;
 
 import com.google.common.reflect.TypeToken;
 import io.github.disbatch.command.Command;
-import io.github.disbatch.command.descriptor.CommandDescriptor;
+import io.github.disbatch.command.CommandDescriptor;
 import io.github.disbatch.command.exception.CommandRegistrationException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;

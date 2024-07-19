@@ -1,4 +1,4 @@
-package io.github.disbatch.command.descriptor;
+package io.github.disbatch.command;
 
 import io.github.disbatch.command.exception.CommandException;
 import org.bukkit.command.CommandMap;

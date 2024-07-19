@@ -53,7 +53,7 @@ public final class CommandInputs {
     }
 
     /**
-     * Provides the {@link CommandSyntax} for any sort of command input.
+     * Provides the flexible {@link CommandSyntax} for any sort of command input.
      *
      * @since 1.1.0
      * @param <S> the type of the command sender

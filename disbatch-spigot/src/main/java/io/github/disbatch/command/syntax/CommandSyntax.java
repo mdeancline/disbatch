@@ -1,6 +1,7 @@
 package io.github.disbatch.command.syntax;
 
 import io.github.disbatch.command.CommandInput;
+import io.github.disbatch.command.CommandInputs;
 import io.github.disbatch.command.Suggestion;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
@@ -13,6 +14,7 @@ import java.util.Collection;
  * depend on the {@link CommandSender}.
  *
  * @since 1.1.0
+ * @see CommandInputs#syntax()
  * @param <S> any type extending {@link CommandSender} required to parse arguments.
  * @param <V> the type from the resulting {@code Object} parsed from arguments.
  */

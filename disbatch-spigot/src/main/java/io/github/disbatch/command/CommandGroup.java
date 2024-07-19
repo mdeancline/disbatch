@@ -1,6 +1,5 @@
 package io.github.disbatch.command;
 
-import io.github.disbatch.command.descriptor.CommandDescriptor;
 import io.github.disbatch.command.exception.ArgumentIndexOutOfBoundsException;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;

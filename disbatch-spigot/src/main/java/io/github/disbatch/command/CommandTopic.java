@@ -1,6 +1,5 @@
-package io.github.disbatch.command.descriptor;
+package io.github.disbatch.command;
 
-import io.github.disbatch.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;

@@ -1,6 +1,5 @@
 package io.github.disbatch.command;
 
-import io.github.disbatch.command.descriptor.CommandFailure;
 import org.bukkit.command.CommandSender;
 
 //TODO complete documentation

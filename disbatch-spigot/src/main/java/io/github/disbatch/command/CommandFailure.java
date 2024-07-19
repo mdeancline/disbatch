@@ -1,36 +1,23 @@
-package io.github.disbatch.command.descriptor;
-
-import io.github.disbatch.command.CommandInput;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Iterator;
+package io.github.disbatch.command;
 
 /**
+ * Represents a type of {@link CommandInput} that is unable to be processed by a command.
+ *
  * @since 1.1.0
  */
-public final class CommandFailure implements Iterable<CommandInput.Binding> {
-    private final CommandInput input;
-    private final Reason reason;
+public interface CommandFailure extends CommandInput {
 
-    CommandFailure(final CommandInput input, final Reason reason) {
-        this.input = input;
-        this.reason = reason;
-    }
-
-    @NotNull
-    @Override
-    public Iterator<CommandInput.Binding> iterator() {
-        return input.iterator();
-    }
-
-    public Reason getReason() {
-        return reason;
-    }
+    /**
+     * Retrieves the reason for the failure.
+     *
+     * @return the reason
+     */
+    Reason getReason();
 
     /**
      * Represents various situations for why a command failed to execute.
      */
-    public enum Reason {
+    enum Reason {
         INVALID_SENDER,
 
         /**

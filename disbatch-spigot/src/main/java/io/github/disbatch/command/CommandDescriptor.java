@@ -1,6 +1,5 @@
-package io.github.disbatch.command.descriptor;
+package io.github.disbatch.command;
 
-import io.github.disbatch.command.*;
 import io.github.disbatch.command.exception.CommandExecutionException;
 import io.github.disbatch.command.exception.CommandRegistrationException;
 import io.github.disbatch.command.syntax.CommandSyntax;
@@ -287,7 +286,7 @@ public final class CommandDescriptor {
             if (senderType.isAssignableFrom(sender.getClass()))
                 execute(sender, input);
             else
-                CommandDescriptor.this.failureHandler.handle(sender, new CommandFailure(input, CommandFailure.Reason.INVALID_SENDER));
+                CommandDescriptor.this.failureHandler.handle(sender, new CommandFailureImpl(input, CommandFailure.Reason.INVALID_SENDER));
 
             return true;
         }
@@ -306,7 +305,7 @@ public final class CommandDescriptor {
             final CommandFailure.Reason reason = hasLackingArgs
                     ? CommandFailure.Reason.LACKING_ARGUMENTS
                     : CommandFailure.Reason.EXTRA_ARGUMENTS;
-            final CommandFailure failure = new CommandFailure(input, reason);
+            final CommandFailure failure = new CommandFailureImpl(input, reason);
             CommandDescriptor.this.failureHandler.handle(sender, failure);
         }
 
@@ -314,7 +313,7 @@ public final class CommandDescriptor {
             final Object result = syntax.parse(sender, input);
 
             if (result == null)
-                CommandDescriptor.this.failureHandler.handle(sender, new CommandFailure(input, CommandFailure.Reason.INSUFFICIENT_ARGUMENTS));
+                CommandDescriptor.this.failureHandler.handle(sender, new CommandFailureImpl(input, CommandFailure.Reason.INSUFFICIENT_ARGUMENTS));
             else
                 executor.execute(sender, result);
         }
@@ -323,6 +322,57 @@ public final class CommandDescriptor {
             return senderType.isAssignableFrom(sender.getClass())
                     ? syntax.getSuggestions(sender, args)
                     : Collections.emptyList();
+        }
+
+        private class CommandFailureImpl implements CommandFailure {
+            private final CommandInput source;
+            private final Reason reason;
+
+            public CommandFailureImpl(final CommandInput source, final Reason reason) {
+                this.source = source;
+                this.reason = reason;
+            }
+
+            @Override
+            public Reason getReason() {
+                return reason;
+            }
+
+            @Override
+            public int getArgumentLength() {
+                return source.getArgumentLength();
+            }
+
+            @Override
+            public String getArgumentLine() {
+                return source.getArgumentLine();
+            }
+
+            @Override
+            public String getArgument(final int index) {
+                return source.getArgument(index);
+            }
+
+            @Override
+            public String[] getArguments() {
+                return source.getArguments();
+            }
+
+            @Override
+            public String getCommandLabel() {
+                return source.getCommandLabel();
+            }
+
+            @Override
+            public String getCommandLine() {
+                return source.getCommandLine();
+            }
+
+            @NotNull
+            @Override
+            public Iterator<Binding> iterator() {
+                return source.iterator();
+            }
         }
     }
 }
