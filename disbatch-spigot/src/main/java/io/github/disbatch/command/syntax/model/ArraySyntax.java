@@ -67,8 +67,8 @@ public final class ArraySyntax<S extends CommandSender, V> implements CommandSyn
     }
 
     @Override
-    public @Nullable Node getNode(int argumentIndex) {
-        return source.getNode(argumentIndex);
+    public @Nullable CommandSyntax.Literal getLiteral(int index) {
+        return source.getLiteral(index);
     }
 
     @Override
@@ -89,7 +89,7 @@ public final class ArraySyntax<S extends CommandSender, V> implements CommandSyn
     //TODO return valid iterator
     @NotNull
     @Override
-    public Iterator<Node> iterator() {
+    public Iterator<Literal> iterator() {
         return Iterators.emptyIterator();
     }
 

@@ -17,8 +17,8 @@ public final class IntegerSyntax extends NumericSyntax<CommandSender, Integer> {
     /**
      * Constructs a new {@code IntegerSyntax} with the specified argument label.
      */
-    public IntegerSyntax(final @NotNull String name) {
-        super(name);
+    public IntegerSyntax(final @NotNull String label) {
+        super(label);
     }
 
     @Override

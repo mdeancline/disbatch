@@ -2,6 +2,7 @@ package io.github.disbatch.command;
 
 import io.github.disbatch.CommandRegistrar;
 import io.github.disbatch.command.syntax.CommandSyntax;
+import io.github.disbatch.command.syntax.UnrestrictedSyntax;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collection;
@@ -15,13 +16,8 @@ import java.util.Collections;
  * @apiNote Not to be confused with {@link org.bukkit.command.Command}.
  * @see CommandRegistrar
  * @since 1.0.0
- * @deprecated Starting in the release of Disbatch 1.2.0 for Spigot, all {@code Command} implementations will
- * have to implement the {@link Command#getSyntax()} method due to the introduction of only having to register a
- * {@link CommandExecutor} with a label at minimum. Other than that, the {@code Command} interface will remain available
- * in the library after that version release.
  */
-@Deprecated
-public interface Command<S extends CommandSender> extends CommandExecutor<S, String> {
+public interface Command<S extends CommandSender> extends CommandExecutor<S, CommandInput> {
 
     /**
      * @deprecated With the introduction of some of Minecraft's newest features, tab-completion suggestions will take
@@ -34,17 +30,16 @@ public interface Command<S extends CommandSender> extends CommandExecutor<S, Str
     }
 
     @Deprecated
-    default void execute(S sender, CommandInput input) {
-        execute(sender, input, null);
+    default void execute(final S sender, final CommandInput input) {
+        run(sender, input);
     }
 
-    //TODO return a valid CommandSyntax
     /**
      * Provides the {@code Argumentation} for this command
      *
      * @return the syntax for this command
      */
-    default CommandSyntax<S, String> getSyntax() {
-        return null;
+    default CommandSyntax<S, CommandInput> getSyntax() {
+        return UnrestrictedSyntax.getInstance();
     }
 }

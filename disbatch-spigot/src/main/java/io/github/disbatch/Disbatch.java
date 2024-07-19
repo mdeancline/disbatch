@@ -3,6 +3,7 @@ package io.github.disbatch;
 import com.google.common.reflect.TypeToken;
 import io.github.disbatch.command.Command;
 import io.github.disbatch.command.descriptor.CommandDescriptor;
+import io.github.disbatch.command.exception.CommandRegistrationException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +29,7 @@ public final class Disbatch {
      * @param label the label that should be used to execute the {@code Command}.
      * @see Disbatch#register(Command, CommandDescriptor)
      *
-     * @deprecated use {@link CommandRegistrar#register(CommandDescriptor)} instead
+     * @deprecated use {@link CommandRegistrar#register(String, CommandDescriptor)} instead
      */
     public static <S extends CommandSender> void register(final @NotNull Command<S> command, final @NotNull String label) {
         final Class<S> senderType = (Class<S>) new TypeToken<S>(command.getClass()){}.getRawType();
@@ -42,13 +43,16 @@ public final class Disbatch {
      * @param descriptor the {@link CommandDescriptor} aiding in providing usage help in the server's {@code /help} menu.
      * @see Disbatch#register(Command, String)
      *
-     * @deprecated use {@link CommandRegistrar#register(CommandDescriptor)} instead
+     * @deprecated use {@link CommandRegistrar#register(String, CommandDescriptor)} instead
      */
-    public static <S extends CommandSender> void register(final @NotNull Command<S> command, final @NotNull CommandDescriptor<?, ?> descriptor) {
+    public static <S extends CommandSender> void register(final @NotNull Command<S> command, final @NotNull CommandDescriptor descriptor) {
+        if (descriptor.getLabel() == null)
+            throw new CommandRegistrationException("Command label cannot be empty");
+
         final JavaPlugin plugin = JavaPlugin.getProvidingPlugin(command.getClass());
         final Class<S> senderType = (Class<S>) new TypeToken<S>(command.getClass()){}.getRawType();
         final CommandRegistrar registrar = CommandRegistrars.getCompatibleRegistrar(plugin);
-        registrar.register(descriptor);
+        registrar.register(descriptor.getLabel(), descriptor);
     }
 
     /**
@@ -59,7 +63,7 @@ public final class Disbatch {
      * @param plugin the plugin chosen to have the given {@code Command} registered.
      * @see Disbatch#register(Command, CommandDescriptor, JavaPlugin)
      *
-     * @deprecated use {@link CommandRegistrar#registerFromFile(CommandDescriptor)} instead
+     * @deprecated use {@link CommandRegistrar#registerFromFile(String, CommandDescriptor)} instead
      */
     public static <S extends CommandSender> void register(final @NotNull Command<S> command, final @NotNull String label, final @NotNull JavaPlugin plugin) {
         register(command, CommandDescriptor.of((Class<S>) new TypeToken<S>(command.getClass()) {}.getRawType(), command)
@@ -76,8 +80,8 @@ public final class Disbatch {
      * @param plugin the plugin chosen to have the given {@code Command} registered.
      * @see Disbatch#register(Command, String, JavaPlugin)
      *
-     * @deprecated use {@link CommandRegistrar#registerFromFile(CommandDescriptor)} instead
+     * @deprecated use {@link CommandRegistrar#registerFromFile(String, CommandDescriptor)} instead
      */
-    public static <S extends CommandSender> void register(final @NotNull Command<S> command, final @NotNull CommandDescriptor<?, ?> descriptor, final @NotNull JavaPlugin plugin) {
+    public static <S extends CommandSender> void register(final @NotNull Command<S> command, final @NotNull CommandDescriptor descriptor, final @NotNull JavaPlugin plugin) {
     }
 }

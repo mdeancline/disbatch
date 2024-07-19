@@ -52,22 +52,21 @@ class BukkitCommandRegistrar implements CommandRegistrar {
     }
 
     @Override
-    public void register(final @NotNull CommandDescriptor<?, ?> descriptor) {
-        final String label = descriptor.getLabel();
-        final CommandAdapter adapter = new CommandAdapter(descriptor);
+    public void register(final @NotNull String label, final @NotNull CommandDescriptor descriptor) {
+        final CommandAdapter adapter = new CommandAdapter(label, descriptor);
         serverCommandMap.register(label, adapter);
-        server.getHelpMap().addTopic(new CommandTopicAdapter(descriptor));
+        server.getHelpMap().addTopic(new CommandTopicAdapter(label, descriptor));
     }
 
     @Override
-    public void registerFromFile(final @NotNull CommandDescriptor<?, ?> descriptor) {
-        setupPluginCommandExecution(descriptor);
-        server.getHelpMap().addTopic(new CommandTopicAdapter(descriptor));
+    public void registerFromFile(final @NotNull String label, final @NotNull CommandDescriptor descriptor) {
+        setupPluginCommandExecution(label, descriptor);
+        server.getHelpMap().addTopic(new CommandTopicAdapter(label, descriptor));
     }
 
-    private void setupPluginCommandExecution(final CommandDescriptor<?, ?> descriptor) {
-        final PluginCommand pluginCommand = getExistingPluginCommand(descriptor.getLabel());
-        final CommandAdapter adapter = new CommandAdapter(descriptor);
+    private void setupPluginCommandExecution(final String label, final CommandDescriptor descriptor) {
+        final PluginCommand pluginCommand = getExistingPluginCommand(label);
+        final CommandAdapter adapter = new CommandAdapter(label, descriptor);
         pluginCommand.setExecutor(adapter);
         pluginCommand.setTabCompleter(adapter);
     }
@@ -83,11 +82,11 @@ class BukkitCommandRegistrar implements CommandRegistrar {
     }
 
     static class CommandAdapter extends Command implements TabExecutor, CommandExecutor {
-        private final CommandDescriptor<?, ?>.Command command;
+        private final CommandDescriptor.Executor command;
 
-        CommandAdapter(final CommandDescriptor<?, ?> descriptor) {
-            super(descriptor.getLabel());
-            command = descriptor.getCommand();
+        CommandAdapter(final String label, final CommandDescriptor descriptor) {
+            super(label);
+            command = descriptor.getExecutor();
         }
 
         @Override
@@ -117,10 +116,10 @@ class BukkitCommandRegistrar implements CommandRegistrar {
         private final CommandTopic<CommandSender> source;
 
         @SuppressWarnings("unchecked")
-        private CommandTopicAdapter(final CommandDescriptor<?, ?> descriptor) {
+        private CommandTopicAdapter(final String label, final CommandDescriptor descriptor) {
             senderType = descriptor.getSenderType();
             source = (CommandTopic<CommandSender>) descriptor.getTopic();
-            name = "/" + descriptor.getLabel();
+            name = "/" + label;
         }
 
         @Override

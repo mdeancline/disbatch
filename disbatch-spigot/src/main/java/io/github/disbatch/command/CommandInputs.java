@@ -171,7 +171,7 @@ public final class CommandInputs {
                 bindings = new CommandInput.Binding[arguments.length];
 
                 for (int i = 0; i < bindings.length; i++)
-                    bindings[i] = new SimpleBinding(syntax.getNode(i), arguments, i);
+                    bindings[i] = new SimpleBinding(syntax.getLiteral(i), arguments, i);
             }
 
             return Arrays.asList(bindings).iterator();

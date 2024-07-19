@@ -22,22 +22,24 @@ public interface CommandRegistrar {
      * <a href="https://www.spigotmc.org/wiki/plugin-yml/">plugin.yml</a> file belonging to the
      * {@code CommandRegistrar}'s connected {@link Plugin}.
      *
-     * @param descriptor  the descriptor for registering a command to the server.
+     * @param label the label that should be used for this builder
+     * @param descriptor the descriptor for registering a command to the server.
      * @throws CommandRegistrationException
-     * @see CommandRegistrar#registerFromFile(CommandDescriptor)
+     * @see CommandRegistrar#registerFromFile(String, CommandDescriptor)
      */
-    void register(@NotNull CommandDescriptor<?, ?> descriptor);
+    void register(@NotNull String label, @NotNull CommandDescriptor descriptor);
 
     /**
      * Registers a {@link Command} to be used on the Spigot Minecraft server as defined in the
      * <a href="https://www.spigotmc.org/wiki/plugin-yml/">plugin.yml</a> file belonging to the
      * {@code CommandRegistrar}'s connected {@link Plugin}.
      *
-     * @param descriptor  the descriptor for registering a command to the server.
+     * @param label the label that should be used for this builder
+     * @param descriptor the descriptor for registering a command to the server.
      * @throws CommandRegistrationException
-     * @see CommandRegistrar#register(CommandDescriptor)
+     * @see CommandRegistrar#register(String, CommandDescriptor)
      */
-    void registerFromFile(@NotNull CommandDescriptor<?, ?> descriptor);
+    void registerFromFile(@NotNull String label, @NotNull CommandDescriptor descriptor);
 
     //TODO complete documentation
     abstract class Key {

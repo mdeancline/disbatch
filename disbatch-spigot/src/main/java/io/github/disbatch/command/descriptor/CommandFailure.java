@@ -1,7 +1,6 @@
 package io.github.disbatch.command.descriptor;
 
 import io.github.disbatch.command.CommandInput;
-import io.github.disbatch.command.syntax.CommandSyntax;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -10,12 +9,10 @@ import java.util.Iterator;
  * @since 1.1.0
  */
 public final class CommandFailure implements Iterable<CommandInput.Binding> {
-    private final CommandSyntax<?, ?> syntax;
     private final CommandInput input;
     private final Reason reason;
 
-    CommandFailure(final CommandSyntax<?, ?> syntax, final CommandInput input, final Reason reason) {
-        this.syntax = syntax;
+    CommandFailure(final CommandInput input, final Reason reason) {
         this.input = input;
         this.reason = reason;
     }

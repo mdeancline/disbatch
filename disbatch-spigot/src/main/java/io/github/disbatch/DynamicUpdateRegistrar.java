@@ -11,14 +11,14 @@ class DynamicUpdateRegistrar implements CommandRegistrar {
     }
 
     @Override
-    public void register(@NotNull CommandDescriptor<?, ?> descriptor) {
-        source.register(descriptor);
+    public void register(final @NotNull String label, final @NotNull CommandDescriptor descriptor) {
+        source.register(label, descriptor);
         updateClientCommandLists();
     }
 
     @Override
-    public void registerFromFile(@NotNull CommandDescriptor<?, ?> descriptor) {
-        source.registerFromFile(descriptor);
+    public void registerFromFile(final @NotNull String label, final @NotNull CommandDescriptor descriptor) {
+        source.registerFromFile(label, descriptor);
         updateClientCommandLists();
     }
 

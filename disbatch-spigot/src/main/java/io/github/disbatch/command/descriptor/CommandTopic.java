@@ -32,7 +32,7 @@ public interface CommandTopic<S extends CommandSender> {
      */
     void amend(@Nullable String shortText, @Nullable String fullText);
 
-    void apply(CommandDescriptor<S, ?> descriptor);
+    void apply(CommandDescriptor descriptor);
 
     /**
      * Determines if a {@link CommandSender} is allowed to see this {@code CommandTopic}.

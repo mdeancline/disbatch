@@ -18,10 +18,9 @@ public class MockCommandRegistrar implements CommandRegistrar {
     }
 
     @Override
-    public void register(@NotNull final CommandDescriptor<?, ?> descriptor) {
-        final CommandDescriptor<?, ?>.Command command = descriptor.getCommand();
+    public void register(@NotNull String label, @NotNull final CommandDescriptor descriptor) {
+        final CommandDescriptor.Executor command = descriptor.getExecutor();
         final CommandSyntax<?, ?> syntax = descriptor.getSyntax();
-        final String label = descriptor.getLabel();
 
         dispatcher.register(LiteralArgumentBuilder.<CommandSender>literal(label).executes(context -> {
             final String input = context.getInput();
@@ -32,7 +31,7 @@ public class MockCommandRegistrar implements CommandRegistrar {
     }
 
     @Override
-    public void registerFromFile(@NotNull CommandDescriptor<?, ?> descriptor) {
+    public void registerFromFile(@NotNull String label, @NotNull CommandDescriptor descriptor) {
 
     }
 }

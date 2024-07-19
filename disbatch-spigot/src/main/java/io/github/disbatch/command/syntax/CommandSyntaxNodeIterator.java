@@ -2,11 +2,11 @@ package io.github.disbatch.command.syntax;
 
 import java.util.Iterator;
 
-public class CommandSyntaxNodeIterator implements Iterator<CommandSyntax.Node> {
-    private CommandSyntax.Node current;
+public class CommandSyntaxNodeIterator implements Iterator<CommandSyntax.Literal> {
+    private CommandSyntax.Literal current;
     private final boolean traverseTree;
 
-    public CommandSyntaxNodeIterator(final CommandSyntax.Node current, boolean traverseTree) {
+    public CommandSyntaxNodeIterator(final CommandSyntax.Literal current, boolean traverseTree) {
         this.current = current;
         this.traverseTree = traverseTree;
     }
@@ -17,7 +17,7 @@ public class CommandSyntaxNodeIterator implements Iterator<CommandSyntax.Node> {
     }
 
     @Override
-    public CommandSyntax.Node next() {
+    public CommandSyntax.Literal next() {
         return null;
     }
 }

@@ -15,8 +15,8 @@ import java.util.*;
  *
  * @since 1.0.0
  */
-public final class CommandGroup<S extends CommandSender> implements Command<S> {
-    private final Map<String, GroupedExecutor<?>> executors = new HashMap<>();
+public final class CommandGroup implements Command<CommandSender> {
+    private final Map<String, CommandDescriptor.Executor> executors = new HashMap<>();
 
     public CommandGroup(final @NotNull String name) {
 
@@ -27,30 +27,29 @@ public final class CommandGroup<S extends CommandSender> implements Command<S> {
      *
      * @param descriptor
      */
-    @SuppressWarnings("unchecked")
-    public <V> CommandGroup<S> with(final @NotNull CommandDescriptor<? extends S, V> descriptor) {
-        final CommandDescriptor<S, V> casted = (CommandDescriptor<S, V>) descriptor;
-        final GroupedExecutor<V> executor = new GroupedExecutor<>(casted);
+    public CommandGroup with(final @NotNull String label, final @NotNull CommandDescriptor descriptor) {
+        final CommandDescriptor.Executor executor = descriptor.getExecutor();
+        executors.put(label, descriptor.getExecutor());
 
-        for (final String alias : casted.getAliases())
+        for (final String alias : descriptor.getAliases())
             executors.put(alias, executor);
 
         return this;
     }
 
     @Override
-    public void execute(S sender, CommandInput input, String value) {
+    public void run(final CommandSender sender, final CommandInput input) {
         executors.get(input.getArgument(0)).execute(sender, input);
     }
 
-    private class GroupedExecutor<V> {
-        private final CommandDescriptor<S, V>.Command command;
+    private static class GroupedExecutor {
+        private final CommandDescriptor.Executor command;
 
-        private GroupedExecutor(final CommandDescriptor<S, V> descriptor) {
-            command = descriptor.getCommand();
+        private GroupedExecutor(final CommandDescriptor descriptor) {
+            command = descriptor.getExecutor();
         }
 
-        public void execute(final S sender, final CommandInput input) {
+        public void execute(final CommandSender sender, final CommandInput input) {
             command.execute(sender, new LazyLoadingGroupedArgumentInput(input));
         }
     }

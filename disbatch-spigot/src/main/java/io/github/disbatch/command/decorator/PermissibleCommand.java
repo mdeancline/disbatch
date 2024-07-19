@@ -28,9 +28,9 @@ public final class PermissibleCommand<S extends CommandSender> extends CommandPr
     }
 
     @Override
-    public void execute(final S sender, final @NotNull CommandInput input) {
+    public void run(final S sender, final @NotNull CommandInput input) {
         if (sender.hasPermission(permissionNode))
-            super.execute(sender, input);
+            super.run(sender, input);
         else if (!Strings.isNullOrEmpty(noPermissionMessage))
             sender.sendMessage(noPermissionMessage.replace("%permission", permissionNode));
     }

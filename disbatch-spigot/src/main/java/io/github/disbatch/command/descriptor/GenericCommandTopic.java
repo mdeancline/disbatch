@@ -41,7 +41,7 @@ public class GenericCommandTopic<S extends CommandSender> implements CommandTopi
     }
 
     @Override
-    public void apply(final CommandDescriptor<S, ?> descriptor) {
+    public void apply(final CommandDescriptor descriptor) {
 //        final org.bukkit.command.Command placeholder = new PlaceholderCommand(
 //                descriptor.getLabel(),
 //                description,

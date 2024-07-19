@@ -16,7 +16,7 @@ import java.util.Collection;
  * @param <S> any type extending {@link CommandSender} required to parse arguments.
  * @param <V> the type from the resulting {@code Object} parsed from arguments.
  */
-public interface CommandSyntax<S extends CommandSender, V> extends Iterable<CommandSyntax.Node> {
+public interface CommandSyntax<S extends CommandSender, V> extends Iterable<CommandSyntax.Literal> {
 
     /**
      * Parses the command input to a value of type {@code V}.
@@ -36,7 +36,7 @@ public interface CommandSyntax<S extends CommandSender, V> extends Iterable<Comm
      */
     Collection<Suggestion> getSuggestions(S sender, String[] args);
 
-    @Nullable Node getNode(int argumentIndex);
+    @Nullable Literal getLiteral(int index);
 
     /**
      * Checks if the given argument binding matches the expected syntax.
@@ -60,14 +60,8 @@ public interface CommandSyntax<S extends CommandSender, V> extends Iterable<Comm
      */
     int getMaximumUsage();
 
-    interface Node extends Iterable<Node> {
-        boolean hasChild();
-
-        boolean hasChildren();
-
-        Node getChild(String value);
-
-        Node getDirectChild();
+    interface Literal {
+        boolean isGreedy();
 
         String getLabel();
     }

@@ -20,10 +20,10 @@ public interface CommandExecutor<S extends CommandSender, V> {
      * @param input  the {@link CommandInput} used to execute the {@code Command}.
      * @param value the resulting {@code Object} parsed from arguments.
      */
-    void execute(S sender, CommandInput input, V value);
+    void run(S sender, V value);
 
     @Deprecated
     default void execute(S sender, CommandInput input) {
-        execute(sender, input, null);
+        run(sender, null);
     }
 }

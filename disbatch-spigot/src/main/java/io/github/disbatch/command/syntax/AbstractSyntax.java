@@ -22,16 +22,16 @@ import java.util.Iterator;
  */
 public abstract class AbstractSyntax<S extends CommandSender, V> implements CommandSyntax<S, V> {
     private Suggester<S> suggester = Suggesters.empty();
-    private final SimpleNode root;
+    private final SimpleLiteral root;
 
     protected AbstractSyntax(final String... labels) {
         if (labels.length == 0)
             throw new IllegalArgumentException("There must be at least one label");
 
-        SimpleNode node = new SimpleNode(labels[0]);
+        SimpleLiteral node = new SimpleLiteral(labels[0]);
         for (int i = 1; i < labels.length; i++) {
-            final SimpleNode previous = node;
-            node = new SimpleNode(labels[i]);
+            final SimpleLiteral previous = node;
+            node = new SimpleLiteral(labels[i]);
             previous.addChild(node);
         }
 
@@ -44,22 +44,22 @@ public abstract class AbstractSyntax<S extends CommandSender, V> implements Comm
     }
 
     @Override
-    public final @Nullable Node getNode(final int argumentIndex) {
-        Node current = root;
+    public final @Nullable CommandSyntax.Literal getLiteral(final int index) {
+        Literal current = root;
         int i = 0;
         final CommandSyntaxNodeIterator iterator = new CommandSyntaxNodeIterator(current, false);
 
-        for (; i <= argumentIndex; i++) {
+        for (; i <= index; i++) {
             if (iterator.hasNext()) current = iterator.next();
             else break;
         }
 
-        return !isGreedy() && i > argumentIndex ? null : current;
+        return !isGreedy() && i > index ? null : current;
     }
 
     @NotNull
     @Override
-    public Iterator<Node> iterator() {
+    public Iterator<Literal> iterator() {
         return new CommandSyntaxNodeIterator(root, false);
     }
 

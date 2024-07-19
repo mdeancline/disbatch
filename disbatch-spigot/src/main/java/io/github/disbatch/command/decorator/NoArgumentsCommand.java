@@ -22,8 +22,8 @@ public final class NoArgumentsCommand<S extends CommandSender, V> extends Comman
     }
 
     @Override
-    public void execute(final S sender, final @NotNull CommandInput input) {
+    public void run(final S sender, final @NotNull CommandInput input) {
         if (input.getArgumentLength() == 0) noArgsExecutor.execute(sender, input);
-        else super.execute(sender, input);
+        else super.run(sender, input);
     }
 }

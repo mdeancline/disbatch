@@ -4,7 +4,9 @@ import io.github.disbatch.command.*;
 import io.github.disbatch.command.exception.CommandExecutionException;
 import io.github.disbatch.command.exception.CommandRegistrationException;
 import io.github.disbatch.command.syntax.CommandSyntax;
+import io.github.disbatch.command.syntax.model.StringSyntax;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.help.HelpMap;
 import org.jetbrains.annotations.NotNull;
@@ -21,67 +23,69 @@ import java.util.*;
  * @see CommandDescriptor#of(CommandExecutor) 
  * @since 1.0.0
  */
-public final class CommandDescriptor<S extends CommandSender, V> {
+public final class CommandDescriptor {
     private final List<String> aliases = new LinkedList<>();
-    private final Class<S> senderType;
-    private final Command command;
-    private final CommandSyntax<S, V> syntax;
+    private final Class<? extends CommandSender> senderType;
+    private final Executor executor;
+    private final CommandSyntax<CommandSender, Object> syntax;
     private final CommandFailureHandler failureHandler;
-    private final CommandTopic<? super S> topic;
+    private final CommandTopic<CommandSender> topic;
     private final String label;
 
+    @SuppressWarnings("unchecked")
     private CommandDescriptor(
             final @NotNull String label,
             final @NotNull String[] aliases,
-            final @NotNull Class<S> senderType,
-            final @NotNull CommandExecutor<S, V> executor,
-            final @NotNull CommandSyntax<S, V> syntax,
+            final @NotNull Class<? extends CommandSender> senderType,
+            final @NotNull CommandExecutor<?, ?> executor,
+            final @NotNull CommandSyntax<?, ?> syntax,
             final @NotNull CommandFailureHandler failureHandler,
-            final @NotNull CommandTopic<? super S> topic
+            final @NotNull CommandTopic<?> topic
     ) {
         this.label = label;
         this.senderType = senderType;
-        this.syntax = syntax;
+        this.syntax = (CommandSyntax<CommandSender, Object>) syntax;
         this.failureHandler = failureHandler;
-        this.topic = topic;
+        this.topic = (CommandTopic<CommandSender>) topic;
         this.aliases.addAll(Arrays.asList(aliases));
 
-        this.command = new Command(executor, syntax);
+        this.executor = new Executor(executor, syntax);
     }
 
-    public static LimitedBuilder<CommandSender, String> of(final io.github.disbatch.command.Command<CommandSender> command) {
+    public static BasicBuilder<CommandSender, CommandInput> of(final @NotNull Command<CommandSender> command) {
         return of(CommandSender.class, command);
     }
 
-    public static <S extends CommandSender> LimitedBuilder<S, String> of(final Class<S> senderType, final io.github.disbatch.command.Command<S> command) {
+    public static <S extends CommandSender> BasicBuilder<S, CommandInput> of(final @NotNull Class<S> senderType, final @NotNull Command<S> command) {
         return new Builder<>(senderType, command).syntax(command.getSyntax());
     }
 
-    public static <V> FullBuilder<CommandSender, V> of(final CommandExecutor<CommandSender, V> executor) {
+    public static <V> AdvancedBuilder<CommandSender, V> of(final @NotNull CommandExecutor<CommandSender, V> executor) {
         return of(CommandSender.class, executor);
     }
     
-    public static <S extends CommandSender, V> FullBuilder<S, V> of(final Class<S> senderType, final CommandExecutor<S, V> executor) {
+    public static <S extends CommandSender, V> AdvancedBuilder<S, V> of(final @NotNull Class<S> senderType, final @NotNull CommandExecutor<S, V> executor) {
         return new Builder<>(senderType, executor);
     }
 
-    public Command getCommand() {
-        return command;
+    public Executor getExecutor() {
+        return executor;
     }
 
+    @Deprecated
     public String getLabel() {
         return label;
     }
 
-    public CommandTopic<? super S> getTopic() {
+    public CommandTopic<?> getTopic() {
         return topic;
     }
 
-    public Class<S> getSenderType() {
+    public Class<? extends CommandSender> getSenderType() {
         return senderType;
     }
 
-    public CommandSyntax<S, V> getSyntax() {
+    public CommandSyntax<?, ?> getSyntax() {
         return syntax;
     }
 
@@ -94,9 +98,9 @@ public final class CommandDescriptor<S extends CommandSender, V> {
      *
      * @since 1.1.0
      */
-    public interface LimitedBuilder<S extends CommandSender, V> {
+    public interface BasicBuilder<S extends CommandSender, V> {
 
-        LimitedBuilder<S, V> onFailure(@NotNull CommandFailureHandler failureHandler);
+        BasicBuilder<S, V> onFailure(@NotNull CommandFailureHandler failureHandler);
 
         /**
          * Sets the {@link CommandTopic} that should be converted accordingly to be added to the server's {@link HelpMap}.
@@ -104,15 +108,7 @@ public final class CommandDescriptor<S extends CommandSender, V> {
          * @param topic the {@code CommandTopic} to be added to the server's {@code HelpMap}
          * @return the corresponding builder
          */
-        LimitedBuilder<S, V> topic(@NotNull CommandTopic<S> topic);
-
-        /**
-         * Sets the command label for use by the created descriptor for when a {@link io.github.disbatch.command.Command} is registered with it.
-         *
-         * @param label the label that should be used for this builder
-         * @return the corresponding builder
-         */
-        LimitedBuilder<S, V> label(@NotNull String label);
+        BasicBuilder<S, V> topic(@NotNull CommandTopic<S> topic);
 
         /**
          * Sets the command label aliases, which is optional, for use by the created descriptor for when a {@link io.github.disbatch.command.Command}
@@ -121,7 +117,10 @@ public final class CommandDescriptor<S extends CommandSender, V> {
          * @param aliases the aliases that should be used for this builder
          * @return the corresponding builder
          */
-        LimitedBuilder<S, V> aliases(@NotNull String... aliases);
+        BasicBuilder<S, V> aliases(@NotNull String... aliases);
+
+        @Deprecated
+        AdvancedBuilder<S, V> label(@NotNull String label);
 
         /**
          * Sets the valid sender message to be displayed.
@@ -130,14 +129,14 @@ public final class CommandDescriptor<S extends CommandSender, V> {
          * @return the corresponding builder
          */
         @Deprecated
-        LimitedBuilder<S, V> validSenderMessage(@NotNull String validSenderMessage);
+        BasicBuilder<S, V> validSenderMessage(@NotNull String validSenderMessage);
 
         /**
          * Creates a new {@link CommandDescriptor}.
          *
          * @return the created descriptor
          */
-        @NotNull CommandDescriptor<S, V> build();
+        @NotNull CommandDescriptor build();
     }
 
     /**
@@ -145,9 +144,9 @@ public final class CommandDescriptor<S extends CommandSender, V> {
      *
      * @since 1.1.0
      */
-    public interface FullBuilder<S extends CommandSender, V> {
+    public interface AdvancedBuilder<S extends CommandSender, V> {
 
-        FullBuilder<S, V> onFailure(@NotNull CommandFailureHandler failureHandler);
+        AdvancedBuilder<S, V> onFailure(@NotNull CommandFailureHandler failureHandler);
 
         /**
          * Sets the {@link CommandTopic} that should be converted accordingly to be added to the server's {@link HelpMap}.
@@ -155,15 +154,7 @@ public final class CommandDescriptor<S extends CommandSender, V> {
          * @param topic the {@code CommandTopic} to be added to the server's {@code HelpMap}
          * @return the corresponding builder
          */
-        FullBuilder<S, V> topic(@NotNull CommandTopic<S> topic);
-
-        /**
-         * Sets the command label for use by the created descriptor for when a {@link io.github.disbatch.command.Command} is registered with it.
-         *
-         * @param label the label that should be used for this builder
-         * @return the corresponding builder
-         */
-        FullBuilder<S, V> label(@NotNull String label);
+        AdvancedBuilder<S, V> topic(@NotNull CommandTopic<S> topic);
 
         /**
          * Sets the command label aliases, which is optional, for use by the created descriptor for when a {@link io.github.disbatch.command.Command}
@@ -172,7 +163,10 @@ public final class CommandDescriptor<S extends CommandSender, V> {
          * @param aliases the aliases that should be used for this builder
          * @return the corresponding builder
          */
-        FullBuilder<S, V> aliases(@NotNull String... aliases);
+        AdvancedBuilder<S, V> aliases(@NotNull String... aliases);
+
+        @Deprecated
+        AdvancedBuilder<S, V> label(@NotNull String label);
 
         /**
          * Sets the valid sender message to be displayed.
@@ -181,28 +175,38 @@ public final class CommandDescriptor<S extends CommandSender, V> {
          * @return the corresponding builder
          */
         @Deprecated
-        FullBuilder<S, V> validSenderMessage(@NotNull String validSenderMessage);
+        AdvancedBuilder<S, V> validSenderMessage(@NotNull String validSenderMessage);
 
-        FullBuilder<S, V> syntax(@NotNull CommandSyntax<S, V> syntax);
+        AdvancedBuilder<S, V> syntax(@NotNull CommandSyntax<S, V> syntax);
 
         /**
          * Creates a new {@link CommandDescriptor}.
          *
          * @return the created descriptor
          */
-        @NotNull CommandDescriptor<S, V> build();
+        @NotNull CommandDescriptor build();
     }
 
-    private static final class Builder<S extends CommandSender, V> implements LimitedBuilder<S, V>, FullBuilder<S, V> {
+    public static final class Builder<S extends CommandSender, V> implements BasicBuilder<S, V>, AdvancedBuilder<S, V> {
         private static final CommandFailureHandler DEFAULT_FAILURE_HANDLER = (sender, failure) -> {};
 
         private final Class<S> senderType;
         private final CommandExecutor<S, V> executor;
-        private CommandSyntax<S, V> syntax;
+        @SuppressWarnings("unchecked")
+        private CommandSyntax<S, V> syntax = (CommandSyntax<S, V>) new StringSyntax(StringUtils.EMPTY);
         private CommandFailureHandler failureHandler = DEFAULT_FAILURE_HANDLER;
         private CommandTopic<S> topic = new GenericCommandTopic<>("A plugin provided command.");
-        private String label;
+        private String label = StringUtils.EMPTY;
         private String[] aliases = ArrayUtils.EMPTY_STRING_ARRAY;
+
+        /**
+         * @deprecated
+         */
+        @SuppressWarnings("unchecked")
+        @Deprecated
+        public Builder() {
+            this((Class<S>) CommandSender.class, (sender, value) -> {});
+        }
 
         private Builder(final @NotNull Class<S> senderType, final @NotNull CommandExecutor<S, V> executor) {
             this.senderType = senderType;
@@ -212,6 +216,7 @@ public final class CommandDescriptor<S extends CommandSender, V> {
         @Override
         public Builder<S, V> syntax(final @NotNull CommandSyntax<S, V> syntax) {
             this.syntax = syntax;
+            new CommandDescriptor.Builder<>();
             return this;
         }
 
@@ -257,11 +262,8 @@ public final class CommandDescriptor<S extends CommandSender, V> {
         }
 
         @Override
-        public @NotNull CommandDescriptor<S, V> build() {
-            if (label == null)
-                throw new CommandRegistrationException("Command label cannot be empty");
-
-            return new CommandDescriptor<>(
+        public @NotNull CommandDescriptor build() {
+            return new CommandDescriptor(
                     label,
                     aliases,
                     senderType,
@@ -273,12 +275,12 @@ public final class CommandDescriptor<S extends CommandSender, V> {
         }
     }
 
-    public final class Command {
+    public final class Executor {
         private final CommandExecutor<CommandSender, Object> executor;
         private final CommandSyntax<CommandSender, Object> syntax;
 
         @SuppressWarnings("unchecked")
-        private Command(final CommandExecutor<S, ?> executor, final CommandSyntax<S, ?> syntax) {
+        private Executor(final CommandExecutor<?, ?> executor, final CommandSyntax<?, ?> syntax) {
             this.executor = (CommandExecutor<CommandSender, Object>) executor;
             this.syntax = (CommandSyntax<CommandSender, Object>) syntax;
         }
@@ -292,7 +294,7 @@ public final class CommandDescriptor<S extends CommandSender, V> {
             if (senderType.isAssignableFrom(sender.getClass()))
                 execute(sender, input);
             else
-                CommandDescriptor.this.failureHandler.handle(sender, new CommandFailure(syntax, input, CommandFailure.Reason.INVALID_SENDER));
+                CommandDescriptor.this.failureHandler.handle(sender, new CommandFailure(input, CommandFailure.Reason.INVALID_SENDER));
 
             return true;
         }
@@ -311,7 +313,7 @@ public final class CommandDescriptor<S extends CommandSender, V> {
             final CommandFailure.Reason reason = hasLackingArgs
                     ? CommandFailure.Reason.LACKING_ARGUMENTS
                     : CommandFailure.Reason.EXTRA_ARGUMENTS;
-            final CommandFailure failure = new CommandFailure(syntax, input, reason);
+            final CommandFailure failure = new CommandFailure(input, reason);
             CommandDescriptor.this.failureHandler.handle(sender, failure);
         }
 
@@ -319,9 +321,9 @@ public final class CommandDescriptor<S extends CommandSender, V> {
             final Object result = syntax.parse(sender, input);
 
             if (result == null)
-                CommandDescriptor.this.failureHandler.handle(sender, new CommandFailure(syntax, input, CommandFailure.Reason.INSUFFICIENT_ARGUMENTS));
+                CommandDescriptor.this.failureHandler.handle(sender, new CommandFailure(input, CommandFailure.Reason.INSUFFICIENT_ARGUMENTS));
             else
-                executor.execute(sender, input, result);
+                executor.run(sender, result);
         }
 
         public Collection<Suggestion> getSuggestions(CommandSender sender, String[] args) {

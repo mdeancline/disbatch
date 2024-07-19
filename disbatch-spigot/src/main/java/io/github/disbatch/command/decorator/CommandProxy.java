@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * An abstraction for proxying any {@link Command}. Any method calls that should be delegated to the proxied
  * {@code Command} can be done via the {@code super} reference (e.g., to route execution logic, call
- * {@link Command#execute(CommandSender, CommandInput)} on it).
+ * {@link Command#run(CommandSender, CommandInput)} on it).
  *
  * @param <S> {@inheritDoc}
  * @since 1.0.0
@@ -25,8 +25,8 @@ public abstract class CommandProxy<S extends CommandSender> implements Command<S
     }
 
     @Deprecated
-    public void execute(final S sender, final CommandInput input) {
-        innerCommand.execute(sender, input);
+    public void run(final S sender, final CommandInput input) {
+        innerCommand.run(sender, input);
     }
 
     @Override

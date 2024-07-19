@@ -35,10 +35,9 @@ public class CommandDispatchTest {
     public void testWithExecutor() throws CommandSyntaxException {
         final Player player = mockServer.addPlayer(TestUtils.randomString());
 
-        final CommandExecutor<CommandSender, Player> messageExecutor = (sender, input, value) -> value.sendMessage(sender.getName() + " said hi!");
-        mockRegistrar.register(CommandDescriptor.of(messageExecutor)
+        final CommandExecutor<CommandSender, Player> messageExecutor = (sender, value) -> value.sendMessage(sender.getName() + " said hi!");
+        mockRegistrar.register("message", CommandDescriptor.of(messageExecutor)
                 .syntax(new PlayerFromNameSyntax("name"))
-                .label("message")
                 .build());
 
         final int status = mockDispatcher.execute("message " + player.getName(), mockConsole);
