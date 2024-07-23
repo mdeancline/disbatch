@@ -1,8 +1,6 @@
 package io.github.disbatch;
 
 import io.github.disbatch.command.Command;
-import io.github.disbatch.command.CommandRegistration;
-import io.github.disbatch.command.exception.CommandRegistrationException;
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +17,6 @@ import java.util.regex.Pattern;
  */
 public final class CommandRegistrars {
     private static final Pattern VERSION_PATTERN = Pattern.compile("\\(MC: (\\d)\\.(\\d+)\\.?(\\d+?)?( .*)?\\)");
-    private static final String BRIGADIER_PACKAGE_NAME = "com.mojang.brigadier";
     private static final Map<CommandRegistrar.Key, CommandRegistrar> REGISTRARS = new HashMap<>();
 
     private CommandRegistrars() {
@@ -45,54 +42,32 @@ public final class CommandRegistrars {
      */
     public static CommandRegistrar getCompatibleRegistrar(@NotNull final CommandRegistrar.Key key) {
         if (!REGISTRARS.containsKey(key)) {
-            final Server server = key.getServer();
-            final CommandRegistrar registrar = isBrigadierPresent()
-                    ? getBrigadierRegistrar(server)
-                    : getBukkitRegistrar(server);
+            final CommandRegistrar registrar = getCompatibleRegistrar(key.getServer());
             REGISTRARS.put(key, registrar);
-
             return registrar;
         }
 
         return REGISTRARS.get(key);
     }
 
-    private static CommandRegistrar getBukkitRegistrar(final Server server) {
-        final CommandRegistrar registrar = new BukkitCommandRegistrar(server);
-        return server.getPluginManager().getPlugin("ProtocolLib") == null
-                ? registrar
-                : new DynamicUpdateRegistrar(registrar);
-    }
-
-    private static CommandRegistrar getBrigadierRegistrar(final Server server) {
-        switch (getMinecraftVersion(server)) {
-            case 113:
-                return new BrigadierCommandRegistrar_1_13(server);
-            case 117:
-                return new BrigadierCommandRegistrar_1_17(server);
+    private static CommandRegistrar getCompatibleRegistrar(final Server server) {
+        switch (getMinecraftServerVersion(server)) {
+            case 1131:
+                return new BrigadierCommandRegistrar_1_13_R1(server);
+            case 1132:
+                return new BrigadierCommandRegistrar_1_13_R2(server);
+            case 1141:
+                return new BrigadierCommandRegistrar_1_14_R1(server);
+            case 1171:
+                return new BrigadierCommandRegistrar_1_17_R1(server);
             default:
-                return getBukkitRegistrar(server);
+                return new BukkitCommandRegistrar(server);
         }
     }
 
-    private static int getMinecraftVersion(final Server server) {
+    private static int getMinecraftServerVersion(final Server server) {
         final Matcher matcher = VERSION_PATTERN.matcher(server.getVersion());
-
-        if (matcher.find())
-            return Integer.parseInt(matcher.toMatchResult().group(2), 10);
-        else
-            throw new CommandRegistrationException("Unable to extract the correct Minecraft version");
-    }
-
-    //TODO develop different system of verifying Brigadier presence
-    private static boolean isBrigadierPresent() {
-        final String javaVersion = System.getProperty("java.version");
-//        final Package brigadierPackage = javaVersion.startsWith("9.")
-//                ? ClassLoader.getSystemClassLoader().getDefinedPackage(BRIGADIER_PACKAGE_NAME)
-//                : Package.getPackage(BRIGADIER_PACKAGE_NAME);
-        final Package brigadierPackage = Package.getPackage(BRIGADIER_PACKAGE_NAME);
-
-        return brigadierPackage != null;
+        return matcher.find() ? Integer.parseInt(matcher.toMatchResult().group(2), 10) : -1;
     }
 
     private static class PluginKey extends CommandRegistrar.Key {
@@ -110,30 +85,6 @@ public final class CommandRegistrars {
         @Override
         public Server getServer() {
             return plugin.getServer();
-        }
-    }
-
-    private static class DynamicUpdateRegistrar implements CommandRegistrar {
-        private final CommandRegistrar source;
-
-        private DynamicUpdateRegistrar(final CommandRegistrar source) {
-            this.source = source;
-        }
-
-        @Override
-        public void register(@NotNull final CommandRegistration registration) {
-            source.register(registration);
-            updateClientCommandLists();
-        }
-
-        @Override
-        public void registerFromFile(@NotNull final CommandRegistration registration) {
-            source.registerFromFile(registration);
-            updateClientCommandLists();
-        }
-
-        private void updateClientCommandLists() {
-
         }
     }
 }

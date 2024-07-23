@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
-//TODO complete development
 abstract class BrigadierCommandRegistrar implements CommandRegistrar {
     private final CommandDispatcher<Sender> dispatcher;
 
