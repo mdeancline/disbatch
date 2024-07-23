@@ -1,6 +1,5 @@
 package io.github.disbatch;
 
-import io.github.disbatch.command.Command;
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A namespace for retrieving the correct {@link CommandRegistrar} for registering {@link Command}s.
+ * A namespace for retrieving the correct {@link CommandRegistrar} for registering commands.
  *
  * @since 1.1.0
  */

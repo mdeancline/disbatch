@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * Responsible for the registration of commands.
  *
  * @see CommandRegistrars#getCompatibleRegistrar(JavaPlugin)
+ * @see CommandRegistrars#getCompatibleRegistrar(Key)
  * @since 1.1.0
  */
 public interface CommandRegistrar {
@@ -21,7 +22,7 @@ public interface CommandRegistrar {
      * {@code CommandRegistrar}'s connected {@link Plugin}.
      *
      * @param registration the registration for registering a command to the server.
-     * @throws CommandRegistrationException
+     * @throws CommandRegistrationException if there is an error during the command registration process.
      * @see CommandRegistrar#registerFromFile(CommandRegistration)
      */
     void register(@NotNull CommandRegistration registration);
@@ -32,16 +33,29 @@ public interface CommandRegistrar {
      * {@code CommandRegistrar}'s connected {@link Plugin}.
      *
      * @param registration the registration for registering a command to the server.
-     * @throws CommandRegistrationException
+     * @throws CommandRegistrationException if there is an error during the command registration process.
      * @see CommandRegistrar#register(CommandRegistration)
      */
     void registerFromFile(@NotNull CommandRegistration registration);
 
-    //TODO complete documentation
+    /**
+     * Represents a key for identifying and retrieving a {@link CommandRegistrar}.
+     */
     abstract class Key {
+
+        /**
+         * Returns a hash code value for the key unique to the key's properties.
+         *
+         * @return a hash code value.
+         */
         @Override
         public abstract int hashCode();
 
+        /**
+         * Gets the server associated with this key.
+         *
+         * @return the server.
+         */
         public abstract Server getServer();
     }
 }
