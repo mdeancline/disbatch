@@ -37,7 +37,7 @@ public final class CommandRegistrars {
      * environment.
      *
      * @apiNote If <a href="https://github.com/Mojang/brigadier">Brigadier</a> is present on the server, an appropriate
-     * {@code CommandRegistrar} that can link commandss to its features will be returned.
+     * {@code CommandRegistrar} that can link commands to its features will be returned.
      */
     public static CommandRegistrar getCompatibleRegistrar(@NotNull final CommandRegistrar.Key key) {
         if (!REGISTRARS.containsKey(key)) {
