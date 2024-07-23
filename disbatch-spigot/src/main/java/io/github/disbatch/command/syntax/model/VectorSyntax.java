@@ -18,12 +18,12 @@ public final class VectorSyntax extends NumericSyntax<CommandSender, Vector> {
     /**
      * Constructs a new {@code VectorSyntax} with the specified argument labels.
      */
-    public VectorSyntax(final @NotNull String xLabel, final @NotNull String yLabel, final @NotNull String zLabel) {
+    public VectorSyntax(@NotNull final String xLabel, @NotNull final String yLabel, @NotNull final String zLabel) {
         super(xLabel, yLabel, zLabel);
     }
 
     @Override
-    public boolean matches(CommandInput.Binding binding) {
+    public boolean matches(final CommandInput.Binding binding) {
         return isFloating(binding.getArgument());
     }
 

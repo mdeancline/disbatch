@@ -13,10 +13,10 @@ import java.util.Collection;
  * burden of performing various checks to ensure that a specific set of arguments is fit for parsing, which can also
  * depend on the {@link CommandSender}.
  *
- * @since 1.1.0
- * @see CommandInputs#syntax()
  * @param <S> any type extending {@link CommandSender} required to parse arguments.
  * @param <V> the type from the resulting {@code Object} parsed from arguments.
+ * @see CommandInputs#syntax()
+ * @since 1.1.0
  */
 public interface CommandSyntax<S extends CommandSender, V> extends Iterable<CommandSyntax.Literal> {
 
@@ -28,12 +28,13 @@ public interface CommandSyntax<S extends CommandSender, V> extends Iterable<Comm
      * @param input  the input provided by the sender.
      * @return the parsed {@code Object}.
      */
-    @Nullable V parse(S sender, CommandInput input);
+    @Nullable
+    V parse(S sender, CommandInput input);
 
     /**
      * Provides suggestions based on the current input.
      *
-     * @param sender the command sender
+     * @param sender    the command sender
      * @param arguments the current input arguments
      * @return a collection of suggestions
      */
@@ -45,7 +46,8 @@ public interface CommandSyntax<S extends CommandSender, V> extends Iterable<Comm
      * @param index the index of the literal
      * @return the literal at the specified index, or {@code null} if it doesn't exist
      */
-    @Nullable Literal getLiteral(int index);
+    @Nullable
+    Literal getLiteral(int index);
 
     /**
      * Checks if the given argument binding matches the expected syntax.
@@ -82,17 +84,12 @@ public interface CommandSyntax<S extends CommandSender, V> extends Iterable<Comm
         boolean isGreedy();
 
         /**
-         * Gets the child literals of this literal.
-         *
-         * @return a collection of child literals
-         */
-        Collection<Literal> getChildren();
-
-        /**
          * Gets the label of this literal.
          *
          * @return the label of the literal
          */
         String getLabel();
+
+        Collection<Literal> getChildren();
     }
 }

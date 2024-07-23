@@ -1,6 +1,6 @@
 package io.github.disbatch;
 
-import io.github.disbatch.command.CommandDescriptor;
+import io.github.disbatch.command.CommandRegistration;
 import io.github.disbatch.command.CommandTopic;
 import io.github.disbatch.command.Suggestion;
 import io.github.disbatch.command.exception.CommandException;
@@ -52,41 +52,41 @@ class BukkitCommandRegistrar implements CommandRegistrar {
     }
 
     @Override
-    public void register(final @NotNull String label, final @NotNull CommandDescriptor descriptor) {
-        final CommandAdapter adapter = new CommandAdapter(label, descriptor);
-        serverCommandMap.register(label, adapter);
-        server.getHelpMap().addTopic(new CommandTopicAdapter(label, descriptor));
+    public void register(@NotNull final CommandRegistration registration) {
+        final CommandAdapter adapter = new CommandAdapter(registration);
+        serverCommandMap.register(adapter.getLabel(), adapter);
+        server.getHelpMap().addTopic(new CommandTopicAdapter(registration));
     }
 
     @Override
-    public void registerFromFile(final @NotNull String label, final @NotNull CommandDescriptor descriptor) {
-        setupPluginCommandExecution(label, descriptor);
-        server.getHelpMap().addTopic(new CommandTopicAdapter(label, descriptor));
+    public void registerFromFile(@NotNull final CommandRegistration registration) {
+        setupPluginCommandExecution(registration);
+        server.getHelpMap().addTopic(new CommandTopicAdapter(registration));
     }
 
-    private void setupPluginCommandExecution(final String label, final CommandDescriptor descriptor) {
-        final PluginCommand pluginCommand = getExistingPluginCommand(label);
-        final CommandAdapter adapter = new CommandAdapter(label, descriptor);
+    private void setupPluginCommandExecution(final CommandRegistration registration) {
+        final PluginCommand pluginCommand = getExistingPluginCommand(registration);
+        final CommandAdapter adapter = new CommandAdapter(registration);
         pluginCommand.setExecutor(adapter);
         pluginCommand.setTabCompleter(adapter);
     }
 
-    private PluginCommand getExistingPluginCommand(final String commandLabel) {
-        final PluginCommand pluginCommand = server.getPluginCommand(commandLabel);
+    private PluginCommand getExistingPluginCommand(final CommandRegistration registration) {
+        final PluginCommand pluginCommand = server.getPluginCommand(registration.getLabel());
 
         if (pluginCommand == null)
             throw new CommandRegistrationException(String.format("Command \"%s\" is not registered in the plugin.yml file of %s",
-                    commandLabel, server.getName()));
+                    registration.getLabel(), server.getName()));
 
         return pluginCommand;
     }
 
     static class CommandAdapter extends Command implements TabExecutor, CommandExecutor {
-        private final CommandDescriptor.Executor command;
+        private final CommandRegistration.Command command;
 
-        CommandAdapter(final String label, final CommandDescriptor descriptor) {
-            super(label);
-            command = descriptor.getExecutor();
+        CommandAdapter(final CommandRegistration registration) {
+            super(registration.getLabel());
+            command = registration.getCommand();
         }
 
         @Override
@@ -116,10 +116,10 @@ class BukkitCommandRegistrar implements CommandRegistrar {
         private final CommandTopic<CommandSender> source;
 
         @SuppressWarnings("unchecked")
-        private CommandTopicAdapter(final String label, final CommandDescriptor descriptor) {
-            senderType = descriptor.getSenderType();
-            source = (CommandTopic<CommandSender>) descriptor.getTopic();
-            name = "/" + label;
+        private CommandTopicAdapter(final CommandRegistration registration) {
+            senderType = registration.getSenderType();
+            source = (CommandTopic<CommandSender>) registration.getTopic();
+            name = "/" + registration.getLabel();
         }
 
         @Override

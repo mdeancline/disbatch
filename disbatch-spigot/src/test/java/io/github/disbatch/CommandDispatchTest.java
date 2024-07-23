@@ -5,8 +5,8 @@ import be.seeseemelk.mockbukkit.ServerMock;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.disbatch.command.CommandDescriptor;
 import io.github.disbatch.command.CommandExecutor;
+import io.github.disbatch.command.CommandRegistration;
 import io.github.disbatch.command.syntax.model.PlayerFromNameSyntax;
 import io.github.disbatch.mock.MockCommandRegistrar;
 import org.bukkit.command.CommandSender;
@@ -34,9 +34,10 @@ public class CommandDispatchTest {
     @Test
     public void testWithExecutor() throws CommandSyntaxException {
         final Player player = mockServer.addPlayer(TestUtils.randomString());
+        final CommandExecutor<CommandSender, Player> messageExecutor = (sender, value)
+                -> value.sendMessage(sender.getName() + " said hi!");
 
-        final CommandExecutor<CommandSender, Player> messageExecutor = (sender, value) -> value.sendMessage(sender.getName() + " said hi!");
-        mockRegistrar.register("message", CommandDescriptor.of(messageExecutor)
+        mockRegistrar.register(CommandRegistration.builder(messageExecutor)
                 .syntax(new PlayerFromNameSyntax("name"))
                 .build());
 

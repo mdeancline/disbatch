@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//TODO create minimum and maximum integer input requirements
 /**
  * Creates an {@link Integer} based on a parsable, passed argument.
  * <p>
@@ -14,17 +13,33 @@ import org.jetbrains.annotations.Nullable;
  * @since 1.1.0
  */
 public final class IntegerSyntax extends NumericSyntax<CommandSender, Integer> {
+    private final int min;
+    private final int max;
 
     /**
      * Constructs a new {@code IntegerSyntax} with the specified argument label.
      */
-    public IntegerSyntax(final @NotNull String label) {
+    public IntegerSyntax(@NotNull final String label) {
+        this(label, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    /**
+     * Constructs a new {@code IntegerSyntax} with the specified argument label, minimum, and maximum values.
+     */
+    public IntegerSyntax(@NotNull final String label, final int min, final int max) {
         super(label);
+        this.min = min;
+        this.max = max;
     }
 
     @Override
     public boolean matches(final CommandInput.Binding binding) {
-        return isInteger(binding.getArgument());
+        if (isInteger(binding.getArgument())) {
+            final float value = parseFloat(binding.getArgument());
+            return value >= min && value <= max;
+        }
+
+        return false;
     }
 
     @Override

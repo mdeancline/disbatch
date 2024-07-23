@@ -16,7 +16,7 @@ public final class BooleanSyntax extends SenderIndependentSyntax<Boolean> {
     /**
      * Constructs a new {@code BooleanSyntax} with the specified argument label.
      */
-    public BooleanSyntax(final @NotNull String label) {
+    public BooleanSyntax(@NotNull final String label) {
         super(label);
     }
 
@@ -28,7 +28,7 @@ public final class BooleanSyntax extends SenderIndependentSyntax<Boolean> {
 
     @Override
     public boolean matches(final CommandInput.Binding binding) {
-        return isBoolean(binding.getLabel());
+        return isBoolean(binding.getArgument());
     }
 
     private boolean isBoolean(final String argument) {

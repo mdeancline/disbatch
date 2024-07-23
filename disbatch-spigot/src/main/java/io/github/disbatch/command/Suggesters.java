@@ -39,10 +39,9 @@ public final class Suggesters {
      * @param <S>
      * @param <E>
      * @return
-     *
      * @since 1.1.0
      */
-    public static <S extends CommandSender, E extends Enum<E>> Suggester<S> of(final @NotNull E[] values) {
+    public static <S extends CommandSender, E extends Enum<E>> Suggester<S> of(@NotNull final E[] values) {
         return of(Arrays.stream(values)
                 .map(Enum::name)
                 .collect(Collectors.toList()));
@@ -53,10 +52,9 @@ public final class Suggesters {
      * @param <S>
      * @param <E>
      * @return
-     *
      * @since 1.1.0
      */
-    public static <S extends CommandSender, E extends Enum<E>> Suggester<S> ofLowerCase(final @NotNull E[] values) {
+    public static <S extends CommandSender, E extends Enum<E>> Suggester<S> ofLowerCase(@NotNull final E[] values) {
         return of(Arrays.stream(values)
                 .map(e -> e.name().toLowerCase(Locale.ROOT))
                 .collect(Collectors.toList()));
@@ -66,10 +64,9 @@ public final class Suggesters {
      * @param values
      * @param <S>
      * @return
-     *
      * @since 1.1.0
      */
-    public static <S extends CommandSender> Suggester<S> of(final @NotNull Collection<String> values) {
+    public static <S extends CommandSender> Suggester<S> of(@NotNull final Collection<String> values) {
         return of((String[]) values.toArray());
     }
 
@@ -77,35 +74,30 @@ public final class Suggesters {
      * @param values
      * @param <S>
      * @return
-     *
      * @since 1.1.0
      */
-    public static <S extends CommandSender> Suggester<S> of(final @NotNull String... values) {
+    public static <S extends CommandSender> Suggester<S> of(@NotNull final String... values) {
         final Collection<Suggestion> suggestions = Suggestion.ofTexts(values);
         return (sender, input) -> suggestions;
     }
 
     /**
-     *
      * @param values
-     * @return
      * @param <S>
-     *
+     * @return
      * @since 1.1.0
      */
-    public static <S extends CommandSender> Suggester<S> forFirstArgument(final @NotNull String... values) {
+    public static <S extends CommandSender> Suggester<S> forFirstArgument(@NotNull final String... values) {
         return forFirstArgument(Lists.newArrayList(values));
     }
 
     /**
-     *
      * @param collection
-     * @return
      * @param <S>
-     *
+     * @return
      * @since 1.1.0
      */
-    public static <S extends CommandSender> Suggester<S> forFirstArgument(final @NotNull Collection<String> collection) {
+    public static <S extends CommandSender> Suggester<S> forFirstArgument(@NotNull final Collection<String> collection) {
         return forFirstArgument(of(collection));
     }
 
@@ -113,10 +105,9 @@ public final class Suggesters {
      * @param completer
      * @param <S>
      * @return
-     *
      * @since 1.1.0
      */
-    public static <S extends CommandSender> Suggester<S> forFirstArgument(final @NotNull Suggester<S> completer) {
+    public static <S extends CommandSender> Suggester<S> forFirstArgument(@NotNull final Suggester<S> completer) {
         return (sender, input) -> {
             final int length = input.length;
             return length == 1

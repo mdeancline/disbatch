@@ -8,28 +8,28 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 //TODO make valid command usage mechanism possible
+
 /**
- * In the absence of an alternative, a {@link CommandDescriptor} will create a new instance of this to be registered
+ * In the absence of an alternative, a {@link CommandRegistration} will create a new instance of this to be registered
  * in the server's {@link CommandMap}. You can use this as a base class for custom {@code CommandTopic}s or as an example
  * of how to write your own.
  *
  * @implSpec This internally uses a {@link GenericCommandHelpTopic} instance to fetch all necessary formatted help contents.
- *
  * @since 1.1.0
  */
 public class GenericCommandTopic<S extends CommandSender> implements CommandTopic<S> {
     private final String description;
-//    private final CommandSyntaxMessage usage;
+    //    private final CommandSyntaxMessage usage;
     private GenericCommandHelpTopic bukkitTopic;
 
-//    public GenericCommandTopic(final @NotNull String description) {
+//    public GenericCommandTopic(@NotNull final String description) {
 //        this(description, new ParameterUsage.Builder().labelHead('<').labelTail('>').build());
 //    }
 
     /**
      * @param description
      */
-    public GenericCommandTopic(final @NotNull String description) {
+    public GenericCommandTopic(@NotNull final String description) {
         this.description = description;
 //        this.usage = usage;
     }
@@ -41,12 +41,12 @@ public class GenericCommandTopic<S extends CommandSender> implements CommandTopi
     }
 
     @Override
-    public void apply(final CommandDescriptor descriptor) {
+    public void apply(final CommandRegistration registration) {
 //        final org.bukkit.command.Command placeholder = new PlaceholderCommand(
-//                descriptor.getLabel(),
+//                registration.getLabel(),
 //                description,
-//                descriptor.getAliases(),
-//                descriptor.getSyntax()
+//                registration.getAliases(),
+//                registration.getSyntax()
 //        );
 //        bukkitTopic = new GenericCommandHelpTopic(placeholder);
     }

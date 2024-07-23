@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//TODO create minimum and maximum float input requirements
 /**
  * Parses a {@link Float} based on a parsable, passed argument.
  * <p>
@@ -14,13 +13,25 @@ import org.jetbrains.annotations.Nullable;
  * @since 1.1.0
  */
 public final class FloatSyntax extends NumericSyntax<CommandSender, Float> {
+    private final float min;
+    private final float max;
 
     /**
      * Constructs a new {@code FloatSyntax} with the specified argument label.
      */
-    public FloatSyntax(final @NotNull String label) {
-        super(label);
+    public FloatSyntax(@NotNull final String label) {
+        this(label, Float.MIN_VALUE, Float.MAX_VALUE);
     }
+
+    /**
+     * Constructs a new {@code FloatSyntax} with the specified argument label, minimum, and maximum values.
+     */
+    public FloatSyntax(@NotNull final String label, final float min, final float max) {
+        super(label);
+        this.min = min;
+        this.max = max;
+    }
+
 
     @Override
     public @Nullable Float parse(final CommandSender sender, final CommandInput input) {
@@ -33,7 +44,12 @@ public final class FloatSyntax extends NumericSyntax<CommandSender, Float> {
 
     @Override
     public boolean matches(final CommandInput.Binding binding) {
-        return isFloating(binding.getArgument());
+        if (isFloating(binding.getArgument())) {
+            final float value = parseFloat(binding.getArgument());
+            return value >= min && value <= max;
+        }
+
+        return false;
     }
 
     @Override

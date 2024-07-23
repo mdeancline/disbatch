@@ -21,7 +21,7 @@ public final class OfflinePlayerSyntax extends UUIDOrientedSyntax<CommandSender,
     /**
      * Constructs a new {@code OfflinePlayerSyntax} with the specified argument label.
      */
-    public OfflinePlayerSyntax(final @NotNull String label) {
+    public OfflinePlayerSyntax(@NotNull final String label) {
         super(label);
     }
 

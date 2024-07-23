@@ -16,11 +16,11 @@ public final class TestUtils {
         final StringBuilder buffer = new StringBuilder(targetStringLength);
 
         for (int i = 0; i < targetStringLength; i++) {
-            int randomLimitedInt = leftLimit + (int)
+            final int randomLimitedInt = leftLimit + (int)
                     (random.nextFloat() * (rightLimit - leftLimit + 1));
             buffer.append((char) randomLimitedInt);
         }
 
-        return  buffer.toString();
+        return buffer.toString();
     }
 }

@@ -20,10 +20,11 @@ import java.util.Collection;
 public abstract class CommandProxy<S extends CommandSender> implements Command<S> {
     private final Command<S> innerCommand;
 
-    protected CommandProxy(final @NotNull Command<S> innerCommand) {
+    protected CommandProxy(@NotNull final Command<S> innerCommand) {
         this.innerCommand = innerCommand;
     }
 
+    @Override
     @Deprecated
     public void execute(final S sender, final CommandInput input) {
         innerCommand.execute(sender, input);

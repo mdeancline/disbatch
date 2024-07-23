@@ -20,12 +20,12 @@ public final class UUIDSyntax extends UUIDOrientedSyntax<CommandSender, UUID> {
     /**
      * Constructs a new {@code UUIDSyntax} with the specified argument label.
      */
-    public UUIDSyntax(final @NotNull String label) {
+    public UUIDSyntax(@NotNull final String label) {
         super(label);
     }
 
     @Override
-    public boolean matches(CommandInput.Binding binding) {
+    public boolean matches(final CommandInput.Binding binding) {
         return isUniqueId(binding.getArgument());
     }
 

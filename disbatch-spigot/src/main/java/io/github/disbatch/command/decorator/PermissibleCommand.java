@@ -14,21 +14,22 @@ import java.util.StringJoiner;
  * A {@link CommandProxy} that is fully executed for any {@link CommandSender} having a specific permission node.
  *
  * @param <S> {@inheritDoc}
- *
  * @since 1.0.0
+ * @deprecated
  */
+@Deprecated
 public final class PermissibleCommand<S extends CommandSender> extends CommandProxy<S> {
     private final String permissionNode;
     private final String noPermissionMessage;
 
-    public PermissibleCommand(final @NotNull Command<S> innerCommand, final @NotNull String permissionNode, final String noPermissionMessage) {
+    public PermissibleCommand(@NotNull final Command<S> innerCommand, @NotNull final String permissionNode, final String noPermissionMessage) {
         super(innerCommand);
         this.permissionNode = permissionNode;
         this.noPermissionMessage = noPermissionMessage;
     }
 
     @Override
-    public void execute(final S sender, final @NotNull CommandInput input) {
+    public void execute(final S sender, @NotNull final CommandInput input) {
         if (sender.hasPermission(permissionNode))
             super.execute(sender, input);
         else if (!Strings.isNullOrEmpty(noPermissionMessage))
@@ -36,7 +37,7 @@ public final class PermissibleCommand<S extends CommandSender> extends CommandPr
     }
 
     @Override
-    public Collection<String> tabComplete(final S sender, final @NotNull CommandInput input) {
+    public Collection<String> tabComplete(final S sender, @NotNull final CommandInput input) {
         return sender.hasPermission(permissionNode)
                 ? super.tabComplete(sender, input)
                 : Collections.emptyList();

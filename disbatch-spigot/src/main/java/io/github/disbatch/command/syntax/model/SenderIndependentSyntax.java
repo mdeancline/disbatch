@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class SenderIndependentSyntax<V> extends AbstractSyntax<CommandSender, V> {
 
-    protected SenderIndependentSyntax(final @NotNull String... labels) {
+    protected SenderIndependentSyntax(@NotNull final String... labels) {
         super(labels);
     }
 
@@ -29,7 +29,7 @@ public abstract class SenderIndependentSyntax<V> extends AbstractSyntax<CommandS
      * Serves the same functionality as {@link CommandSyntax#parse(CommandSender, CommandInput)} but without the
      * {@link CommandSender}.
      *
-     * @param input  the {@link CommandInput} passed from a command.
+     * @param input the {@link CommandInput} passed from a command.
      * @return the parsed {@code Object} result.
      */
     protected abstract @Nullable V parse(CommandInput input);

@@ -40,13 +40,13 @@ public final class CommandInputs {
     /**
      * Creates a new {@link CommandInput} from the given label and arguments, using the provided {@link CommandSyntax}.
      *
-     * @since 1.1.0
-     * @param label the command label
+     * @param label     the command label
      * @param arguments the command arguments
-     * @param syntax the command syntax
+     * @param syntax    the command syntax
      * @return the created {@link CommandInput}
+     * @since 1.1.0
      */
-    public static CommandInput of(final @NotNull String label, final @NotNull String[] arguments, final @NotNull CommandSyntax<?, ?> syntax) {
+    public static CommandInput of(@NotNull final String label, @NotNull final String[] arguments, @NotNull final CommandSyntax<?, ?> syntax) {
         return arguments.length > 0
                 ? new LazyLoadingCommandInput(label, arguments, syntax)
                 : new SingleLabelCommandInput(label);
@@ -55,25 +55,21 @@ public final class CommandInputs {
     /**
      * Provides the flexible {@link CommandSyntax} for any sort of command input.
      *
-     * @since 1.1.0
      * @param <S> the type of the command sender
      * @return the syntax for command inputs
+     * @since 1.1.0
      */
-    @SuppressWarnings("unchecked")
-    public static <S extends CommandSender> CommandSyntax<S, CommandInput> syntax() {
-        return (CommandSyntax<S, CommandInput>) SYNTAX;
+    public static CommandSyntax<CommandSender, CommandInput> syntax() {
+        return SYNTAX;
     }
 
     private static class SingleLabelCommandInput implements CommandInput {
+        private static final long serialVersionUID = -4557742310680630380L;
+
         private final String label;
 
         private SingleLabelCommandInput(final String label) {
             this.label = label;
-        }
-
-        @Override
-        public int getArgumentLength() {
-            return 0;
         }
 
         @Override
@@ -113,6 +109,8 @@ public final class CommandInputs {
     }
 
     private static class LazyLoadingCommandInput implements CommandInput {
+        private static final long serialVersionUID = 7220435579159208472L;
+
         private final String[] arguments;
         private final CommandSyntax<?, ?> syntax;
         private final String cmdLabel;
@@ -138,14 +136,10 @@ public final class CommandInputs {
         public String[] getArguments() {
             return arguments;
         }
+
         @Override
         public String getCommandLabel() {
             return cmdLabel;
-        }
-
-        @Override
-        public int getArgumentLength() {
-            return arguments.length;
         }
 
         @Override
@@ -200,10 +194,7 @@ public final class CommandInputs {
     }
 
     private static class EmptyCommandInput implements CommandInput {
-        @Override
-        public int getArgumentLength() {
-            return 0;
-        }
+        private static final long serialVersionUID = -8890684311013221621L;
 
         @Override
         public String getArgumentLine() {

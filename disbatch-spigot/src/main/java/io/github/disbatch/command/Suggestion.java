@@ -26,7 +26,7 @@ public final class Suggestion {
         this.tooltip = tooltip;
     }
 
-    public static List<String> toTexts(final @NotNull Collection<Suggestion> suggestions) {
+    public static List<String> toTexts(@NotNull final Collection<Suggestion> suggestions) {
         final List<String> texts = new ArrayList<>(suggestions.size());
 
         for (final Suggestion suggestion : suggestions)
@@ -43,7 +43,7 @@ public final class Suggestion {
      * @param texts the collection of text strings to convert to suggestions
      * @return a collection of suggestions
      */
-    public static Collection<Suggestion> ofTexts(final @NotNull String... texts) {
+    public static Collection<Suggestion> ofTexts(@NotNull final String... texts) {
         return ofTexts(Lists.newArrayList(texts));
     }
 
@@ -55,7 +55,7 @@ public final class Suggestion {
      * @param texts the collection of text strings to convert to suggestions
      * @return a collection of suggestions
      */
-    public static Collection<Suggestion> ofTexts(final @NotNull Collection<String> texts) {
+    public static Collection<Suggestion> ofTexts(@NotNull final Collection<String> texts) {
         final List<Suggestion> suggestions = new ArrayList<>();
 
         for (final String text : texts)
@@ -70,18 +70,18 @@ public final class Suggestion {
      * @param text the text of the suggestion
      * @return a new suggestion with the specified text and an empty tooltip
      */
-    public static Suggestion of(final @NotNull String text) {
+    public static Suggestion of(@NotNull final String text) {
         return of(text, StringUtils.EMPTY);
     }
 
     /**
      * Creates a {@code Suggestion} from a text string and a tooltip.
      *
-     * @param text the text of the suggestion
+     * @param text    the text of the suggestion
      * @param tooltip the tooltip of the suggestion
      * @return a new suggestion with the specified text and tooltip
      */
-    public static Suggestion of(final @NotNull String text, final @NotNull String tooltip) {
+    public static Suggestion of(@NotNull final String text, @NotNull final String tooltip) {
         return new Suggestion(text, tooltip);
     }
 

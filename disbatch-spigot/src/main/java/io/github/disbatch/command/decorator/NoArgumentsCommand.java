@@ -10,9 +10,10 @@ import org.jetbrains.annotations.NotNull;
  * A {@link CommandProxy} for handling cases where a {@link CommandSender} passes no arguments.
  *
  * @param <S> {@inheritDoc}
- *
  * @since 1.0.0
+ * @deprecated
  */
+@Deprecated
 public final class NoArgumentsCommand<S extends CommandSender, V> extends CommandProxy<S> {
     private final CommandExecutor<S, V> noArgsExecutor;
 
@@ -22,7 +23,7 @@ public final class NoArgumentsCommand<S extends CommandSender, V> extends Comman
     }
 
     @Override
-    public void execute(final S sender, final @NotNull CommandInput input) {
+    public void execute(final S sender, @NotNull final CommandInput input) {
         if (input.getArgumentLength() == 0) noArgsExecutor.execute(sender, input);
         else super.execute(sender, input);
     }

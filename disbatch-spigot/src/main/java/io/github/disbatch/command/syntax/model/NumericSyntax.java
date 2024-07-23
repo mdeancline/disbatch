@@ -10,14 +10,13 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <S> {@inheritDoc}
  * @param <V> {@inheritDoc}
- *
  * @since 1.1.0
  */
 public abstract class NumericSyntax<S extends CommandSender, V> extends AbstractSyntax<S, V> {
     private static final String NUMBER_REGEX = "-?\\d+(\\.\\d+)?";
     private static final String DECIMAL = ".";
 
-    protected NumericSyntax(final @NotNull String... labels) {
+    protected NumericSyntax(@NotNull final String... labels) {
         super(labels);
     }
 
@@ -28,7 +27,7 @@ public abstract class NumericSyntax<S extends CommandSender, V> extends Abstract
      * @param argument the argument passed from a command.
      * @return if the passed arguments can be parsed.
      */
-    protected final boolean isNumber(final @NotNull String argument) {
+    protected final boolean isNumber(@NotNull final String argument) {
         return isFloating(argument) || isInteger(argument);
     }
 
@@ -39,17 +38,17 @@ public abstract class NumericSyntax<S extends CommandSender, V> extends Abstract
      * @param argument the argument passed from a command.
      * @return if the passed arguments can be parsed.
      */
-    protected final boolean isFloating(final @NotNull String argument) {
+    protected final boolean isFloating(@NotNull final String argument) {
         return argument.contains(DECIMAL) && argument.matches(NUMBER_REGEX);
     }
 
     /**
      * Determines if the given argument can be parsed to an integer.
      *
-     * @param argument         the argument passed from a command.
+     * @param argument the argument passed from a command.
      * @return if the passed arguments can be parsed.
      */
-    protected final boolean isInteger(final @NotNull String argument) {
+    protected final boolean isInteger(@NotNull final String argument) {
         return !argument.contains(DECIMAL) && argument.matches(NUMBER_REGEX);
     }
 
@@ -60,7 +59,7 @@ public abstract class NumericSyntax<S extends CommandSender, V> extends Abstract
      * @return the integer value represented by the argument.
      * @throws NumberFormatException if the argument does not contain a parsable integer.
      */
-    protected final int parseInt(final @NotNull String argument) {
+    protected final int parseInt(@NotNull final String argument) {
         return Integer.parseInt(argument);
     }
 
@@ -71,7 +70,7 @@ public abstract class NumericSyntax<S extends CommandSender, V> extends Abstract
      * @return the double value represented by the argument.
      * @throws NumberFormatException if the argument does not contain a parsable double.
      */
-    protected final double parseDouble(final @NotNull String argument) {
+    protected final double parseDouble(@NotNull final String argument) {
         return Double.parseDouble(argument.contains(DECIMAL) ? argument : argument + DECIMAL);
     }
 
@@ -82,7 +81,7 @@ public abstract class NumericSyntax<S extends CommandSender, V> extends Abstract
      * @return the double value represented by the argument.
      * @throws NumberFormatException if the argument does not contain a parsable float.
      */
-    protected final float parseFloat(final @NotNull String argument) {
+    protected final float parseFloat(@NotNull final String argument) {
         return Float.parseFloat(argument.contains(DECIMAL) ? argument : argument + DECIMAL);
     }
 }

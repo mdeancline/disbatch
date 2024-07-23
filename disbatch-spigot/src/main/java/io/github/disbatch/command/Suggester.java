@@ -9,7 +9,6 @@ import java.util.Collection;
  * their client, which is typically done through tab completion.
  *
  * @param <S> any type extending {@link CommandSender} that can safely receive suggestions.
- *
  * @since 1.1.0
  */
 @FunctionalInterface
@@ -20,7 +19,6 @@ public interface Suggester<S extends CommandSender> {
      *
      * @param sender the {@link CommandSender} responsible for initiating a tab completion
      * @param input  the {@link CommandInput} present from tab completion
-     *
      * @return a {@code Collection} of tab completion options for the specified arguments, which may be empty or immutable
      */
     Collection<Suggestion> getSuggestions(S sender, String[] arguments);

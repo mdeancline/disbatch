@@ -17,7 +17,6 @@ import java.util.Iterator;
  *
  * @param <S> {@inheritDoc}
  * @param <V> {@inheritDoc}
- *
  * @since 1.1.0
  */
 public final class ArraySyntax<S extends CommandSender, V> implements CommandSyntax<S, V[]> {
@@ -27,11 +26,11 @@ public final class ArraySyntax<S extends CommandSender, V> implements CommandSyn
     private final int minUsageMultiple;
     private final int maxUsageMultiple;
 
-    public ArraySyntax(final @NotNull CommandSyntax<S, V> source) {
+    public ArraySyntax(@NotNull final CommandSyntax<S, V> source) {
         this(source, 1, Integer.MAX_VALUE);
     }
 
-    public ArraySyntax(final @NotNull CommandSyntax<S, V> source, final int minUsageMultiple, final int maxUsageMultiple) {
+    public ArraySyntax(@NotNull final CommandSyntax<S, V> source, final int minUsageMultiple, final int maxUsageMultiple) {
         this.source = source;
         this.minUsageMultiple = minUsageMultiple;
         this.maxUsageMultiple = maxUsageMultiple;
@@ -67,12 +66,12 @@ public final class ArraySyntax<S extends CommandSender, V> implements CommandSyn
     }
 
     @Override
-    public @Nullable CommandSyntax.Literal getLiteral(int index) {
+    public @Nullable CommandSyntax.Literal getLiteral(final int index) {
         return source.getLiteral(index);
     }
 
     @Override
-    public boolean matches(CommandInput.Binding binding) {
+    public boolean matches(final CommandInput.Binding binding) {
         return false;
     }
 

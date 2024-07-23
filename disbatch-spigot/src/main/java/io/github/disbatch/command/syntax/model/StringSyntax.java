@@ -15,11 +15,11 @@ import org.jetbrains.annotations.Nullable;
 public final class StringSyntax extends SenderIndependentSyntax<String> {
     private final int maxCharacters;
 
-    public StringSyntax(final @NotNull String label) {
+    public StringSyntax(@NotNull final String label) {
         this(label, Integer.MAX_VALUE);
     }
 
-    public StringSyntax(final @NotNull String label, final int maxCharacters) {
+    public StringSyntax(@NotNull final String label, final int maxCharacters) {
         super(label);
         this.maxCharacters = maxCharacters;
     }

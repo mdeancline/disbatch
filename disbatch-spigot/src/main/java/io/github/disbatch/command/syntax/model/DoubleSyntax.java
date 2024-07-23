@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//TODO create minimum and maximum double input requirements
 /**
  * Parses a {@link Double} based on a parsable, passed argument.
  * <p>
@@ -14,17 +13,33 @@ import org.jetbrains.annotations.Nullable;
  * @since 1.1.0
  */
 public final class DoubleSyntax extends NumericSyntax<CommandSender, Double> {
+    private final double min;
+    private final double max;
 
     /**
      * Constructs a new {@code DoubleSyntax} with the specified argument label.
      */
-    public DoubleSyntax(final @NotNull String label) {
+    public DoubleSyntax(@NotNull final String label) {
+        this(label, Double.MIN_VALUE, Double.MAX_VALUE);
+    }
+
+    /**
+     * Constructs a new {@code DoubleSyntax} with the specified argument label, minimum, and maximum values.
+     */
+    public DoubleSyntax(@NotNull final String label, final double min, final double max) {
         super(label);
+        this.min = min;
+        this.max = max;
     }
 
     @Override
     public boolean matches(final CommandInput.Binding binding) {
-        return isFloating(binding.getArgument());
+        if (isFloating(binding.getArgument())) {
+            final double value = parseDouble(binding.getArgument());
+            return value >= min && value <= max;
+        }
+
+        return false;
     }
 
     @Override

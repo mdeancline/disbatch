@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param <E> the enum type subclass.
  * @apiNote This should only be used in conjunction with {@link EnumConverter}.
- *
  * @since 1.1.0
  */
 public interface EnumRepository<E extends Enum<E>> {
@@ -18,5 +17,6 @@ public interface EnumRepository<E extends Enum<E>> {
      * @param name the given name of the enum.
      * @return the retrieved enum.
      */
-    @Nullable E get(String name);
+    @Nullable
+    E get(String name);
 }

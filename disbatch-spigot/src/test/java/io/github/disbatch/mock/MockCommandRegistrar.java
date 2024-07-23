@@ -4,9 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.github.disbatch.CommandRegistrar;
-import io.github.disbatch.command.CommandDescriptor;
-import io.github.disbatch.command.CommandInputs;
-import io.github.disbatch.command.syntax.CommandSyntax;
+import io.github.disbatch.command.CommandRegistration;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,20 +16,20 @@ public class MockCommandRegistrar implements CommandRegistrar {
     }
 
     @Override
-    public void register(@NotNull String label, @NotNull final CommandDescriptor descriptor) {
-        final CommandDescriptor.Executor command = descriptor.getExecutor();
-        final CommandSyntax<?, ?> syntax = descriptor.getSyntax();
+    public void register(@NotNull final CommandRegistration registration) {
+        final String label = registration.getLabel();
+        final CommandRegistration.Command command = registration.getCommand();
 
         dispatcher.register(LiteralArgumentBuilder.<CommandSender>literal(label).executes(context -> {
             final String input = context.getInput();
             final String[] arguments = input.substring(0, input.indexOf(" ")).split(" ");
-            command.execute(context.getSource(), CommandInputs.of(label, arguments, syntax));
+            command.execute(context.getSource(), label, arguments);
             return Command.SINGLE_SUCCESS;
         }));
     }
 
     @Override
-    public void registerFromFile(@NotNull String label, @NotNull CommandDescriptor descriptor) {
+    public void registerFromFile(@NotNull final CommandRegistration registration) {
 
     }
 }

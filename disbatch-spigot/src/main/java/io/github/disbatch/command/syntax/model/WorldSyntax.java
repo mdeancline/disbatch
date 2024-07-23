@@ -18,10 +18,10 @@ public final class WorldSyntax extends SenderIndependentSyntax<World> {
     /**
      * Constructs a new {@code WorldSyntax} with the specified argument label.
      */
-    public WorldSyntax(final @NotNull String label) {
+    public WorldSyntax(@NotNull final String label) {
         super(label);
     }
-    
+
     @Override
     public @Nullable World parse(final CommandInput input) {
         return Bukkit.getWorld(input.getArgument(0));

@@ -21,7 +21,7 @@ public final class PlayerFromUUIDSyntax extends UUIDOrientedSyntax<CommandSender
     /**
      * Constructs a new {@code PlayerFromUUIDSyntax} with the specified argument label.
      */
-    public PlayerFromUUIDSyntax(final @NotNull String label) {
+    public PlayerFromUUIDSyntax(@NotNull final String label) {
         super(label);
     }
 
@@ -36,7 +36,8 @@ public final class PlayerFromUUIDSyntax extends UUIDOrientedSyntax<CommandSender
 
     @Override
     public boolean matches(final CommandInput.Binding binding) {
-        return isUniqueId(binding.getArgument()) && Bukkit.getPlayer(UUID.fromString(binding.getArgument())) != null;
+        final String argument = binding.getArgument();
+        return isUniqueId(argument) && Bukkit.getPlayer(UUID.fromString(argument)) != null;
     }
 
     @Override

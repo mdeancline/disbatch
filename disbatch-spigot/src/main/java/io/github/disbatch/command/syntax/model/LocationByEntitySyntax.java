@@ -20,7 +20,7 @@ public final class LocationByEntitySyntax<S extends Entity> extends NumericSynta
     /**
      * Constructs a new {@code LocationByEntitySyntax} with the specified argument labels.
      */
-    public LocationByEntitySyntax(final @NotNull String xLabel, final @NotNull String yLabel, final @NotNull String zLabel) {
+    public LocationByEntitySyntax(@NotNull final String xLabel, @NotNull final String yLabel, @NotNull final String zLabel) {
         super(xLabel, yLabel, zLabel);
     }
 

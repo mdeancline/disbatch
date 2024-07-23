@@ -6,10 +6,10 @@ import org.bukkit.command.CommandSender;
 /**
  * Responsible for the execution of a command.
  *
- * @apiNote Not to be confused with {@link org.bukkit.command.CommandExecutor}.
- * @since 1.0.0
  * @param <S> any type extending {@link CommandSender} that can safely perform execution.
  * @param <V> the type from the resulting {@code Object} parsed from arguments.
+ * @apiNote Not to be confused with {@link org.bukkit.command.CommandExecutor}.
+ * @since 1.0.0
  */
 @FunctionalInterface
 public interface CommandExecutor<S extends CommandSender, V> {
@@ -19,7 +19,7 @@ public interface CommandExecutor<S extends CommandSender, V> {
      *
      * @param sender the {@link CommandSender} responsible for execution.
      * @param input  the {@link CommandInput} used to execute the {@code Command}.
-     * @param value the resulting {@code Object} parsed from arguments.
+     * @param value  the resulting {@code Object} parsed from arguments.
      */
     void execute(S sender, V value);
 
@@ -32,6 +32,6 @@ public interface CommandExecutor<S extends CommandSender, V> {
      * it should be avoided and replaced with the new method as soon as possible.
      */
     @Deprecated
-    default void execute(S sender, CommandInput input) {
+    default void execute(final S sender, final CommandInput input) {
     }
 }

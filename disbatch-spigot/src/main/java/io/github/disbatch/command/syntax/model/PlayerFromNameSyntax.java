@@ -18,7 +18,7 @@ public final class PlayerFromNameSyntax extends SenderIndependentSyntax<Player> 
     /**
      * Constructs a new {@code PlayerFromNameSyntax} with the specified argument label.
      */
-    public PlayerFromNameSyntax(final @NotNull String label) {
+    public PlayerFromNameSyntax(@NotNull final String label) {
         super(label);
     }
 

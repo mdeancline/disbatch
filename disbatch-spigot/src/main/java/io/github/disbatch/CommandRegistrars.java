@@ -1,12 +1,16 @@
 package io.github.disbatch;
 
 import io.github.disbatch.command.Command;
+import io.github.disbatch.command.CommandRegistration;
+import io.github.disbatch.command.exception.CommandRegistrationException;
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A namespace for retrieving the correct {@link CommandRegistrar} for registering {@link Command}s.
@@ -14,6 +18,7 @@ import java.util.Map;
  * @since 1.1.0
  */
 public final class CommandRegistrars {
+    private static final Pattern VERSION_PATTERN = Pattern.compile("\\(MC: (\\d)\\.(\\d+)\\.?(\\d+?)?( .*)?\\)");
     private static final String BRIGADIER_PACKAGE_NAME = "com.mojang.brigadier";
     private static final Map<CommandRegistrar.Key, CommandRegistrar> REGISTRARS = new HashMap<>();
 
@@ -27,7 +32,7 @@ public final class CommandRegistrars {
      * @apiNote If <a href="https://github.com/Mojang/brigadier">Brigadier</a> is present on the server, an appropriate
      * {@code CommandRegistrar} that can link commands to its features will be returned.
      */
-    public static CommandRegistrar getCompatibleRegistrar(final @NotNull JavaPlugin plugin) {
+    public static CommandRegistrar getCompatibleRegistrar(@NotNull final JavaPlugin plugin) {
         return getCompatibleRegistrar(new PluginKey(plugin));
     }
 
@@ -38,21 +43,45 @@ public final class CommandRegistrars {
      * @apiNote If <a href="https://github.com/Mojang/brigadier">Brigadier</a> is present on the server, an appropriate
      * {@code CommandRegistrar} that can link commandss to its features will be returned.
      */
-    public static CommandRegistrar getCompatibleRegistrar(final @NotNull CommandRegistrar.Key key) {
+    public static CommandRegistrar getCompatibleRegistrar(@NotNull final CommandRegistrar.Key key) {
         if (!REGISTRARS.containsKey(key)) {
             final Server server = key.getServer();
             final CommandRegistrar registrar = isBrigadierPresent()
-                    ? new BrigadierCommandRegistrar(server)
-                    : new BukkitCommandRegistrar(server);
-
-            REGISTRARS.put(key, server.getPluginManager().getPlugin("ProtocolLib") == null
-                    ? registrar
-                    : new DynamicUpdateRegistrar(registrar));
+                    ? getBrigadierRegistrar(server)
+                    : getBukkitRegistrar(server);
+            REGISTRARS.put(key, registrar);
 
             return registrar;
         }
 
         return REGISTRARS.get(key);
+    }
+
+    private static CommandRegistrar getBukkitRegistrar(final Server server) {
+        final CommandRegistrar registrar = new BukkitCommandRegistrar(server);
+        return server.getPluginManager().getPlugin("ProtocolLib") == null
+                ? registrar
+                : new DynamicUpdateRegistrar(registrar);
+    }
+
+    private static CommandRegistrar getBrigadierRegistrar(final Server server) {
+        switch (getMinecraftVersion(server)) {
+            case 113:
+                return new BrigadierCommandRegistrar_1_13(server);
+            case 117:
+                return new BrigadierCommandRegistrar_1_17(server);
+            default:
+                return getBukkitRegistrar(server);
+        }
+    }
+
+    private static int getMinecraftVersion(final Server server) {
+        final Matcher matcher = VERSION_PATTERN.matcher(server.getVersion());
+
+        if (matcher.find())
+            return Integer.parseInt(matcher.toMatchResult().group(2), 10);
+        else
+            throw new CommandRegistrationException("Unable to extract the correct Minecraft version");
     }
 
     //TODO develop different system of verifying Brigadier presence
@@ -66,10 +95,10 @@ public final class CommandRegistrars {
         return brigadierPackage != null;
     }
 
-    public static class PluginKey extends CommandRegistrar.Key {
+    private static class PluginKey extends CommandRegistrar.Key {
         private final JavaPlugin plugin;
 
-        public PluginKey(JavaPlugin plugin) {
+        private PluginKey(final JavaPlugin plugin) {
             this.plugin = plugin;
         }
 
@@ -81,6 +110,30 @@ public final class CommandRegistrars {
         @Override
         public Server getServer() {
             return plugin.getServer();
+        }
+    }
+
+    private static class DynamicUpdateRegistrar implements CommandRegistrar {
+        private final CommandRegistrar source;
+
+        private DynamicUpdateRegistrar(final CommandRegistrar source) {
+            this.source = source;
+        }
+
+        @Override
+        public void register(@NotNull final CommandRegistration registration) {
+            source.register(registration);
+            updateClientCommandLists();
+        }
+
+        @Override
+        public void registerFromFile(@NotNull final CommandRegistration registration) {
+            source.registerFromFile(registration);
+            updateClientCommandLists();
+        }
+
+        private void updateClientCommandLists() {
+
         }
     }
 }

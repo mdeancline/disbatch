@@ -21,7 +21,7 @@ public final class LocationFromPlayerSyntax extends NumericSyntax<CommandSender,
     /**
      * Constructs a new {@code LocationFromPlayerSyntax} with the specified argument labels.
      */
-    public LocationFromPlayerSyntax(final @NotNull String nameLabel, final @NotNull String xLabel, final @NotNull String yLabel, final @NotNull String zLabel) {
+    public LocationFromPlayerSyntax(@NotNull final String nameLabel, @NotNull final String xLabel, @NotNull final String yLabel, @NotNull final String zLabel) {
         super(nameLabel, xLabel, yLabel, zLabel);
     }
 

@@ -20,7 +20,7 @@ public final class LocationFromWorldSyntax extends NumericSyntax<CommandSender, 
     /**
      * Constructs a new {@code LocationFromWorldSyntax} with the specified argument labels.
      */
-    public LocationFromWorldSyntax(final @NotNull String nameLabel, final @NotNull String xLabel, final @NotNull String yLabel, final @NotNull String zLabel) {
+    public LocationFromWorldSyntax(@NotNull final String nameLabel, @NotNull final String xLabel, @NotNull final String yLabel, @NotNull final String zLabel) {
         super(nameLabel, xLabel, yLabel, zLabel);
     }
 
@@ -42,7 +42,7 @@ public final class LocationFromWorldSyntax extends NumericSyntax<CommandSender, 
     @Override
     public boolean matches(final CommandInput.Binding binding) {
         return binding.getIndex() == 0
-                ? (Bukkit.getWorld(binding.getLabel()) != null)
+                ? (Bukkit.getWorld(binding.getArgument()) != null)
                 : isNumber(binding.getArgument());
     }
 

@@ -29,7 +29,7 @@ public final class EnumSyntax<S extends CommandSender, E extends Enum<E>> extend
     /**
      * Constructs a new {@code EnumSyntax} with the specified argument label and enum type.
      */
-    public EnumSyntax(final @NotNull String label, final @NotNull Class<E> type) {
+    public EnumSyntax(@NotNull final String label, @NotNull final Class<E> type) {
         this(label, type, EnumConverters.caseSensitive());
     }
 
@@ -37,7 +37,7 @@ public final class EnumSyntax<S extends CommandSender, E extends Enum<E>> extend
      * Constructs a new {@code EnumSyntax} with the specified argument label, enum type, and converter.
      */
     @SuppressWarnings("unchecked")
-    public EnumSyntax(final @NotNull String label, final @NotNull Class<E> type, final @NotNull EnumConverter<E> converter) {
+    public EnumSyntax(@NotNull final String label, @NotNull final Class<E> type, @NotNull final EnumConverter<E> converter) {
         super(label);
         this.converter = converter;
 
@@ -51,7 +51,7 @@ public final class EnumSyntax<S extends CommandSender, E extends Enum<E>> extend
     }
 
     @Override
-    public boolean matches(CommandInput.Binding binding) {
+    public boolean matches(final CommandInput.Binding binding) {
         return false;
     }
 
