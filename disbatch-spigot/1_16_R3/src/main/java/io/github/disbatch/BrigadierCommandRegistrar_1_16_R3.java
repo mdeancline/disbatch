@@ -1,16 +1,16 @@
 package io.github.disbatch;
 
 import com.mojang.brigadier.CommandDispatcher;
-import org.bukkit.Server;
-import org.bukkit.craftbukkit.v1_17_R1.CraftServer;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_16_R3.CraftServer;
 
 class BrigadierCommandRegistrar_1_16_R3 extends BrigadierCommandRegistrar {
-    BrigadierCommandRegistrar_1_16_R3(final Server server) {
-        super(server);
+    BrigadierCommandRegistrar_1_16_R3() {
+        super();
     }
 
     @Override
-    protected CommandDispatcher<?> getDispatcher(final Server server) {
-        return ((CraftServer) server).getServer().getCommandDispatcher().a();
+    protected CommandDispatcher<?> getDispatcher() {
+        return ((CraftServer) Bukkit.getServer()).getServer().getCommandDispatcher().a();
     }
 }

@@ -2,6 +2,7 @@ package io.github.disbatch;
 
 import com.google.common.collect.Lists;
 import io.github.disbatch.command.*;
+import io.github.disbatch.command.exception.CommandCreationException;
 import io.github.disbatch.command.exception.CommandExecutionException;
 import io.github.disbatch.command.exception.CommandRegistrationException;
 import io.github.disbatch.command.syntax.CommandSyntax;
@@ -22,8 +23,14 @@ import java.util.List;
  * Represents a registered command with associated metadata including its label, execution logic, syntax, and failure
  * handling.
  *
- * @apiNote A {@code Command} can only be created using {@link Command#builder(Class, CommandExecutor)}
- * or {@link Command#builder(CommandExecutor)}.
+ * @apiNote A {@code Command} can only be created using any of the following static builder methods:
+ * <ul>
+ *     <li>{@link Command#builder(CommandSyntaxExecutor)}</li>
+ *     <li>{@link Command#builder(Class, CommandSyntaxExecutor)}</li>
+ *     <li>{@link Command#builder(CommandExecutor)}</li>
+ *     <li>{@link Command#builder(Class, CommandExecutor)}</li>
+ * </ul>
+ *
  * @since 1.1.0
  */
 public final class Command {
@@ -45,7 +52,8 @@ public final class Command {
             @NotNull final Class<? extends CommandSender> senderType,
             @NotNull final CommandSyntax<?, ?> syntax,
             @NotNull final CommandTopic<?> topic,
-            @NotNull final String label, final Permission permission
+            @NotNull final String label,
+            @NotNull final Permission permission
     ) {
         executable = new Executable();
 
@@ -66,7 +74,7 @@ public final class Command {
      * @param <V>      the type of command arguments
      * @return a new {@code BasicBuilder} instance
      */
-    public static <V> BasicBuilder<CommandSender, V> builder(@NotNull final SyntaxExecutor<CommandSender, V> executor) {
+    public static <V> BasicBuilder<CommandSender, V> builder(@NotNull final CommandSyntaxExecutor<CommandSender, V> executor) {
         return builder(CommandSender.class, executor);
     }
 
@@ -79,7 +87,7 @@ public final class Command {
      * @param <V>        the type of command arguments
      * @return a new {@code BasicBuilder} instance
      */
-    public static <S extends CommandSender, V> BasicBuilder<S, V> builder(@NotNull final Class<S> senderType, @NotNull final SyntaxExecutor<S, V> executor) {
+    public static <S extends CommandSender, V> BasicBuilder<S, V> builder(@NotNull final Class<S> senderType, @NotNull final CommandSyntaxExecutor<S, V> executor) {
         return new Builder<>(senderType, executor).syntax(executor.getSyntax());
     }
 
@@ -157,7 +165,7 @@ public final class Command {
      *
      * @return a collection of aliases
      */
-    public Collection<String> getAliases() {
+    public List<String> getAliases() {
         return aliases;
     }
 
@@ -174,7 +182,7 @@ public final class Command {
      */
     public interface BasicBuilder<S extends CommandSender, V> {
 
-        BasicBuilder<S, V> onFailure(@NotNull CommandFailureHandler failureHandler);
+        BasicBuilder<S, V> onFailure(@NotNull CommandFailureHandler handler);
 
         /**
          * Sets the {@link CommandTopic} for this command, which will be added to the server's {@link HelpMap}.
@@ -210,7 +218,7 @@ public final class Command {
          * @return the created registration
          */
         @NotNull
-        io.github.disbatch.Command build();
+        Command build();
     }
 
     /**
@@ -223,7 +231,7 @@ public final class Command {
 
         AdvancedBuilder<S, V> syntax(@NotNull CommandSyntax<? super S, V> syntax);
 
-        AdvancedBuilder<S, V> onFailure(@NotNull CommandFailureHandler failureHandler);
+        AdvancedBuilder<S, V> onFailure(@NotNull CommandFailureHandler handler);
 
         /**
          * Sets the {@link CommandTopic} for this command, which will be added to the server's {@link HelpMap}.
@@ -259,7 +267,7 @@ public final class Command {
          * @return the created registration
          */
         @NotNull
-        io.github.disbatch.Command build();
+        Command build();
     }
 
     /**
@@ -350,14 +358,15 @@ public final class Command {
         }
 
         @Override
-        public @NotNull io.github.disbatch.Command build() {
+        @NotNull
+        public Command build() {
             if (label == null)
-                throw new CommandRegistrationException("Command label is null");
+                throw new CommandCreationException("Command label is null");
 
             if (syntax == null)
-                throw new CommandRegistrationException("CommandSyntax is null");
+                throw new CommandCreationException("CommandSyntax is null");
 
-            return new io.github.disbatch.Command(executor, handler, aliases, senderType, syntax, topic, label, permission);
+            return new Command(executor, handler, aliases, senderType, syntax, topic, label, permission);
         }
     }
 

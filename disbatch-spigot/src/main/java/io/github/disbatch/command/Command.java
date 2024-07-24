@@ -21,7 +21,7 @@ import java.util.Collections;
  * <a href="https://github.com/Mojang/brigadier">Brigadier</a>.
  */
 @Deprecated
-public interface Command<S extends CommandSender> extends SyntaxExecutor<S, CommandInput> {
+public interface Command<S extends CommandSender> extends CommandSyntaxExecutor<S, CommandInput> {
 
     /**
      * Executed on tab completion, returning a {@code List} of argument options the {@link CommandSender} can tab through.

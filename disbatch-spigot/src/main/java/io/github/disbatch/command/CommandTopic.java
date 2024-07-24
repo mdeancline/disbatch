@@ -6,7 +6,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Holds information about a {@link io.github.disbatch.command.Command} that should be displayed to a {@link CommandSender} when executing Spigot's
+ * Holds information about a {@link Command} that should be displayed to a {@link CommandSender} when executing Spigot's
  * {@code /help} command.
  *
  * @apiNote This simplifies and offers more flexibility for commands than {@link org.bukkit.help.HelpTopic}, such as not
@@ -31,7 +31,7 @@ public interface CommandTopic<S extends CommandSender> {
      */
     void amend(@Nullable String shortText, @Nullable String fullText);
 
-    void apply(Command registration);
+    void apply(Command command);
 
     /**
      * Determines if a {@link CommandSender} is allowed to see this {@code CommandTopic}.
@@ -39,7 +39,7 @@ public interface CommandTopic<S extends CommandSender> {
      * @param sender the sender in question
      * @return if the sender can see this command topic, false otherwise
      */
-    boolean isViewableTo(S sender);
+    boolean canSee(S sender);
 
     /**
      * Returns a brief description that will be displayed in the topic index.

@@ -2,20 +2,21 @@ package io.github.disbatch.command;
 
 import io.github.disbatch.Command;
 import io.github.disbatch.command.exception.CommandException;
-import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.help.GenericCommandHelpTopic;
+import org.bukkit.help.HelpMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 //TODO make valid command usage mechanism possible
 
 /**
- * In the absence of an alternative, a {@link Command} will create a new instance of this to be registered
- * in the server's {@link CommandMap}. You can use this as a base class for custom {@code CommandTopic}s or as an example
- * of how to write your own.
+ * Serves as a default implementation that will be instantiated and registered into the server's {@link HelpMap}
+ * when no alternative is provided for a {@link Command}.
  *
- * @implSpec This internally uses a {@link GenericCommandHelpTopic} instance to fetch all necessary formatted help contents.
+ * You can extend this class to create a custom {@code CommandTopic}, or use it as a reference for implementing your own.
+ *
+ * @implSpec Internally, this class uses an instance of {@link GenericCommandHelpTopic} to retrieve all required formatted help contents.
  * @since 1.1.0
  */
 public class GenericCommandTopic<S extends CommandSender> implements CommandTopic<S> {
@@ -42,18 +43,12 @@ public class GenericCommandTopic<S extends CommandSender> implements CommandTopi
     }
 
     @Override
-    public void apply(final Command registration) {
-//        final org.bukkit.command.Command placeholder = new PlaceholderCommand(
-//                registration.getLabel(),
-//                description,
-//                registration.getAliases(),
-//                registration.getSyntax()
-//        );
-//        bukkitTopic = new GenericCommandHelpTopic(placeholder);
+    public void apply(final Command command) {
+        bukkitTopic = new GenericCommandHelpTopic(new PlaceholderCommand(command, description));
     }
 
     @Override
-    public boolean isViewableTo(final CommandSender sender) {
+    public boolean canSee(final CommandSender sender) {
         return true;
     }
 
@@ -74,19 +69,19 @@ public class GenericCommandTopic<S extends CommandSender> implements CommandTopi
             throw new CommandException("GenericCommandTopic isn't fully initialized");
     }
 
-//    private class PlaceholderCommand extends org.bukkit.command.Command {
-//        private PlaceholderCommand(final String label, final String description, final List<String> aliases) {
-//            super(
-//                label,
-//                description,
-//                "/<command>" + (commandSyntaxLiteral.isValid() ? usage.createUsageString(commandSyntaxLiteral) : StringUtils.EMPTY),
-//                aliases
-//            );
-//        }
-//
-//        @Override
-//        public boolean execute(final CommandSender sender, final String commandLabel, final String[] args) {
-//            return false;
-//        }
-//    }
+    private static class PlaceholderCommand extends org.bukkit.command.Command {
+        private PlaceholderCommand(final Command command, final String description) {
+            super(
+                command.getLabel(),
+                description,
+                "/<command>",
+                command.getAliases()
+            );
+        }
+
+        @Override
+        public boolean execute(final CommandSender sender, final String commandLabel, final String[] args) {
+            return false;
+        }
+    }
 }

@@ -18,7 +18,7 @@ import java.util.Collection;
  * @see CommandInputs#syntax()
  * @since 1.1.0
  */
-public interface CommandSyntax<S extends CommandSender, V> extends Iterable<CommandSyntax.Literal> {
+public interface CommandSyntax<S extends CommandSender, V> {
 
     /**
      * Parses the {@link CommandInput} provided by the sender into an {@code Object} of type {@link V}, which may be {@code null},

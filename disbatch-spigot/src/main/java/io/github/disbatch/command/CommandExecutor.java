@@ -4,7 +4,7 @@ import io.github.disbatch.command.syntax.CommandSyntax;
 import org.bukkit.command.CommandSender;
 
 /**
- * Responsible for the execution of a command.
+ * Responsible for executing a command.
  *
  * @param <S> any type extending {@link CommandSender} that can safely perform execution.
  * @param <V> the type from the resulting {@code Object} parsed from arguments.

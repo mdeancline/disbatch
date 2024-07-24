@@ -7,7 +7,10 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A {@code CommandSyntax} abstraction that utilizes its own {@link Suggester}, which is empty by default, to return a
@@ -30,12 +33,17 @@ public abstract class AbstractSyntax<S extends CommandSender, V> implements Comm
             if (labels.length != 1)
                 throw new IllegalArgumentException("Greedy syntax must have exactly one label");
 
-            this.literals = Collections.singletonList(new SimpleLiteral(labels[0], true));
+            literals = Collections.singletonList(new SimpleLiteral(labels[0], true));
         } else {
-            this.literals = new ArrayList<>(labels.length);
+            literals = new ArrayList<>(labels.length);
+            SimpleLiteral current = new SimpleLiteral(labels[0]);
+            literals.add(current);
 
-            for (final String label : labels)
-                literals.add(new SimpleLiteral(label, false));
+            for (int i = 1; i < labels.length; i++) {
+                final SimpleLiteral next = new SimpleLiteral(labels[i]);
+                current.addChild(next);
+                current = next;
+            }
         }
     }
 
@@ -49,12 +57,6 @@ public abstract class AbstractSyntax<S extends CommandSender, V> implements Comm
     public final Literal getLiteral(final int index) {
         final int maxIndex = literals.size() - 1;
         return isGreedy() && index > maxIndex ? literals.get(maxIndex) : literals.get(index);
-    }
-
-    @NotNull
-    @Override
-    public Iterator<Literal> iterator() {
-        return literals.iterator();
     }
 
     /**

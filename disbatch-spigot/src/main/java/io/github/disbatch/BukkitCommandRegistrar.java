@@ -4,7 +4,7 @@ import io.github.disbatch.command.CommandTopic;
 import io.github.disbatch.command.Suggestion;
 import io.github.disbatch.command.exception.CommandException;
 import io.github.disbatch.command.exception.CommandRegistrationException;
-import org.bukkit.Server;
+import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.help.HelpTopic;
 import org.bukkit.plugin.PluginManager;
@@ -18,12 +18,10 @@ import java.util.stream.Stream;
 
 class BukkitCommandRegistrar implements CommandRegistrar {
     private final SimpleCommandMap serverCommandMap;
-    private final Server server;
 
-    BukkitCommandRegistrar(final Server server) {
+    BukkitCommandRegistrar() {
         try {
-            this.server = server;
-            final PluginManager pluginManager = server.getPluginManager();
+            final PluginManager pluginManager = Bukkit.getServer().getPluginManager();
             serverCommandMap = (SimpleCommandMap) getCommandMapField(pluginManager).get(pluginManager);
         } catch (final ReflectiveOperationException e) {
             throw new CommandException(e);
@@ -54,13 +52,13 @@ class BukkitCommandRegistrar implements CommandRegistrar {
     public void register(@NotNull final Command command) {
         final CommandAdapter adapter = new CommandAdapter(command);
         serverCommandMap.register(adapter.getLabel(), adapter);
-        server.getHelpMap().addTopic(new CommandTopicAdapter(command));
+        Bukkit.getHelpMap().addTopic(new CommandTopicAdapter(command));
     }
 
     @Override
     public void registerFromFile(@NotNull final Command command) {
         setupPluginCommandExecution(command);
-        server.getHelpMap().addTopic(new CommandTopicAdapter(command));
+        Bukkit.getHelpMap().addTopic(new CommandTopicAdapter(command));
     }
 
     private void setupPluginCommandExecution(final Command registration) {
@@ -71,11 +69,11 @@ class BukkitCommandRegistrar implements CommandRegistrar {
     }
 
     private PluginCommand getExistingPluginCommand(final Command registration) {
-        final PluginCommand pluginCommand = server.getPluginCommand(registration.getLabel());
+        final PluginCommand pluginCommand = Bukkit.getPluginCommand(registration.getLabel());
 
         if (pluginCommand == null)
             throw new CommandRegistrationException(String.format("Command \"%s\" is not registered in the plugin.yml file of %s",
-                    registration.getLabel(), server.getName()));
+                    registration.getLabel(), Bukkit.getName()));
 
         return pluginCommand;
     }
@@ -123,7 +121,7 @@ class BukkitCommandRegistrar implements CommandRegistrar {
 
         @Override
         public boolean canSee(final CommandSender sender) {
-            return senderType.isAssignableFrom(sender.getClass()) && source.isViewableTo(sender);
+            return senderType.isAssignableFrom(sender.getClass()) && source.canSee(sender);
         }
 
         @Override

@@ -9,7 +9,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.github.disbatch.command.syntax.CommandSyntax;
-import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
@@ -22,8 +21,8 @@ abstract class BrigadierCommandRegistrar implements CommandRegistrar {
     private final CommandDispatcher<Sender> dispatcher;
 
     @SuppressWarnings("unchecked")
-    BrigadierCommandRegistrar(final Server server) {
-        dispatcher = (CommandDispatcher<Sender>) getDispatcher(server);
+    BrigadierCommandRegistrar() {
+        dispatcher = (CommandDispatcher<Sender>) getDispatcher();
     }
 
     @Override
@@ -48,7 +47,7 @@ abstract class BrigadierCommandRegistrar implements CommandRegistrar {
         dispatcher.register(builder);
     }
 
-    protected abstract CommandDispatcher<?> getDispatcher(Server server);
+    protected abstract CommandDispatcher<?> getDispatcher();
 
     private <V> RequiredArgumentBuilder<Sender, V> visit(final CommandSyntax.Literal literal, final CommandSyntax<?, V> syntax) {
         final Collection<CommandSyntax.Literal> children = literal.getChildren();

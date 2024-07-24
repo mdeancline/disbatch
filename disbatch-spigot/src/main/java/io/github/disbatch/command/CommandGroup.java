@@ -1,14 +1,16 @@
 package io.github.disbatch.command;
 
 import io.github.disbatch.Command;
-import io.github.disbatch.command.exception.ArgumentIndexOutOfBoundsException;
 import io.github.disbatch.command.syntax.CommandSyntax;
 import io.github.disbatch.command.syntax.SimpleLiteral;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 //TODO complete development
 
@@ -18,7 +20,7 @@ import java.util.*;
  * @param <S> {@inheritDoc}
  * @since 1.0.0
  */
-public final class CommandGroup implements SyntaxExecutor<CommandSender, CommandInput> {
+public final class CommandGroup implements CommandSyntaxExecutor<CommandSender, CommandInput> {
     private final Map<String, Command.Executable> executables = new HashMap<>();
     private final Map<String, CommandSyntax<?, ?>> syntaxes = new HashMap<>();
     private final GroupedCommandSyntax syntax;
@@ -34,9 +36,12 @@ public final class CommandGroup implements SyntaxExecutor<CommandSender, Command
      */
     public CommandGroup with(@NotNull final Command command) {
         final String label = command.getLabel();
+
         final Command.Executable executable = command.getExecutable();
-        executables.put(label, command.getExecutable());
-        syntaxes.put(label, command.getSyntax());
+        final CommandSyntax<?, ?> syntax = command.getSyntax();
+        executables.put(label, executable);
+        syntaxes.put(label, syntax);
+        this.syntax.addChild(syntax);
 
         for (final String alias : command.getAliases()) {
             executables.put(alias, executable);
@@ -60,88 +65,8 @@ public final class CommandGroup implements SyntaxExecutor<CommandSender, Command
         return syntax;
     }
 
-    private static class GroupedCommandInput implements CommandInput {
-        private static final long serialVersionUID = 2377622153887293994L;
-
-        private final CommandInput previous;
-        private final String cmdLabel;
-        private String[] arguments;
-        private String argumentLine;
-
-        private GroupedCommandInput(final CommandInput previous) {
-            this.previous = previous;
-            cmdLabel = previous.getCommandLabel() + " " + previous.getArgument(0);
-        }
-
-        @Override
-        public String getArgumentLine() {
-            return argumentLine == null
-                    ? (argumentLine = String.join(" ", getArguments()))
-                    : argumentLine;
-        }
-
-        @Override
-        public String getArgument(final int index) {
-            final String[] arguments = getArguments();
-
-            if (index < 0 || index >= arguments.length)
-                throw new ArgumentIndexOutOfBoundsException(index);
-
-            return arguments[index];
-        }
-
-        @Override
-        public String[] getArguments() {
-            if (arguments == null) {
-                final String[] previousArguments = previous.getArguments();
-                final String[] arguments = (this.arguments = new String[previousArguments.length - 1]);
-                System.arraycopy(previousArguments, 1, arguments, 0, arguments.length);
-
-                return arguments;
-            }
-
-            return arguments;
-        }
-
-        @Override
-        public String getCommandLabel() {
-            return cmdLabel;
-        }
-
-        @Override
-        public String getCommandLine() {
-            return previous.getCommandLine();
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) return true;
-            if (!(o instanceof CommandInput)) return false;
-            final CommandInput that = (CommandInput) o;
-            return getCommandLine().equals(that.getCommandLine());
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(getCommandLine());
-        }
-
-        @Override
-        public String toString() {
-            return new StringJoiner(", ", getClass().getSimpleName() + "[", "]")
-                    .add("commandLine=" + getCommandLine())
-                    .toString();
-        }
-
-        @NotNull
-        @Override
-        public Iterator<Binding> iterator() {
-            return null;
-        }
-    }
-
     private final class GroupedCommandSyntax implements CommandSyntax<CommandSender, CommandInput> {
-        private final Literal literal;
+        private final SimpleLiteral literal;
 
         private GroupedCommandSyntax(final String label) {
             literal = new SimpleLiteral(label, false);
@@ -160,14 +85,12 @@ public final class CommandGroup implements SyntaxExecutor<CommandSender, Command
         @Override
         @NotNull
         public Literal getLiteral(final int index) {
-            return literal;
+            return index > 0 ? syntax.getLiteral(index - 1) : literal;
         }
 
         @Override
         public boolean matches(final CommandInput.Binding binding) {
-            return binding.getIndex() > 0
-                    ? executables.containsKey(binding.getArgument())
-                    : syntaxes.get(binding.getArguments()[0]).matches(new GroupedCommandInput());
+            return executables.containsKey(binding.getArgument());
         }
 
         @Override
@@ -184,6 +107,10 @@ public final class CommandGroup implements SyntaxExecutor<CommandSender, Command
         @Override
         public Iterator<Literal> iterator() {
             return null;
+        }
+
+        public void addChild(final CommandSyntax<?,?> syntax) {
+            literal.addChild(syntax.getLiteral(0));
         }
     }
 }

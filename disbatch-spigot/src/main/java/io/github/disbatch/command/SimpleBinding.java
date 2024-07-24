@@ -1,6 +1,7 @@
 package io.github.disbatch.command;
 
 import io.github.disbatch.command.syntax.CommandSyntax;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a binding of command arguments to a specific {@link CommandSyntax.Literal}, providing access to the
@@ -21,7 +22,7 @@ public final class SimpleBinding implements CommandInput.Binding {
      * @param arguments the array of arguments for the command
      * @param index     the index of the argument within the arguments array
      */
-    public SimpleBinding(final CommandSyntax.Literal literal, final String[] arguments, final int index) {
+    public SimpleBinding(@NotNull final CommandSyntax.Literal literal, @NotNull final String[] arguments, @NotNull final int index) {
         this.literal = literal;
         this.arguments = arguments;
         this.index = index;
