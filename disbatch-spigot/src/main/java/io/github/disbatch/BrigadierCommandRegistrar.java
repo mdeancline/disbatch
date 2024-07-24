@@ -1,6 +1,5 @@
 package io.github.disbatch;
 
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -9,7 +8,6 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import io.github.disbatch.command.CommandRegistration;
 import io.github.disbatch.command.syntax.CommandSyntax;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -29,15 +27,15 @@ abstract class BrigadierCommandRegistrar implements CommandRegistrar {
     }
 
     @Override
-    public final void register(@NotNull final CommandRegistration registration) {
-        setupBrigadierCommandExecution(registration);
+    public final void register(@NotNull final Command command) {
+        setupBrigadierCommandExecution(command);
     }
 
     @Override
-    public final void registerFromFile(@NotNull final CommandRegistration registration) {
+    public final void registerFromFile(@NotNull final Command command) {
     }
 
-    private void setupBrigadierCommandExecution(final CommandRegistration registration) {
+    private void setupBrigadierCommandExecution(final Command registration) {
         final CommandAdapter adapter = new CommandAdapter(registration);
         final CommandSyntax<?, ?> syntax = registration.getSyntax();
         final LiteralArgumentBuilder<Sender> builder = LiteralArgumentBuilder.<Sender>literal(registration.getLabel())
@@ -65,14 +63,14 @@ abstract class BrigadierCommandRegistrar implements CommandRegistrar {
         CommandSender getBukkitSender();
     }
 
-    private static class CommandAdapter implements Command<Sender>, Predicate<Sender> {
-        private final CommandRegistration.Command command;
+    private static class CommandAdapter implements com.mojang.brigadier.Command<Sender>, Predicate<Sender> {
+        private final Command.Executable command;
         private final CommandSyntax<CommandSender, Object> syntax;
         private final Permission permission;
 
         @SuppressWarnings("unchecked")
-        private CommandAdapter(final CommandRegistration registration) {
-            command = registration.getCommand();
+        private CommandAdapter(final io.github.disbatch.Command registration) {
+            command = registration.getExecutable();
             permission = registration.getPermission();
             syntax = (CommandSyntax<CommandSender, Object>) registration.getSyntax();
         }
@@ -95,7 +93,7 @@ abstract class BrigadierCommandRegistrar implements CommandRegistrar {
             System.arraycopy(input, 1, arguments, 0, arguments.length);
             command.execute(sender, input[0], arguments);
 
-            return Command.SINGLE_SUCCESS;
+            return com.mojang.brigadier.Command.SINGLE_SUCCESS;
         }
 
 //        @Override

@@ -1,11 +1,12 @@
 package io.github.disbatch.command;
 
+import io.github.disbatch.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Holds information about a {@link Command} that should be displayed to a {@link CommandSender} when executing Spigot's
+ * Holds information about a {@link io.github.disbatch.command.Command} that should be displayed to a {@link CommandSender} when executing Spigot's
  * {@code /help} command.
  *
  * @apiNote This simplifies and offers more flexibility for commands than {@link org.bukkit.help.HelpTopic}, such as not
@@ -30,7 +31,7 @@ public interface CommandTopic<S extends CommandSender> {
      */
     void amend(@Nullable String shortText, @Nullable String fullText);
 
-    void apply(CommandRegistration registration);
+    void apply(Command registration);
 
     /**
      * Determines if a {@link CommandSender} is allowed to see this {@code CommandTopic}.

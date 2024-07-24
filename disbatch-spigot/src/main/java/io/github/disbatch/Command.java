@@ -1,6 +1,7 @@
-package io.github.disbatch.command;
+package io.github.disbatch;
 
 import com.google.common.collect.Lists;
+import io.github.disbatch.command.*;
 import io.github.disbatch.command.exception.CommandExecutionException;
 import io.github.disbatch.command.exception.CommandRegistrationException;
 import io.github.disbatch.command.syntax.CommandSyntax;
@@ -21,12 +22,12 @@ import java.util.List;
  * Represents a registered command with associated metadata including its label, execution logic, syntax, and failure
  * handling.
  *
- * @apiNote A {@code CommandRegistration} can only be created using {@link CommandRegistration#builder(Class, CommandExecutor)}
- * or {@link CommandRegistration#builder(CommandExecutor)}.
+ * @apiNote A {@code Command} can only be created using {@link Command#builder(Class, CommandExecutor)}
+ * or {@link Command#builder(CommandExecutor)}.
  * @since 1.1.0
  */
-public final class CommandRegistration {
-    private final Command command;
+public final class Command {
+    private final Executable executable;
     private final CommandExecutor<CommandSender, Object> executor;
     private final CommandFailureHandler handler;
     private final String label;
@@ -37,7 +38,7 @@ public final class CommandRegistration {
     private final Permission permission;
 
     @SuppressWarnings("unchecked")
-    private CommandRegistration(
+    private Command(
             @NotNull final CommandExecutor<?, ?> executor,
             @NotNull final CommandFailureHandler handler,
             @NotNull final List<String> aliases,
@@ -46,7 +47,7 @@ public final class CommandRegistration {
             @NotNull final CommandTopic<?> topic,
             @NotNull final String label, final Permission permission
     ) {
-        command = new Command();
+        executable = new Executable();
 
         this.executor = (CommandExecutor<CommandSender, Object>) executor;
         this.handler = handler;
@@ -59,7 +60,7 @@ public final class CommandRegistration {
     }
 
     /**
-     * Creates a builder for constructing a {@link CommandRegistration} with default settings.
+     * Creates a builder for constructing a {@link io.github.disbatch.Command} with default settings.
      *
      * @param executor the command executor for this command
      * @param <V>      the type of command arguments
@@ -70,7 +71,7 @@ public final class CommandRegistration {
     }
 
     /**
-     * Creates a builder for constructing a {@link CommandRegistration} with the specified sender type.
+     * Creates a builder for constructing a {@link io.github.disbatch.Command} with the specified sender type.
      *
      * @param senderType the type of command sender
      * @param executor   the command executor for this command
@@ -83,7 +84,7 @@ public final class CommandRegistration {
     }
 
     /**
-     * Creates a builder for constructing a {@link CommandRegistration} with default settings.
+     * Creates a builder for constructing a {@link io.github.disbatch.Command} with default settings.
      *
      * @param executor the command executor for this command
      * @param <V>      the type of command arguments
@@ -94,7 +95,7 @@ public final class CommandRegistration {
     }
 
     /**
-     * Creates a builder for constructing a {@link CommandRegistration} with the specified sender type.
+     * Creates a builder for constructing a {@link io.github.disbatch.Command} with the specified sender type.
      *
      * @param senderType the type of command sender
      * @param executor   the command executor for this command
@@ -107,12 +108,12 @@ public final class CommandRegistration {
     }
 
     /**
-     * Gets the {@link Command} associated with this registration.
+     * Gets the {@link Executable} associated with this registration.
      *
      * @return the command
      */
-    public Command getCommand() {
-        return command;
+    public Executable getExecutable() {
+        return executable;
     }
 
     /**
@@ -166,7 +167,7 @@ public final class CommandRegistration {
     }
 
     /**
-     * Represents a basic {@link CommandRegistration} builder, allowing for setting optional parameters.
+     * Represents a basic {@link io.github.disbatch.Command} builder, allowing for setting optional parameters.
      *
      * @param <S> the type of command sender
      * @param <V> the type of command arguments
@@ -204,16 +205,16 @@ public final class CommandRegistration {
         AdvancedBuilder<S, V> permission(@NotNull Permission permission);
 
         /**
-         * Creates a new {@link CommandRegistration}.
+         * Creates a new {@link io.github.disbatch.Command}.
          *
          * @return the created registration
          */
         @NotNull
-        CommandRegistration build();
+        io.github.disbatch.Command build();
     }
 
     /**
-     * Represents an advanced {@link CommandRegistration} builder, allowing for setting all possible parameters.
+     * Represents an advanced {@link io.github.disbatch.Command} builder, allowing for setting all possible parameters.
      *
      * @param <S> the type of command sender
      * @param <V> the type of command arguments
@@ -253,16 +254,16 @@ public final class CommandRegistration {
         AdvancedBuilder<S, V> permission(@NotNull Permission permission);
 
         /**
-         * Creates a new {@link CommandRegistration}.
+         * Creates a new {@link io.github.disbatch.Command}.
          *
          * @return the created registration
          */
         @NotNull
-        CommandRegistration build();
+        io.github.disbatch.Command build();
     }
 
     /**
-     * Builder for creating a {@link CommandRegistration}.
+     * Builder for creating a {@link io.github.disbatch.Command}.
      *
      * @param <S> the type of command sender
      * @param <V> the type of command arguments
@@ -349,14 +350,14 @@ public final class CommandRegistration {
         }
 
         @Override
-        public @NotNull CommandRegistration build() {
+        public @NotNull io.github.disbatch.Command build() {
             if (label == null)
                 throw new CommandRegistrationException("Command label is null");
 
             if (syntax == null)
                 throw new CommandRegistrationException("CommandSyntax is null");
 
-            return new CommandRegistration(executor, handler, aliases, senderType, syntax, topic, label, permission);
+            return new io.github.disbatch.Command(executor, handler, aliases, senderType, syntax, topic, label, permission);
         }
     }
 
@@ -365,8 +366,8 @@ public final class CommandRegistration {
      *
      * @since 1.1.0
      */
-    public final class Command {
-        private Command() {
+    public final class Executable {
+        private Executable() {
         }
 
         /**

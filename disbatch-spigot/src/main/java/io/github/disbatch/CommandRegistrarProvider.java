@@ -32,7 +32,7 @@ public final class CommandRegistrarProvider {
     /**
      * Retrieves the {@link CommandRegistrar} suitable for the server's environment.
      * If <a href="https://github.com/Mojang/brigadier">Brigadier</a> is present, a corresponding registrar that can
-     * link registered commands to Brigadier's features is returned. Otherwise, a backward-compatible alternative is provided.
+     * link registered commands to its features is returned. Otherwise, a backward-compatible alternative is provided.
      *
      * @return the appropriate {@link CommandRegistrar} instance
      */
@@ -53,6 +53,30 @@ public final class CommandRegistrarProvider {
                 return new BrigadierCommandRegistrar_1_14_R1(server);
             case 1151:
                 return new BrigadierCommandRegistrar_1_15_R1(server);
+            case 1161:
+                return new BrigadierCommandRegistrar_1_16_R1(server);
+            case 1162:
+                return new BrigadierCommandRegistrar_1_16_R2(server);
+            case 1163:
+                return new BrigadierCommandRegistrar_1_16_R3(server);
+            case 1171:
+                return new BrigadierCommandRegistrar_1_17_R1(server);
+            case 1181:
+                return new BrigadierCommandRegistrar_1_18_R1(server);
+            case 1182:
+                return new BrigadierCommandRegistrar_1_18_R2(server);
+            case 1191:
+                return new BrigadierCommandRegistrar_1_19_R1(server);
+            case 1192:
+                return new BrigadierCommandRegistrar_1_19_R2(server);
+            case 1193:
+                return new BrigadierCommandRegistrar_1_19_R3(server);
+            case 1201:
+                return new BrigadierCommandRegistrar_1_20_R1(server);
+            case 1202:
+                return new BrigadierCommandRegistrar_1_20_R2(server);
+            case 1203:
+                return new BrigadierCommandRegistrar_1_20_R3(server);
             default:
                 return new BukkitCommandRegistrar(server);
         }

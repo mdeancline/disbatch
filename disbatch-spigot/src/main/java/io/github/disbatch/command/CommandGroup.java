@@ -1,5 +1,6 @@
 package io.github.disbatch.command;
 
+import io.github.disbatch.Command;
 import io.github.disbatch.command.exception.ArgumentIndexOutOfBoundsException;
 import io.github.disbatch.command.syntax.CommandSyntax;
 import io.github.disbatch.command.syntax.SimpleLiteral;
@@ -18,7 +19,7 @@ import java.util.*;
  * @since 1.0.0
  */
 public final class CommandGroup implements SyntaxExecutor<CommandSender, CommandInput> {
-    private final Map<String, CommandRegistration.Command> commands = new HashMap<>();
+    private final Map<String, Command.Executable> executables = new HashMap<>();
     private final Map<String, CommandSyntax<?, ?>> syntaxes = new HashMap<>();
     private final GroupedCommandSyntax syntax;
 
@@ -27,18 +28,18 @@ public final class CommandGroup implements SyntaxExecutor<CommandSender, Command
     }
 
     /**
-     * Adds a command to be linked to this one through a {@link CommandRegistration}.
+     * Adds a command to be linked to this one.
      *
-     * @param registration
+     * @param command
      */
-    public CommandGroup with(@NotNull final CommandRegistration registration) {
-        final String label = registration.getLabel();
-        final CommandRegistration.Command command = registration.getCommand();
-        commands.put(label, registration.getCommand());
-        syntaxes.put(label, registration.getSyntax());
+    public CommandGroup with(@NotNull final Command command) {
+        final String label = command.getLabel();
+        final Command.Executable executable = command.getExecutable();
+        executables.put(label, command.getExecutable());
+        syntaxes.put(label, command.getSyntax());
 
-        for (final String alias : registration.getAliases()) {
-            commands.put(alias, command);
+        for (final String alias : command.getAliases()) {
+            executables.put(alias, executable);
             syntaxes.put(alias, syntax);
         }
 
@@ -51,7 +52,7 @@ public final class CommandGroup implements SyntaxExecutor<CommandSender, Command
         final String label = arguments[0];
         final String[] newArguments = new String[arguments.length - 1];
         System.arraycopy(arguments, 1, newArguments, 0, newArguments.length);
-        commands.get(input.getArgument(0)).execute(sender, label, newArguments);
+        executables.get(input.getArgument(0)).execute(sender, label, newArguments);
     }
 
     @Override
@@ -153,7 +154,7 @@ public final class CommandGroup implements SyntaxExecutor<CommandSender, Command
 
         @Override
         public Collection<Suggestion> getSuggestions(final CommandSender sender, final String[] arguments) {
-            return Suggestion.ofTexts(commands.keySet());
+            return Suggestion.ofTexts(executables.keySet());
         }
 
         @Override
@@ -165,7 +166,7 @@ public final class CommandGroup implements SyntaxExecutor<CommandSender, Command
         @Override
         public boolean matches(final CommandInput.Binding binding) {
             return binding.getIndex() > 0
-                    ? commands.containsKey(binding.getArgument())
+                    ? executables.containsKey(binding.getArgument())
                     : syntaxes.get(binding.getArguments()[0]).matches(new GroupedCommandInput());
         }
 

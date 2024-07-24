@@ -2,11 +2,9 @@ package io.github.disbatch;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.disbatch.command.CommandExecutor;
-import io.github.disbatch.command.CommandRegistration;
 import io.github.disbatch.command.syntax.model.PlayerFromNameSyntax;
 import io.github.disbatch.mock.MockCommandRegistrar;
 import org.bukkit.command.CommandSender;
@@ -37,7 +35,7 @@ public class CommandDispatchTest {
         final CommandExecutor<CommandSender, Player> messageExecutor = (sender, value)
                 -> value.sendMessage(sender.getName() + " said hi!");
 
-        mockRegistrar.register(CommandRegistration.builder(messageExecutor)
+        mockRegistrar.register(Command.builder(messageExecutor)
                 .syntax(new PlayerFromNameSyntax("name"))
                 .build());
 
@@ -46,6 +44,6 @@ public class CommandDispatchTest {
     }
 
     private boolean isSuccessful(final int status) {
-        return status == Command.SINGLE_SUCCESS;
+        return status == com.mojang.brigadier.Command.SINGLE_SUCCESS;
     }
 }

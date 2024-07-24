@@ -1,5 +1,6 @@
 package io.github.disbatch.command;
 
+import io.github.disbatch.Command;
 import io.github.disbatch.command.exception.CommandException;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 //TODO make valid command usage mechanism possible
 
 /**
- * In the absence of an alternative, a {@link CommandRegistration} will create a new instance of this to be registered
+ * In the absence of an alternative, a {@link Command} will create a new instance of this to be registered
  * in the server's {@link CommandMap}. You can use this as a base class for custom {@code CommandTopic}s or as an example
  * of how to write your own.
  *
@@ -41,7 +42,7 @@ public class GenericCommandTopic<S extends CommandSender> implements CommandTopi
     }
 
     @Override
-    public void apply(final CommandRegistration registration) {
+    public void apply(final Command registration) {
 //        final org.bukkit.command.Command placeholder = new PlaceholderCommand(
 //                registration.getLabel(),
 //                description,

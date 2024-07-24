@@ -1,6 +1,5 @@
 package io.github.disbatch;
 
-import io.github.disbatch.command.CommandRegistration;
 import io.github.disbatch.command.CommandTopic;
 import io.github.disbatch.command.Suggestion;
 import io.github.disbatch.command.exception.CommandException;
@@ -52,26 +51,26 @@ class BukkitCommandRegistrar implements CommandRegistrar {
     }
 
     @Override
-    public void register(@NotNull final CommandRegistration registration) {
-        final CommandAdapter adapter = new CommandAdapter(registration);
+    public void register(@NotNull final Command command) {
+        final CommandAdapter adapter = new CommandAdapter(command);
         serverCommandMap.register(adapter.getLabel(), adapter);
-        server.getHelpMap().addTopic(new CommandTopicAdapter(registration));
+        server.getHelpMap().addTopic(new CommandTopicAdapter(command));
     }
 
     @Override
-    public void registerFromFile(@NotNull final CommandRegistration registration) {
-        setupPluginCommandExecution(registration);
-        server.getHelpMap().addTopic(new CommandTopicAdapter(registration));
+    public void registerFromFile(@NotNull final Command command) {
+        setupPluginCommandExecution(command);
+        server.getHelpMap().addTopic(new CommandTopicAdapter(command));
     }
 
-    private void setupPluginCommandExecution(final CommandRegistration registration) {
+    private void setupPluginCommandExecution(final Command registration) {
         final PluginCommand pluginCommand = getExistingPluginCommand(registration);
         final CommandAdapter adapter = new CommandAdapter(registration);
         pluginCommand.setExecutor(adapter);
         pluginCommand.setTabCompleter(adapter);
     }
 
-    private PluginCommand getExistingPluginCommand(final CommandRegistration registration) {
+    private PluginCommand getExistingPluginCommand(final Command registration) {
         final PluginCommand pluginCommand = server.getPluginCommand(registration.getLabel());
 
         if (pluginCommand == null)
@@ -81,21 +80,21 @@ class BukkitCommandRegistrar implements CommandRegistrar {
         return pluginCommand;
     }
 
-    static class CommandAdapter extends Command implements TabExecutor, CommandExecutor {
-        private final CommandRegistration.Command command;
+    static class CommandAdapter extends org.bukkit.command.Command implements TabExecutor, CommandExecutor {
+        private final Command.Executable command;
 
-        CommandAdapter(final CommandRegistration registration) {
+        CommandAdapter(final io.github.disbatch.Command registration) {
             super(registration.getLabel());
-            command = registration.getCommand();
+            command = registration.getExecutable();
         }
 
         @Override
-        public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+        public boolean onCommand(final CommandSender sender, final org.bukkit.command.Command command, final String label, final String[] args) {
             return execute(sender, label, args);
         }
 
         @Override
-        public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
+        public List<String> onTabComplete(final CommandSender sender, final org.bukkit.command.Command command, final String alias, final String[] args) {
             return tabComplete(sender, alias, args);
         }
 
@@ -116,7 +115,7 @@ class BukkitCommandRegistrar implements CommandRegistrar {
         private final CommandTopic<CommandSender> source;
 
         @SuppressWarnings("unchecked")
-        private CommandTopicAdapter(final CommandRegistration registration) {
+        private CommandTopicAdapter(final Command registration) {
             senderType = registration.getSenderType();
             source = (CommandTopic<CommandSender>) registration.getTopic();
             name = "/" + registration.getLabel();
