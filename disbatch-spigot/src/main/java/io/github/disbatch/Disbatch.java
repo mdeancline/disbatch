@@ -50,7 +50,7 @@ public final class Disbatch {
         final JavaPlugin plugin = JavaPlugin.getProvidingPlugin(command.getClass());
         final Class<S> senderType = (Class<S>) new TypeToken<S>(command.getClass()) {
         }.getRawType();
-        final CommandRegistrar registrar = CommandRegistrars.getCompatibleRegistrar(plugin);
+        final CommandRegistrar registrar = new CommandRegistrarProvider().getRegistrar();
         registrar.register(registration);
     }
 

@@ -16,6 +16,7 @@
         <module>1_13_R2</module>
         <module>1_17_R1</module>
         <module>1_14_R1</module>
+        <module>1_15_R1</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
@@ -92,6 +93,13 @@
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_14_R1</artifactId>
+            <version>${version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.disbatch</groupId>
+            <artifactId>1_15_R1</artifactId>
             <version>${version}</version>
             <scope>provided</scope>
         </dependency>

@@ -2,10 +2,10 @@ package io.github.disbatch;
 
 import com.mojang.brigadier.CommandDispatcher;
 import org.bukkit.Server;
-import org.bukkit.craftbukkit.v1_14_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_15_R1.CraftServer;
 
-class BrigadierCommandRegistrar_1_14_R1 extends BrigadierCommandRegistrar {
-    BrigadierCommandRegistrar_1_14_R1(final Server server) {
+class BrigadierCommandRegistrar_1_15_R1 extends BrigadierCommandRegistrar {
+    BrigadierCommandRegistrar_1_15_R1(final Server server) {
         super(server);
     }
 

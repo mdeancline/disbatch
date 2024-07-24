@@ -4,14 +4,12 @@ import io.github.disbatch.command.CommandRegistration;
 import io.github.disbatch.command.exception.CommandRegistrationException;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Responsible for the registration of commands.
  *
- * @see CommandRegistrars#getCompatibleRegistrar(JavaPlugin)
- * @see CommandRegistrars#getCompatibleRegistrar(Key)
+ * @see CommandRegistrarProvider#getRegistrar()
  * @since 1.1.0
  */
 public interface CommandRegistrar {
