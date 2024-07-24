@@ -85,7 +85,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Start of NMS-based module dependencies-->
+        <!-- Start of OBC and NMS-based module dependencies-->
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>disbatch-spigot</artifactId>
