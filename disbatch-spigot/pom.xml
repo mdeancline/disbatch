@@ -10,9 +10,11 @@
     <packaging>pom</packaging>
 
     <!--
-        NMS versioning references:
+        Version-based development references:
         https://docs.papermc.io/paper/dev/internals
         https://github.com/MiniDigger/spigot-resolver
+        https://mappings.dev/
+        https://helpch.at/docs/
      -->
     <modules>
         <module>1_13_R1</module>
