@@ -142,19 +142,19 @@
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>spigot-nms-120R4</artifactId>
-            <version>1.1.0</version>
+            <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>spigot-nms-121R1</artifactId>
-            <version>1.1.0</version>
+            <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>spigot-nms-primary</artifactId>
-            <version>1.1.0</version>
+            <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
