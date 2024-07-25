@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>spigot</artifactId>
-    <version>${project.parent.version</version>
+    <version>${project.parent.version}</version>
 
     <dependencies>
         <dependency>
