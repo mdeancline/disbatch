@@ -33,6 +33,7 @@
         <module>1_20_R1</module>
         <module>1_20_R2</module>
         <module>1_20_R3</module>
+        <module>1_20_R4</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
@@ -47,30 +48,12 @@
 
     <repositories>
         <repository>
-            <id>spigotmc-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-        </repository>
-
-        <repository>
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
-        </repository>
-
-        <repository>
-            <id>minecraft-libraries</id>
-            <name>Minecraft Libraries</name>
-            <url>https://libraries.minecraft.net</url>
         </repository>
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.13-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
         <dependency>
             <groupId>com.github.seeseemelk</groupId>
             <artifactId>MockBukkit-v1.20</artifactId>
@@ -78,130 +61,101 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.mojang</groupId>
-            <artifactId>brigadier</artifactId>
-            <version>1.0.18</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Start of OBC and NMS-based module dependencies-->
         <dependency>
             <groupId>io.github.disbatch</groupId>
-            <artifactId>disbatch-spigot</artifactId>
-            <version>${version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.disbatch</groupId>
             <artifactId>1_13_R1</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_13_R2</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_14_R1</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_15_R1</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_16_R1</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_16_R2</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_16_R3</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_17_R1</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_18_R1</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_18_R2</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_19_R1</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_19_R2</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_19_R3</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_20_R1</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_20_R2</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>io.github.disbatch</groupId>
             <artifactId>1_20_R3</artifactId>
-            <version>${version}</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

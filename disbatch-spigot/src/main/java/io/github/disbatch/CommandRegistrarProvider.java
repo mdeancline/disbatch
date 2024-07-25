@@ -2,6 +2,7 @@ package io.github.disbatch;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Creates and provides a {@link CommandRegistrar} suitable for the server's environment.
@@ -39,50 +40,56 @@ public final class CommandRegistrarProvider {
      */
     public CommandRegistrar getRegistrar() {
         if (registrar == null) {
-            registrar = versionTarget >= CLIENT_COMMANDS_UPDATE_INTRO
-                    ? new ClientCommandsUpdateRegistrar(getVersionedRegistrar())
-                    : getVersionedRegistrar();
+            final CommandDispatcherContext context = getContext();
+            final CommandRegistrar registrar = context == null
+                    ? new BukkitCommandRegistrar()
+                    : new BrigadierCommandRegistrar(context);
+
+            this.registrar = versionTarget >= CLIENT_COMMANDS_UPDATE_INTRO
+                    ? new ClientCommandsUpdateRegistrar(registrar)
+                    : registrar;
         }
 
         return registrar;
     }
 
-    private CommandRegistrar getVersionedRegistrar() {
+    @Nullable
+    private CommandDispatcherContext getContext() {
         switch (versionTarget) {
             case 1131:
-                return new BrigadierCommandRegistrar_1_13_R1();
+                return new CommandDispatcherContext_1_13_R1();
             case 1132:
-                return new BrigadierCommandRegistrar_1_13_R2();
+                return new CommandDispatcherContext_1_13_R2();
             case 1141:
-                return new BrigadierCommandRegistrar_1_14_R1();
+                return new CommandDispatcherContext_1_14_R1();
             case 1151:
-                return new BrigadierCommandRegistrar_1_15_R1();
+                return new CommandDispatcherContext_1_15_R1();
             case 1161:
-                return new BrigadierCommandRegistrar_1_16_R1();
+                return new CommandDispatcherContext_1_16_R1();
             case 1162:
-                return new BrigadierCommandRegistrar_1_16_R2();
+                return new CommandDispatcherContext_1_16_R2();
             case 1163:
-                return new BrigadierCommandRegistrar_1_16_R3();
+                return new CommandDispatcherContext_1_16_R3();
             case 1171:
-                return new BrigadierCommandRegistrar_1_17_R1();
+                return new CommandDispatcherContext_1_17_R1();
             case 1181:
-                return new BrigadierCommandRegistrar_1_18_R1();
+                return new CommandDispatcherContext_1_18_R1();
             case 1182:
-                return new BrigadierCommandRegistrar_1_18_R2();
+                return new CommandDispatcherContext_1_18_R2();
             case 1191:
-                return new BrigadierCommandRegistrar_1_19_R1();
+                return new CommandDispatcherContext_1_19_R1();
             case 1192:
-                return new BrigadierCommandRegistrar_1_19_R2();
+                return new CommandDispatcherContext_1_19_R2();
             case 1193:
-                return new BrigadierCommandRegistrar_1_19_R3();
+                return new CommandDispatcherContext_1_19_R3();
             case 1201:
-                return new BrigadierCommandRegistrar_1_20_R1();
+                return new CommandDispatcherContext_1_20_R1();
             case 1202:
-                return new BrigadierCommandRegistrar_1_20_R2();
+                return new CommandDispatcherContext_1_20_R2();
             case 1203:
-                return new BrigadierCommandRegistrar_1_20_R3();
+                return new CommandDispatcherContext_1_20_R3();
             default:
-                return new BukkitCommandRegistrar();
+                return null;
         }
     }
 

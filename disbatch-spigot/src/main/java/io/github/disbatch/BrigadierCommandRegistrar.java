@@ -17,12 +17,11 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
-abstract class BrigadierCommandRegistrar implements CommandRegistrar {
-    private final CommandDispatcher<Sender> dispatcher;
+class BrigadierCommandRegistrar implements CommandRegistrar {
+    private final CommandDispatcher<CommandDispatcherContext.Sender> dispatcher;
 
-    @SuppressWarnings("unchecked")
-    BrigadierCommandRegistrar() {
-        dispatcher = (CommandDispatcher<Sender>) getDispatcher();
+    BrigadierCommandRegistrar(final CommandDispatcherContext context) {
+        dispatcher = context.getDispatcher();
     }
 
     @Override
@@ -37,19 +36,17 @@ abstract class BrigadierCommandRegistrar implements CommandRegistrar {
     private void setupBrigadierCommandExecution(final Command registration) {
         final CommandAdapter adapter = new CommandAdapter(registration);
         final CommandSyntax<?, ?> syntax = registration.getSyntax();
-        final LiteralArgumentBuilder<Sender> builder = LiteralArgumentBuilder.<Sender>literal(registration.getLabel())
+        final LiteralArgumentBuilder<CommandDispatcherContext.Sender> builder = LiteralArgumentBuilder.<CommandDispatcherContext.Sender>literal(registration.getLabel())
                 .requires(adapter)
                 .executes(adapter);
 
-        for (final CommandSyntax.Literal literal : registration.getSyntax())
-            builder.then(visit(literal, syntax));
+//        for (final CommandSyntax.Literal literal : registration.getSyntax())
+//            builder.then(visit(literal, syntax));
 
         dispatcher.register(builder);
     }
 
-    protected abstract CommandDispatcher<?> getDispatcher();
-
-    private <V> RequiredArgumentBuilder<Sender, V> visit(final CommandSyntax.Literal literal, final CommandSyntax<?, V> syntax) {
+    private <V> RequiredArgumentBuilder<CommandDispatcherContext.Sender, V> visit(final CommandSyntax.Literal literal, final CommandSyntax<?, V> syntax) {
         final Collection<CommandSyntax.Literal> children = literal.getChildren();
         if (children.size() > 0) {
 
@@ -58,11 +55,7 @@ abstract class BrigadierCommandRegistrar implements CommandRegistrar {
         return RequiredArgumentBuilder.argument(literal.getLabel(), new CommandSyntaxArgumentType<>(syntax));
     }
 
-    interface Sender {
-        CommandSender getBukkitSender();
-    }
-
-    private static class CommandAdapter implements com.mojang.brigadier.Command<Sender>, Predicate<Sender> {
+    private static class CommandAdapter implements com.mojang.brigadier.Command<CommandDispatcherContext.Sender>, Predicate<CommandDispatcherContext.Sender> {
         private final Command.Executable command;
         private final CommandSyntax<CommandSender, Object> syntax;
         private final Permission permission;
@@ -85,7 +78,7 @@ abstract class BrigadierCommandRegistrar implements CommandRegistrar {
 //        }
 
         @Override
-        public int run(final CommandContext<Sender> context) {
+        public int run(final CommandContext<CommandDispatcherContext.Sender> context) {
             final String[] input = context.getInput().split(" ");
             final String[] arguments = new String[input.length - 1];
             final CommandSender sender = context.getSource().getBukkitSender();
@@ -96,7 +89,7 @@ abstract class BrigadierCommandRegistrar implements CommandRegistrar {
         }
 
 //        @Override
-//        public CompletableFuture<Suggestions> getSuggestions(final CommandContext<Sender> context, final SuggestionsBuilder builder) {
+//        public CompletableFuture<Suggestions> getSuggestions(final CommandContext<BukkitVersionContext.Sender> context, final SuggestionsBuilder builder) {
 //            final CommandSender sender = context.getSource().getBukkitSender();
 //            final String[] input = context.getInput().split(" ");
 //            final Collection<Suggestion> suggestions = syntax.getSuggestions(sender, input);
@@ -108,7 +101,7 @@ abstract class BrigadierCommandRegistrar implements CommandRegistrar {
 //        }
 
         @Override
-        public boolean test(final Sender sender) {
+        public boolean test(final CommandDispatcherContext.Sender sender) {
             if (permission == null) return true;
             return sender.getBukkitSender().hasPermission(permission);
         }
