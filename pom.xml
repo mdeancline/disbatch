@@ -10,7 +10,7 @@
     <version>1.1.0</version>
 
     <modules>
-        <module>disbatch-spigot</module>
+        <module>parent-spigot</module>
     </modules>
 
     <properties>
@@ -20,7 +20,7 @@
     <distributionManagement>
         <repository>
             <id>repsy</id>
-            <name>mc-libs-repo</name>
+            <name>mc-libs</name>
             <url>https://repo.repsy.io/mvn/mdcline/mc-libs/</url>
         </repository>
     </distributionManagement>
@@ -95,11 +95,6 @@
             <name>Minecraft Libraries</name>
             <url>https://libraries.minecraft.net</url>
         </repository>
-
-        <repository>
-            <id>spigotmc-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -118,9 +113,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.13-R0.1-SNAPSHOT</version>
+            <groupId>ca.bkaw</groupId>
+            <artifactId>paper-nms</artifactId>
+            <version>1.20.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 

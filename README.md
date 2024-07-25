@@ -28,8 +28,8 @@ Disbatch has its own `Command` interface for creating your own commands and cate
 
 Implementing the `Command` interface:
 ```java
-import io.github.disbatch.command.Command;
-import io.github.disbatch.command.CommandInput;
+import io.github.command.io.github.disbatch.Command;
+import io.github.command.io.github.disbatch.CommandInput;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

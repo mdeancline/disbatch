@@ -1,0 +1,77 @@
+package io.github.disbatch.command.syntax;
+
+import io.github.disbatch.command.CommandInputBinding;
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * A {@code CommandSyntax} abstraction that utilizes its own {@link Suggester}, which is empty by default, to return a
+ * list of possible suggestions.
+ *
+ * @param <S> {@inheritDoc}
+ * @param <V> {@inheritDoc}
+ * @see #withSuggester(Suggester)
+ * @since 1.1.0
+ */
+public abstract class AbstractSyntax<S extends CommandSender, V> implements CommandSyntax<S, V> {
+    private final List<CommandLiteral> literals;
+    private Suggester<S> suggester = Suggesters.empty();
+
+    protected AbstractSyntax(@NotNull final String... labels) {
+        if (labels.length == 0)
+            throw new IllegalArgumentException("There must be at least one label");
+
+        if (isGreedy()) {
+            if (labels.length != 1)
+                throw new IllegalArgumentException("Greedy syntax must have exactly one label");
+
+            literals = Collections.singletonList(new SimpleLiteral(labels[0], true));
+        } else {
+            literals = new ArrayList<>(labels.length);
+            SimpleLiteral current = new SimpleLiteral(labels[0]);
+            literals.add(current);
+
+            for (int i = 1; i < labels.length; i++) {
+                final SimpleLiteral next = new SimpleLiteral(labels[i]);
+                current.addChild(next);
+                current = next;
+            }
+        }
+    }
+
+    @Override
+    public Collection<Suggestion> getSuggestions(final S sender, final CommandInputBinding binding) {
+        return suggester.getSuggestions(sender, binding);
+    }
+
+    @Override
+    @Nullable
+    public final CommandLiteral getLiteral(final int index) {
+        final int maxIndex = literals.size() - 1;
+        return isGreedy() && index > maxIndex ? literals.get(maxIndex) : literals.get(index);
+    }
+
+    /**
+     * Sets the {@link Suggester} to be used for the {@code AbstractParameter}.
+     *
+     * @param suggester the tab completer to be used.
+     * @return this {@code AbstractParameter} as a {@code Parameter}.
+     */
+    public final CommandSyntax<S, V> withSuggester(@NotNull final Suggester<S> suggester) {
+        this.suggester = suggester;
+        return this;
+    }
+
+    /**
+     * Checks if this syntax is greedy as a whole, meaning it consumes all remaining arguments.
+     *
+     * @return true if the syntax is greedy, false otherwise
+     */
+    protected abstract boolean isGreedy();
+}
